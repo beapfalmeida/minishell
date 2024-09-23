@@ -84,6 +84,7 @@ These are the subsystems that make executing commands possible:
   - [ ] **Prompt**: Display a shell prompt and await user input.
   - [ ] **Command History**: Implement a command history using `readline()`.
   - [ ] **Signal Handling**: Properly handle signals (e.g., `ctrl-C`, `ctrl-D`, `ctrl-\`).
+
   - [ ] **Environment Variables**: Expand `$VAR` expressions.
   - [ ] **Exit Status**: Implement `$?` to hold the exit status of the last executed command.
 
@@ -93,6 +94,16 @@ These are the subsystems that make executing commands possible:
   - [ ] Implement rules for handling builtins (`echo`, `cd`, `pwd`, etc.) and external commands.
   - [ ] Implement error handling for invalid input.
 
+- [ ] **Built-ins**
+  - [ ] **echo**: Implement with `-n` option.
+  - [ ] **cd**: Implement with relative or absolute path.
+  - [ ] **pwd**: Print the current directory.
+  - [ ] **export**: Handle environment variable exportation.
+  - [ ] **unset**: Remove environment variables.
+  - [ ] **env**: Print all environment variables.
+  - [ ] **exit**: Exit the shell with a status.
+
+// fazer um grafico antes de comecar esta parte
 - [ ] **Executor**
   - [ ] Create child processes using `fork()` for each command.
   - [ ] Use `execve()` to execute external commands.
@@ -108,20 +119,6 @@ These are the subsystems that make executing commands possible:
 - [ ] **Pipes**
   - [ ] Implement pipes (`|`) to connect commands in a pipeline.
   - [ ] Redirect stdout of one command to stdin of the next using `pipe()` and `dup2()`.
-
-- [ ] **Built-ins**
-  - [ ] **echo**: Implement with `-n` option.
-  - [ ] **cd**: Implement with relative or absolute path.
-  - [ ] **pwd**: Print the current directory.
-  - [ ] **export**: Handle environment variable exportation.
-  - [ ] **unset**: Remove environment variables.
-  - [ ] **env**: Print all environment variables.
-  - [ ] **exit**: Exit the shell with a status.
-
-- [ ] **Interactive Mode**
-  - [ ] **ctrl-C**: Display a new prompt on a new line.
-  - [ ] **ctrl-D**: Exit the shell.
-  - [ ] **ctrl-\**: Do nothing.
 
 - [ ] **Testing**
   - [ ] Create test cases for all possible scenarios, including edge cases.
