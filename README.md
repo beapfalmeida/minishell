@@ -85,9 +85,6 @@ These are the subsystems that make executing commands possible:
   - [ ] **Command History**: Implement a command history using `readline()`.
   - [ ] **Signal Handling**: Properly handle signals (e.g., `ctrl-C`, `ctrl-D`, `ctrl-\`).
 
-  - [ ] **Environment Variables**: Expand `$VAR` expressions.
-  - [ ] **Exit Status**: Implement `$?` to hold the exit status of the last executed command.
-
 - [ ] **Parser**
   - [ ] Implement a **Lexer** (tokenizer) to separate the input into tokens (commands and arguments).
   - [ ] Build the **Command Table** to store commands and arguments.
@@ -103,6 +100,10 @@ These are the subsystems that make executing commands possible:
   - [ ] **env**: Print all environment variables.
   - [ ] **exit**: Exit the shell with a status.
 
+- [ ] **Expanders**
+  - [ ] **Environment Variables**: Expand `$VAR` expressions.
+  - [ ] **Exit Status**: Implement `$?` to hold the exit status of the last executed command.
+      
 // fazer um grafico antes de comecar esta parte
 - [ ] **Executor**
   - [ ] Create child processes using `fork()` for each command.
@@ -126,6 +127,7 @@ These are the subsystems that make executing commands possible:
 
 ## Links
 - https://www.markdownguide.org/extended-syntax/
+
 ## Disclaimer
 At 42 School our projects have to adhere to the 42 Norm of coding standards and good practices. These include:
 - Maximum 25 lines per function and 5 functions per file;
