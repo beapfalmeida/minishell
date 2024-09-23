@@ -102,6 +102,7 @@ These are the subsystems that make executing commands possible:
 
 - [ ] **Expanders**
   - [ ] **Environment Variables**: Expand `$VAR` expressions.
+  - [ ] **Handle brackets**: single and double and both.
   - [ ] **Exit Status**: Implement `$?` to hold the exit status of the last executed command.
       
 // fazer um grafico antes de comecar esta parte
