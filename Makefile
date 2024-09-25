@@ -1,17 +1,22 @@
 CC = cc
 CFLAGS = -Wextra -Wall -Werror -g
+
+READLINE_PATH = vendor/readline/
+RLFLAG = -L$(READLINE_PATH)/lib -lreadline
+
+SRC = jsobreir-main.c init.c
+OBJ = $(SRC:.c=.o)
+
 NAME = minishell
 LIBFT_DIR = libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 FT_PRINTF_DIR = $(LIBFT_DIR)/ft_printf
 FT_PRINTF_A = $(FT_PRINTF_DIR)/ft_printf.a
-SRC = main.c
-OBJ = $(SRC:.c=.o)
 
 all: libft $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT_A) $(FT_PRINTF_A)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT_A) $(FT_PRINTF_A) -o $(NAME)
+	$(CC) $(CFLAGS) $(RLFLAG) $(OBJ) $(LIBFT_A) $(FT_PRINTF_A) -o $(NAME)
 
 $(LIBFT_A): libft
 	$(MAKE) -C $(LIBFT_DIR)
