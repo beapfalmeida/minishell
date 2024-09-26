@@ -4,6 +4,9 @@ CFLAGS = -Wextra -Wall -Werror -g -I./includes
 READLINE_PATH = vendor/readline/
 RLFLAG = -L$(READLINE_PATH)/lib -lreadline
 
+# flags used to supress readline warnings in valgrind
+VALFLAGS = --suppressions=readline.supp
+
 NAME = minishell
 
 LIBFT_DIR = includes/libft/
@@ -24,9 +27,10 @@ OBJ_DIR = obj
 # ------------------------------ Files ------------------------------ #
 # ------------------------------------------------------------------- #
 SRC = $(JSOBREIR_DIR)/jsobreir-main.c \
-      $(INIT_DIR)/init.c \
-      $(EXECUTOR_DIR)/executor.c \
-      $(EXECUTOR_DIR)/pwd/handle_pwd.c
+		$(INIT_DIR)/init.c \
+		$(EXECUTOR_DIR)/executor.c \
+		$(EXECUTOR_DIR)/pwd/handle_pwd.c \
+		$(EXECUTOR_DIR)/cd/handle_cd.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
@@ -46,6 +50,9 @@ $(OBJ_DIR)/%.o: %.c
 
 $(LIBFT_A):
 	$(MAKE) -C $(LIBFT_DIR)
+
+valgrind:
+	valgrind $(VALFLAGS) ./minishell
 
 clean:
 	rm -f $(OBJ)

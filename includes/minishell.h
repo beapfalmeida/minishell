@@ -29,8 +29,9 @@ void	init_tokens(t_tokens *token);
 // Executor
 
 // Builtins
-int	ft_pwd(char *cwd);
+int	ft_pwd(void);
 int	exec_cmd(t_tokens *tokens);
+int	ft_cd(t_tokens *token);
 
 // Free
 

@@ -3,7 +3,7 @@
 /// @brief 
 /// @param cwd 
 /// @return 
-int	ft_pwd()
+int	ft_pwd(void)
 {
     char    cwd[MAX_PATH_SIZE];
 
@@ -11,6 +11,10 @@ int	ft_pwd()
     {
         printf("%s\n", cwd);
     }
-	// else Error
+    else
+    {
+        // Handle Error
+        return (1);
+    }
     return (0);
 }
