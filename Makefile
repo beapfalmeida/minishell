@@ -15,7 +15,9 @@ SRC_DIR = src
 EXECUTOR_DIR = $(SRC_DIR)/executor
 PARSER_DIR = $(SRC_DIR)/parser
 INIT_DIR = $(SRC_DIR)/init
-JSOBREIR_DIR = jsobreir
+PARSER_DIR = $(SRC_DIR)/parser
+PRINTS_DIR = $(SRC_DIR)/prints
+UTILS_DIR = $(SRC_DIR)/utils
 
 # Directory for obj files
 OBJ_DIR = obj
@@ -23,10 +25,14 @@ OBJ_DIR = obj
 # ------------------------------------------------------------------- #
 # ------------------------------ Files ------------------------------ #
 # ------------------------------------------------------------------- #
-SRC = $(JSOBREIR_DIR)/jsobreir-main.c \
+SRC = $(SRC_DIR)/main.c \
       $(INIT_DIR)/init.c \
       $(EXECUTOR_DIR)/executor.c \
-      $(EXECUTOR_DIR)/pwd/handle_pwd.c
+      $(EXECUTOR_DIR)/pwd/handle_pwd.c \
+	  $(PARSER_DIR)/parser.c \
+	  $(PARSER_DIR)/assign_types.c \
+	  $(PRINTS_DIR)/print.c \
+	  $(UTILS_DIR)/utils.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
@@ -39,7 +45,7 @@ $(NAME): $(OBJ) $(LIBFT_A)
 	$(CC) $(CFLAGS) $(RLFLAG) $(OBJ) $(LIBFT_A) -o $(NAME)
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR) $(OBJ_DIR)/$(JSOBREIR_DIR) $(OBJ_DIR)/$(EXECUTOR_DIR)/pwd $(OBJ_DIR)/$(INIT_DIR)
+	mkdir -p $(OBJ_DIR) $(OBJ_DIR)/$(EXECUTOR_DIR)/pwd $(OBJ_DIR)/$(INIT_DIR) $(OBJ_DIR)/$(PARSER_DIR) $(OBJ_DIR)/$(PRINTS_DIR) $(OBJ_DIR)/$(UTILS_DIR)
 
 $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -49,15 +55,11 @@ $(LIBFT_A):
 
 clean:
 	rm -f $(OBJ)
-	@if [ -d "$(LIBFT_DIR)" ]; then \
-	$(MAKE) -C $(LIBFT_DIR) clean; \
-	fi
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
 	rm -rf $(OBJ_DIR)
-	@if [ -d "$(LIBFT_DIR)" ]; then \
-	$(MAKE) -C $(LIBFT_DIR) fclean; \
-	fi
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
