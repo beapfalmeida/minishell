@@ -45,7 +45,7 @@ int	main(void)
 		create_tokens(&tokens, input_buffer);
 		exec_cmd(tokens);
 		free(input_buffer);
-		free(tokens->token);
+		lstclear(&tokens);
 	}
 	free(input_buffer);
 }
