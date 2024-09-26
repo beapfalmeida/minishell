@@ -10,6 +10,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
+
 typedef struct s_tokens
 {
 	char			*token;
@@ -27,7 +29,8 @@ void	init_tokens(t_tokens *token);
 // Executor
 
 // Builtins
-void	ft_pwd(char *cwd);
+int	ft_pwd(char *cwd);
+int	exec_cmd(t_tokens *tokens);
 
 // Free
 

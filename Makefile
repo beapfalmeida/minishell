@@ -1,17 +1,35 @@
 CC = cc
+
 CFLAGS = -Wextra -Wall -Werror -g
 
 READLINE_PATH = vendor/readline/
 RLFLAG = -L$(READLINE_PATH)/lib -lreadline
 
-SRC = jsobreir-main.c init.c
-OBJ = $(SRC:.c=.o)
 
 NAME = minishell
+
 LIBFT_DIR = libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
-FT_PRINTF_DIR = $(LIBFT_DIR)/ft_printf
-FT_PRINTF_A = $(FT_PRINTF_DIR)/ft_printf.a
+# Retirei o printf pois podemos usar a funcao original
+
+# Directories containing source files
+SRC_DIR = src
+EXECUTOR_DIR = $(SRC_DIR)/executor
+PARSER_DIR = $(SRC_DIR)parser
+INIT_DIR = $(SRC_DIR)/init
+
+# Directory for obj files
+OBJ_DIR = obj
+
+# ------------------------------------------------------------------- #
+# ------------------------------ Files ------------------------------ #
+# ------------------------------------------------------------------- #
+SRC = jsobreir/jsobreir-main.c \
+      $(SRC_DIR)/$(INIT_DIR)/init.c \
+      $(SRC_DIR)/$(EXECUTOR_DIR)/executor.c \
+      $(SRC_DIR)/$(EXECUTOR_DIR)/pwd/handle_pwd.c \
+
+OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 all: libft $(NAME)
 
@@ -23,7 +41,7 @@ $(LIBFT_A): libft
 
 clean:
 	rm -f $(OBJ)
-	@if [-d "$(LIBFT_DIR)"]; then \
+	@if [ -d "$(LIBFT_DIR)" ]; then \
 	$(MAKE) -C $(LIBFT_DIR) clean; \
 	fi
 

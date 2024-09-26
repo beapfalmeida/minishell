@@ -44,7 +44,10 @@ int	main(void)
 			break ;
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
+		tokens.token = ft_strdup(input_buffer); 
+		exec_cmd(&tokens);
 		free(input_buffer);
+		free(tokens.token);
 	}
 	free(input_buffer);
 }
