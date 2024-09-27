@@ -31,8 +31,11 @@ SRC = $(SRC_DIR)/main.c \
       $(EXECUTOR_DIR)/pwd/handle_pwd.c \
 	  $(PARSER_DIR)/parser.c \
 	  $(PARSER_DIR)/assign_types.c \
+	  $(PARSER_DIR)/process_args.c \
+	  $(PARSER_DIR)/separate_types.c \
 	  $(PRINTS_DIR)/print.c \
-	  $(UTILS_DIR)/utils.c
+	  $(UTILS_DIR)/utils.c \
+	  $(UTILS_DIR)/handle_errors
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 

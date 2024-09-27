@@ -12,17 +12,16 @@ void	redirect_in(t_tokens **temp)
 {
 	(*temp)->type = REDIRECT_IN;
 	(*temp)->next->type = INPUT;
-	if (((*temp)->prev && (*temp)->prev->type == CMD) || !(*temp)->prev)
-	{
-		(*temp) = (*temp)->next->next;
-		command(temp);
-	}
-	else
+	if (((*temp)->prev && (*temp)->prev->type == CMD))
 	{
 		(*temp) = (*temp)->next->next;
 		loop_assigning(temp, INPUT);
 	}
-
+	else
+	{
+		(*temp) = (*temp)->next->next;
+		command(temp);
+	}
 }
 
 void	redirect_out(t_tokens **temp)

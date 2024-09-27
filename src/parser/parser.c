@@ -60,13 +60,11 @@ void	create_tokens(t_tokens **tokens, char *input)
 	while (arr[i])
 	{
 		item = new_node(arr[i]);
-		if (!tokens)
-			*tokens = item;
-		else
-			add_back_list(tokens, item);
+		add_back_list(tokens, item);
 		i++;
 	}
 	free(arr);
 	assign_types(tokens);
 	print_tokens(tokens);
+	process_tokens(tokens);
 }

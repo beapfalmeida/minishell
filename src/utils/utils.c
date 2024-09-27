@@ -1,5 +1,21 @@
 #include "minishell.h"
 
+int	count_pipes(t_tokens **tokens)
+{
+	t_tokens *temp;
+	int count;
+
+	temp = *tokens;
+	count = 0;
+	while (temp)
+	{
+		if (temp->type == PIPE)
+			count++;
+		temp = temp->next;
+	}
+	return (count);
+}
+
 t_tokens	*find_last(t_tokens *lst)
 {
 	while (lst)

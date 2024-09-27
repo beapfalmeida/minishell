@@ -28,12 +28,14 @@ void	signals()
 }
 
 /* My main Function - jsobreir- Currently Segfaulting after ctrl-D due to not exiting cleanly */
-int	main(void)
+int	main(int ac, char **av, char **env)
 {
 	t_tokens	*tokens = NULL;
 	char	*input_buffer;
 
-	//init_tokens(tokens);
+	(void)av;
+	(void)ac;
+	tokens->env = env;
 	while (1)
 	{
 		signals();
@@ -43,7 +45,7 @@ int	main(void)
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
 		create_tokens(&tokens, input_buffer);
-		exec_cmd(tokens);
+		//exec_cmd(tokens);
 		free(input_buffer);
 		lstclear(&tokens);
 	}

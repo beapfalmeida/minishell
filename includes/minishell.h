@@ -9,8 +9,11 @@
 # include "./libft/ft_printf/ft_printf.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <errno.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
+
+//token types
 # define OUTPUT 1
 # define CMD 2
 # define PIPE 3
@@ -25,6 +28,7 @@
 typedef struct s_tokens
 {
 	char			*token;
+	char			**env;
 	int				type;
 	struct s_tokens	*next;
 	struct s_tokens	*prev;
@@ -43,6 +47,12 @@ void	command(t_tokens **temp);
 int		is_symbol(char *token);
 void	loop_assigning(t_tokens **temp, int type);
 
+//separate types
+void	process_tokens(t_tokens **tokens);
+char	**join_cmd_args(t_tokens **tokens);
+char	*process_full_path(char *cmd, char **envp);
+char	*get_cmd(char **paths, char *cmd);
+
 // Executor
 
 // Builtins
@@ -56,6 +66,15 @@ t_tokens	*find_last(t_tokens *lst);
 void		add_back_list(t_tokens **lst, t_tokens *new);
 t_tokens	*new_node(char *content);
 void		lstclear(t_tokens **lst);
+int			count_pipes(t_tokens **tokens);
+
+// testing
 void		print_tokens(t_tokens **begin_list);
+
+// Error handling
+void	badfork(int pid, char *strerr);
+void	badpath(char *path, char *cmd);
+void	badopen(int fd, char *file);
+void	free_array(char **arr);
 
 #endif
