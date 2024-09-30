@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 22:02:57 by bpaiva-f          #+#    #+#             */
-/*   Updated: 2024/06/17 16:10:14 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/09/27 13:41:05 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
 
-/// @brief Duplicates a string into a new one identical
+/// @brief Duplicates a string into a new one identical allocating space with malloc(3) for the new string
 char	*ft_strdup(char *src)
 {
 	char	*new;
