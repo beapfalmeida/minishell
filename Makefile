@@ -66,15 +66,11 @@ valgrind:
 
 clean:
 	rm -f $(OBJ)
-	@if [ -d "$(LIBFT_DIR)" ]; then \
-	$(MAKE) -C $(LIBFT_DIR) clean; \
-	fi
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
 	rm -rf $(OBJ_DIR)
-	@if [ -d "$(LIBFT_DIR)" ]; then \
-	$(MAKE) -C $(LIBFT_DIR) fclean; \
-	fi
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all

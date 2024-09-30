@@ -83,7 +83,7 @@ These are the subsystems that make executing commands possible:
 - [ ] **Shell Features**
   - [ ] **Prompt**: Display a shell prompt and await user input.
   - [ ] **Command History**: Implement a command history using `readline()`.
-  - [ ] **Signal Handling**: Properly handle signals (e.g., `ctrl-C`, `ctrl-D`, `ctrl-\`).
+  - [x] **Signal Handling**: Properly handle signals (e.g., `ctrl-C`, `ctrl-D`, `ctrl-\`).
 
 - [ ] **Parser**
   - [ ] Implement a **Lexer** (tokenizer) to separate the input into tokens (commands and arguments).
