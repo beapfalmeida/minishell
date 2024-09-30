@@ -55,34 +55,35 @@ typedef struct s_shell
 }	t_shell;
 
 // Init
-void	init_tokens(t_tokens *token);
+void		init_tokens(t_tokens *token);
 
 // Parser
-void	create_tokens(t_tokens **tokens, char *input);
-void	redirect_in(t_tokens **temp);
-void	redirect_out(t_tokens **temp);
-void	append_out(t_tokens **temp);
-void	append_in(t_tokens **temp);
-void	command(t_tokens **temp);
-int		is_symbol(char *token);
-void	loop_assigning(t_tokens **temp, int type);
+void		create_tokens(t_tokens **tokens, char *input);
+void		redirect_in(t_tokens **temp);
+void		redirect_out(t_tokens **temp);
+void		append_out(t_tokens **temp);
+void		append_in(t_tokens **temp);
+void		command(t_tokens **temp);
+int			is_symbol(char *token);
+void		loop_assigning(t_tokens **temp, int type);
 
 // Create shell struct
-t_shell	process_tokens(t_tokens **tokens);
-int		get_input(t_tokens **tokens);
-int		get_output(t_tokens **tokens);
-void	create_array(t_tokens **tokens, t_shell *args);
+t_shell		process_tokens(t_tokens **tokens);
+int			get_input(t_tokens **tokens);
+int			get_output(t_tokens **tokens);
+void		create_array(t_tokens **tokens, t_shell *args);
 
 // Executor
 
-int	exec_cmd(t_tokens *tokens, t_shell *shell);
+int			exec_cmd(t_tokens *tokens, t_shell *shell);
 
 // Builtins
-int	ft_pwd(void);
-int	ft_cd(t_tokens *tokens);
-int	ft_echo(t_tokens *token);
-int	ft_env(t_shell *shell);
-int	ft_export(t_tokens *token, t_shell *shell);
+int			ft_pwd(void);
+int			ft_cd(t_tokens *tokens);
+int			ft_echo(t_tokens *token);
+int			ft_env(t_shell *shell);
+int			ft_export(t_tokens *token, t_shell *shell);
+int			ft_unset(t_tokens *tokens, t_shell *shell);
 
 // Free
 
@@ -93,10 +94,11 @@ t_tokens	*new_node(char *content);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
 char		**ft_split_adapted(char *s);
+int			arr_len(char **arr);
 
 // testing
 void		print_tokens(t_tokens **begin_list);
 
-void	badopen(int fd, char *file);
+void		badopen(int fd, char *file);
 
 #endif

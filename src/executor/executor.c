@@ -27,6 +27,11 @@ static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 		if ((ft_export(token, shell) != 0))
 			return (1);
 	}
+	else if (ft_strncmp(token->token, "unset", 6) == 0)
+	{
+		if ((ft_unset(token, shell) != 0))
+			return (1);
+	}
 	return (0);
 }
 
