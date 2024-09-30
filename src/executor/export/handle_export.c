@@ -1,53 +1,56 @@
 #include "minishell.h"
 
-char	order_alphabetically(char **envp)
+void	order_alphabetically(char **envp)
 {
 	int		i;
 	int		j;
 	int		lowest_index;
-	int		lowest_diff;
-	char	**ret;
+	char	*temp;
 
 	i = 0;
 	while (envp[i])
 	{
 		lowest_index = i;
-		lowest_diff = ft_strncmp(envp[i], envp[j], ft_strlen(envp[j]));
-		ret = malloc(sizeof(ret) + 1);
+		j = i + 1;
 		while (envp[j])
 		{
-			j = 0;
-			if (ft_strncmp(envp[i], envp[j], ft_strlen(envp[j])) > lowest_diff)
+			if (ft_strncmp(envp[lowest_index], envp[j], ft_strlen(envp[j])) > 0)
 			{
-				lowest_diff = ft_strncmp(envp[i], envp[j], ft_strlen(envp[j]));
 				lowest_index = j;
-				j++;
 			}
+			j++;
 		}
-		ft_strjoin(ret[i], envp[lowest_index]);
+		// Swap the strings
+		if (lowest_index != i)
+		{
+			temp = envp[i];
+			envp[i] = envp[lowest_index];
+			envp[lowest_index] = temp;
+		}
 		i++;
 	}
-	return (0);
 }
+
 
 int	ft_export(t_tokens *token, t_shell *shell)
 {
 	char	**envp;
+	char	**temp_envp;
 	char	**new_envp;
 
 	envp = shell->envp;
-	if (token->next->token && token->next->type == ARG)
+	if (token->next && token->next->type == ARG)
 	{
 		new_envp = malloc(sizeof(envp) + 1);
-		while (*envp)
+		temp_envp = envp;
+		while (*temp_envp)
 		{
-			*new_envp = ft_strdup(*envp);
-			envp++;
+			*new_envp = ft_strdup(*temp_envp);
+			temp_envp++;
 			new_envp++;
 		}
 		order_alphabetically(envp);
-		ft_strjoin(*new_envp, token->token);
-		envp = new_envp;
+		shell->envp = envp;
 	}
 	else
 	{

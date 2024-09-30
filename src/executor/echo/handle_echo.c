@@ -2,10 +2,17 @@
 
 int	ft_echo(t_tokens *token)
 {
-	while (token->token && token->type == ARG)
+	t_tokens	*temp;
+
+	temp = token;
+	temp = temp->next;
+	while (temp->token && temp->type == ARG)
 	{
-		printf("%s", token->token);
+		printf("%s ", temp->token);
+		temp = temp->next;
+		if (temp == NULL)
+			break ;
 	}
-	write(1, "\n", 1);
+	printf("\n");
 	return (0);
 }

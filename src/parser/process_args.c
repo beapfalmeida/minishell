@@ -92,6 +92,6 @@ t_shell	process_tokens(t_tokens **tokens)
 	args.fd_out = get_output(tokens);
 	args.n_pipes = count_pipes(tokens);
 	args.cmds = malloc((args.n_pipes + 1) * sizeof(char **) + 1);
-	create_array(tokens, &args);
+	// create_array(tokens, &args);
 	return (args);
 }

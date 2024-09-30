@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 {
 	if (ft_strncmp(token->token, "pwd", 4) == 0)
@@ -40,6 +39,19 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	i = 0;
 	if (ft_isbuiltin(tokens, shell) == 0)
 		return (0); // Is a builtin
-
+	// else
+	// {
+		// create_array(&tokens, shell);
+		// get_path();
+		// execve()
+	// }
 	return (0);
 }
+
+// char	*get_path()
+// {
+// 	char	*path;
+
+// 	while ()
+// 	return (path);
+// }

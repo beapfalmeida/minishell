@@ -5,11 +5,17 @@ int	ft_cd(t_tokens *tokens)
 	char	*path;
 	char	*arg;
 
-	if (tokens->next->type == ARG)
+	if (tokens->next && tokens->next->type == ARG)
+	{
 		arg = tokens->next->token;
+		path = arg;
+	}
 	else
+	{
 		arg = NULL;
-	if (!ft_strncmp(arg, "~", 1) || !tokens->next->token)
+		path = getenv("HOME");
+	}
+	if (arg && !tokens->next->token) 
 		path = getenv("HOME");
 	if (chdir(path))
 	{

@@ -16,6 +16,9 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 SRC_DIR = src
 EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export
 INIT = init
+PARSER = assign_types parser process_args
+PRINTS = print
+UTILS = utils split
 JSOBREIR = jsobreir-main
 
 # Directory for obj files
@@ -32,11 +35,19 @@ VPATHS =  	src/jsobreir/ \
 			src/executor/echo \
 			src/executor/env \
 			src/executor/export \
-			src/init/
+			src/init/			\
+			src/parser/			\
+			src/prints/			\
+			src/utils/
+
 
 SRC	=	$(addsuffix .c, $(EXECUTOR))\
 		$(addsuffix .c, $(JSOBREIR))\
-		$(addsuffix .c, $(INIT))
+		$(addsuffix .c, $(INIT))	\
+		$(addsuffix .c, $(PARSER))	\
+		$(addsuffix .c, $(PRINTS))	\
+		$(addsuffix .c, $(UTILS))
+
 
 # Convert source files to object files in the obj directory
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
