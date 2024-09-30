@@ -34,6 +34,14 @@ typedef struct s_tokens
 	struct s_tokens	*prev;
 }			t_tokens;
 
+typedef struct s_shell
+{
+	int		fd_in;
+	int		fd_out;
+	char	***cmds;
+	int		n_pipes;
+}	t_shell;
+
 // Init
 void	init_tokens(t_tokens *token);
 
@@ -47,13 +55,14 @@ void	command(t_tokens **temp);
 int		is_symbol(char *token);
 void	loop_assigning(t_tokens **temp, int type);
 
-//separate types
-void	process_tokens(t_tokens **tokens);
-char	**join_cmd_args(t_tokens **tokens);
-char	*process_full_path(char *cmd, char **envp);
-char	*get_cmd(char **paths, char *cmd);
+// Create shell struct
+t_shell	*process_tokens(t_tokens **tokens);
+int		get_input(t_tokens **tokens);
+int		get_output(t_tokens **tokens);
+void	create_array(t_tokens **tokens, t_shell *args);
 
 // Executor
+
 
 // Builtins
 int	ft_pwd(char *cwd);

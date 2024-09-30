@@ -1,10 +1,11 @@
 #include "minishell.h"
 
-char	*handle_input(t_tokens **tokens)
+int	get_input(t_tokens **tokens)
 {
 	t_tokens	*temp;
 	char		infile;
 	int			has_infile;
+	int			fd;
 
 	temp = *tokens;
 	has_infile = 0;
@@ -18,61 +19,21 @@ char	*handle_input(t_tokens **tokens)
 		temp = temp->next;
 	}
 	if (has_infile == 0)
-	{
-		temp = *tokens;
-		while (temp)
-		{
-			if (temp->type == LIMITER)
-				; //TODO: implement heredoc
-		//duvida - o que faco se nao tiver input nenhum? nada ? o execve faz sozinho?
-			temp = temp->next;
-		}
-		return (NULL);
-	}
+		return(0);
 	else
-		return (infile);
-}
-
-char	**join_cmd_args(t_tokens **tokens)
-{
-	t_tokens *temp;
-	int	j;
-	int n;
-	char **cmds;
-	char *temp1;
-
-	temp = *tokens;
-	j = 0;
-	n = count_pipes(tokens);
-	cmds = malloc((n + 1) * sizeof(char *) + 1);
-	//TODO: protecao malloc
-	while (temp)
 	{
-		if (temp->type == CMD)
-			cmds[j] = strdup(temp->token);
-		else if (temp->type == ARG)
-		{
-			temp1 = cmds[j];
-			cmds[j] = ft_strjoin(cmds[j], temp->token);
-			free(temp1);
-		}
-		else if (temp->type == PIPE)
-			j++;
-		temp = temp->next;
+		fd = open(infile, O_RDONLY);
+		badopen(fd, infile);
+		return (fd);
 	}
-	cmds[j] = 0;
-	return (cmds);
 }
 
-void	process_tokens(t_tokens **tokens)
+int	get_output(t_tokens **tokens)
 {
-	t_tokens *temp;
-	char	*infile;
-	char	*outfile;
-	char	**cmds;
+	t_tokens	*temp;
+	char		*outfile;
+	int			fd;
 
-	infile = handle_input(tokens);
-	cmds = join_cmd_args(tokens);
 	temp = *tokens;
 	while (temp)
 	{
@@ -83,11 +44,44 @@ void	process_tokens(t_tokens **tokens)
 		}
 		temp = temp->next;
 	}
-	if (count_pipes(tokens)) 
-		;//pipe_handling(); //TODO: pipes handling
-	else
+	fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	badopen(fd, outfile);
+	return (fd);
+}
+
+void	create_array(t_tokens **tokens, t_shell *args)
+{
+	t_tokens *temp;
+	int	j;
+	int i;
+
+	temp = *tokens;
+	j = 0;
+	i = 0;
+	while (temp)
 	{
-		process_full_path(cmds[0], (*tokens)->env);
-		//exec_cmd(); //TODO: Check if is builtin or execve
+		if (temp->type == CMD || temp->type == ARG)
+		{
+			args->cmds[j][i] = strdup(temp->token);
+			i++;
+		}
+		else if (temp->type == PIPE)
+		{
+			j++;
+			i = 0;
+		}
+		temp = temp->next;
 	}
+}
+
+t_shell	*process_tokens(t_tokens **tokens)
+{
+	t_shell args;
+
+	args.fd_in = get_input(tokens);
+	args.fd_out = get_output(tokens);
+	args.n_pipes = count_pipes(tokens);
+	args.cmds = malloc((args.n_pipes + 1) * sizeof(char **) + 1);
+	create_array(tokens, &args);
+	return (&args);
 }

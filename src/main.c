@@ -45,7 +45,7 @@ int	main(int ac, char **av, char **env)
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
 		create_tokens(&tokens, input_buffer);
-		//exec_cmd(tokens);
+		exec_cmd(tokens);
 		free(input_buffer);
 		lstclear(&tokens);
 	}

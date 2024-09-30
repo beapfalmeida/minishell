@@ -56,7 +56,6 @@ void	create_tokens(t_tokens **tokens, char *input)
 			free(*arr);
 		return ;
 	}
-	// create tokens list
 	while (arr[i])
 	{
 		item = new_node(arr[i]);
@@ -65,6 +64,5 @@ void	create_tokens(t_tokens **tokens, char *input)
 	}
 	free(arr);
 	assign_types(tokens);
-	print_tokens(tokens);
-	process_tokens(tokens);
+	// process_tokens(tokens);
 }
