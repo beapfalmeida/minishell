@@ -1,14 +1,23 @@
 #include "minishell.h"
 
+void	badopen(int fd, char *file)
+{
+	if (fd == -1)
+	{
+		printf("No such file or directory: %s\n", file);
+		exit(1); // implement error code
+	}
+}
 int	get_input(t_tokens **tokens)
 {
 	t_tokens	*temp;
-	char		infile;
+	char		*infile;
 	int			has_infile;
 	int			fd;
 
 	temp = *tokens;
 	has_infile = 0;
+	infile = NULL;
 	while (temp)
 	{
 		if (temp->type == INPUT)
@@ -34,6 +43,7 @@ int	get_output(t_tokens **tokens)
 	char		*outfile;
 	int			fd;
 
+	outfile = NULL;
 	temp = *tokens;
 	while (temp)
 	{
@@ -74,7 +84,7 @@ void	create_array(t_tokens **tokens, t_shell *args)
 	}
 }
 
-t_shell	*process_tokens(t_tokens **tokens)
+t_shell	process_tokens(t_tokens **tokens)
 {
 	t_shell args;
 
@@ -83,5 +93,5 @@ t_shell	*process_tokens(t_tokens **tokens)
 	args.n_pipes = count_pipes(tokens);
 	args.cmds = malloc((args.n_pipes + 1) * sizeof(char **) + 1);
 	create_array(tokens, &args);
-	return (&args);
+	return (args);
 }

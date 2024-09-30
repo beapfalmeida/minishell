@@ -35,7 +35,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)av;
 	(void)ac;
-	tokens->env = env;
+	(void)env;
 	while (1)
 	{
 		signals();

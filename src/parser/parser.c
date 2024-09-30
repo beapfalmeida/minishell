@@ -49,7 +49,7 @@ void	create_tokens(t_tokens **tokens, char *input)
 	t_tokens	*item;
 
 	i = 0;
-	arr = ft_split(input, ' ');
+	arr = ft_split(input , ' ');
 	if (!arr || !*arr)
 	{
 		if (*arr)

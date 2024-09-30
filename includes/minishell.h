@@ -28,7 +28,6 @@
 typedef struct s_tokens
 {
 	char			*token;
-	char			**env;
 	int				type;
 	struct s_tokens	*next;
 	struct s_tokens	*prev;
@@ -56,7 +55,7 @@ int		is_symbol(char *token);
 void	loop_assigning(t_tokens **temp, int type);
 
 // Create shell struct
-t_shell	*process_tokens(t_tokens **tokens);
+t_shell	process_tokens(t_tokens **tokens);
 int		get_input(t_tokens **tokens);
 int		get_output(t_tokens **tokens);
 void	create_array(t_tokens **tokens, t_shell *args);
@@ -76,14 +75,11 @@ void		add_back_list(t_tokens **lst, t_tokens *new);
 t_tokens	*new_node(char *content);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
+char		**ft_split_adapted(char *s);
 
 // testing
 void		print_tokens(t_tokens **begin_list);
 
-// Error handling
-void	badfork(int pid, char *strerr);
-void	badpath(char *path, char *cmd);
 void	badopen(int fd, char *file);
-void	free_array(char **arr);
 
 #endif
