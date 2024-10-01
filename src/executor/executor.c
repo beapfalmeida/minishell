@@ -1,15 +1,27 @@
 #include "minishell.h"
 
+void	free_paths(char **paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i] != NULL)
+		i++;
+	while (i--)
+		free(paths[i]);
+	free(paths);
+}
+
 static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 {
 	if (ft_strncmp(token->token, "pwd", 4) == 0)
 	{
-		if (ft_pwd() != 0)
+		if (ft_pwd(token) != 0)
 			return (1);
 	}
 	else if (ft_strncmp(token->token, "cd", 2) == 0)
 	{
-		if ((ft_cd(token) != 0))
+		if ((ft_cd(token, shell) != 0))
 			return (1);
 	}
 	else if (ft_strncmp(token->token, "echo", 4) == 0)
@@ -32,6 +44,8 @@ static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 		if ((ft_unset(token, shell) != 0))
 			return (1);
 	}
+	else
+		return (1);
 	return (0);
 }
 
@@ -39,24 +53,93 @@ static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 /// @return 
 int	exec_cmd(t_tokens *tokens, t_shell *shell)
 {
-	int	i;
+	int		pid;
+	char	*path;
+	char	**cmds;
 
-	i = 0;
 	if (ft_isbuiltin(tokens, shell) == 0)
 		return (0); // Is a builtin
-	// else
-	// {
-		// create_array(&tokens, shell);
-		// get_path();
-		// execve()
-	// }
+	else
+	{
+		pid = fork();
+		if (pid < 0)
+		{
+			// TODO error when badfork
+			return (1);
+		}
+		if (pid == 0)
+		{
+			cmds = put_cmds(tokens);
+			if (!cmds)
+				return (1);
+			path = get_path(tokens->token, shell->envp);
+			if (!path)
+				return (free_array(cmds, arr_len(cmds)), 1);
+			if (execve(path, cmds, shell->envp) == -1)
+			{
+				// TODO return error and clean exit
+				return (1);
+			}
+		}
+		else
+			wait(NULL);
+	}
 	return (0);
 }
 
-// char	*get_path()
-// {
-// 	char	*path;
+char	*get_path(char	*cmd, char **envp)
+{
+	char	**paths;
+	int		i;
 
-// 	while ()
-// 	return (path);
-// }
+	while (*envp++)
+		if (ft_strncmp(*envp, "PATH", 4) == 0)
+			break ;
+	paths = ft_split(*envp + 5, ':');
+	if (!paths)
+		exit(EXIT_FAILURE);
+	i = 0;
+	while (paths[i++])
+	{
+		paths[i] = ft_strjoin(paths[i], "/");
+		paths[i] = ft_strjoin(paths[i], cmd);
+		if (!paths[i])
+		{
+			free_paths(paths);
+			return (NULL);
+		}
+		if (access(paths[i], R_OK) == 0)
+			return (paths[i]);
+	}
+	free(paths);
+	return (NULL);
+}
+
+char	**put_cmds(t_tokens	*token)
+{
+	char		**ret;
+	t_tokens	*temp;
+	int			i;
+
+	i = 0;
+	temp = token;
+	ret = malloc(sizeof(char *) * (count_args(token) + 1));
+	if (!ret)
+	{
+		// TODO:clean_exit
+		return (NULL);
+	}
+	while (temp && (temp->type == CMD || temp->type == ARG))
+	{
+		ret[i] = ft_strdup(temp->token);
+		if (!ret[i])
+		{
+			free_array(ret, i);
+			return (NULL);
+		}
+		i++;
+		temp = temp->next;
+	}
+	ret[i] = NULL;
+	return (ret);
+}

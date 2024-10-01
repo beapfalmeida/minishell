@@ -40,17 +40,22 @@ int	ft_export(t_tokens *token, t_shell *shell)
 	envp = shell->envp;
 	if (token->next && token->next->type == ARG)
 	{
-		new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
-		temp_envp = envp;
-		i = 0;
-		while (temp_envp[i])
+		while (token->next && token->next->type == ARG)
 		{
-			new_envp[i] = ft_strdup(temp_envp[i]);
-			i++;
+			envp = shell->envp;
+			new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
+			temp_envp = envp;
+			i = 0;
+			while (temp_envp[i])
+			{
+				new_envp[i] = ft_strdup(temp_envp[i]);
+				i++;
+			}
+			new_envp[i] = ft_strdup(token->next->token);
+			order_alphabetically(new_envp);
+			shell->envp = new_envp;
+			token = token->next;
 		}
-		new_envp[i] = ft_strdup(token->next->token);
-		order_alphabetically(new_envp);
-		shell->envp = new_envp;
 	}
 	else
 	{

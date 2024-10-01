@@ -72,7 +72,7 @@ $(NAME): $(OBJ) $(LIBFT_A)
 $(LIBFT_A):
 	$(MAKE) -C $(LIBFT_DIR)
 
-valgrind:
+valgrind: all
 	valgrind $(VALFLAGS) ./minishell
 
 clean:

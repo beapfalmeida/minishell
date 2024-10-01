@@ -10,6 +10,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
@@ -52,6 +54,7 @@ typedef struct s_shell
 	int		fd_out;
 	char	***cmds;
 	int		n_pipes;
+	char	*last_path;
 }	t_shell;
 
 // Init
@@ -76,10 +79,12 @@ void		create_array(t_tokens **tokens, t_shell *args);
 // Executor
 
 int			exec_cmd(t_tokens *tokens, t_shell *shell);
+char		**put_cmds(t_tokens	*token);
+char		*get_path(char	*cmd, char **envp);
 
 // Builtins
-int			ft_pwd(void);
-int			ft_cd(t_tokens *tokens);
+int			ft_pwd(t_tokens *token);
+int			ft_cd(t_tokens *tokens, t_shell *shell);
 int			ft_echo(t_tokens *token);
 int			ft_env(t_shell *shell);
 int			ft_export(t_tokens *token, t_shell *shell);
@@ -89,12 +94,14 @@ int			ft_unset(t_tokens *tokens, t_shell *shell);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);
-void		add_back_list(t_tokens **lst, t_tokens *new);
 t_tokens	*new_node(char *content);
+void		add_back_list(t_tokens **lst, t_tokens *new);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
 char		**ft_split_adapted(char *s);
 int			arr_len(char **arr);
+int			count_args(t_tokens *token);
+int			free_array(char	**arr, int	len);
 
 // testing
 void		print_tokens(t_tokens **begin_list);

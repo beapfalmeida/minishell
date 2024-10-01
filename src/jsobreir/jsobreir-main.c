@@ -41,6 +41,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		signals();
+		shell.last_path = ft_strdup(getenv("PWD"));
 		input_buffer = readline("minishell: ");
 		if (ft_strnstr(input_buffer, "\n", ft_strlen(input_buffer)))
 			write(1, "minishell: ", 11);

@@ -11,3 +11,30 @@ int	arr_len(char **arr)
 	}
 	return (i);
 }
+
+int	count_args(t_tokens *token)
+{
+	t_tokens	*temp;
+	int			count;
+
+	temp = token;
+	temp = temp->next;
+	count = 1;
+	while (temp && temp->type == ARG)
+	{
+		count++;
+		temp = temp->next;
+	}
+	return (count);
+}
+
+int	free_array(char	**arr, int	len)
+{
+	while (arr[len])
+	{
+		free(arr[len]);
+		len--;
+	}
+	free(arr);
+	return (0);
+}
