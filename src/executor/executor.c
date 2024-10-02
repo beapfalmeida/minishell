@@ -65,10 +65,6 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 
 	if (ft_isbuiltin(tokens, shell) == 0)
 		return (0); // Is a builtin
-	if (shell->n_pipes != 0)
-	{
-		pipex(tokens, shell);
-	}
 	else
 	{
 		pid = fork();

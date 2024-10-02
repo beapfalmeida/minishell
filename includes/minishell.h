@@ -27,18 +27,6 @@
 # define LIMITER 9
 # define ARG 10
 
-//token types
-# define OUTPUT 1
-# define CMD 2
-# define PIPE 3
-# define REDIRECT_IN 4
-# define REDIRECT_OUT 5
-# define INPUT 6
-# define APPEND_IN 7
-# define APPEND_OUT 8
-# define LIMITER 9
-# define ARG 10
-
 typedef struct s_tokens
 {
 	char			*token;

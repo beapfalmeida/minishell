@@ -64,62 +64,62 @@ char	**put_cmds(t_tokens	*token)
 	return (ret);
 }
 
-static int	do_pipe(t_tokens *tokens, t_shell *shell, int	i)
-{
-	int	pid;
-	int	fd[2];
+// static int	do_pipe(t_tokens *tokens, t_shell *shell, int	i)
+// {
+// 	int	pid;
+// 	int	fd[2];
 
-	pid = fork();
-	if (pipe(fd) == -1)
-	{
-		// TODO badpipe
-		return (1);
-	}
-	if (pid < 0)
-	{
-		// TODO badfork
-		return (1);
-	}
-	if (pid == 0)
-	{
-		if (i == 0)
-		{
-			dup2(shell->fd_in, STDIN_FILENO);
-			close(fd[0]);
-			dup2(fd[1], STDOUT_FILENO);
-		}
-		else if (i == count_args(tokens) - 1)
-		{
-			dup2(fd[0], STDIN_FILENO);
-			close(fd[1]);
-			dup2(shell->fd_out, STDOUT_FILENO);
-		}
-		else
-		{
-			dup2(fd[0], STDIN_FILENO);
-			dup2(fd[1], STDOUT_FILENO);
-		}
-		if (execve(get_path(shell->cmds[i][0], shell->envp), 
-			shell->cmds[i], shell->envp) == -1)
-		{
-			// TODO error command doesnt exist
-			return (1);	
-		}
-	}
-}
+// 	pid = fork();
+// 	if (pipe(fd) == -1)
+// 	{
+// 		// TODO badpipe
+// 		return (1);
+// 	}
+// 	if (pid < 0)
+// 	{
+// 		// TODO badfork
+// 		return (1);
+// 	}
+// 	if (pid == 0)
+// 	{
+// 		if (i == 0)
+// 		{
+// 			dup2(shell->fd_in, STDIN_FILENO);
+// 			close(fd[0]);
+// 			dup2(fd[1], STDOUT_FILENO);
+// 		}
+// 		else if (i == count_args(tokens) - 1)
+// 		{
+// 			dup2(fd[0], STDIN_FILENO);
+// 			close(fd[1]);
+// 			dup2(shell->fd_out, STDOUT_FILENO);
+// 		}
+// 		else
+// 		{
+// 			dup2(fd[0], STDIN_FILENO);
+// 			dup2(fd[1], STDOUT_FILENO);
+// 		}
+// 		if (execve(get_path(shell->cmds[i][0], shell->envp), 
+// 			shell->cmds[i], shell->envp) == -1)
+// 		{
+// 			// TODO error command doesnt exist
+// 			return (1);	
+// 		}
+// 	}
+// }
 
-int	pipex(t_tokens *tokens, t_shell *shell)
-{
-	char	**cmds;
-	int		fd;
-	int		i;
+// int	pipex(t_tokens *tokens, t_shell *shell)
+// {
+// 	char	**cmds;
+// 	int		fd;
+// 	int		i;
 
-	cmds = shell->cmds;
-	i = 0;
-	while (*cmds)
-	{
-		do_pipe(tokens, shell, i);
-		cmds++;
-		i++;
-	}
-}
+// 	cmds = shell->cmds;
+// 	i = 0;
+// 	while (*cmds)
+// 	{
+// 		do_pipe(tokens, shell, i);
+// 		cmds++;
+// 		i++;
+// 	}
+// }

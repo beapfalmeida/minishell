@@ -19,7 +19,6 @@ INIT = init
 PARSER = assign_types parser process_args
 PRINTS = print
 UTILS = utils utils2 split cmds
-JSOBREIR = jsobreir-main
 
 # Directory for obj files
 OBJ_DIR = obj
