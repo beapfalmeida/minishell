@@ -94,6 +94,7 @@ void	find_expander(t_tokens	*tokens, t_shell *shell)
 	char		*token;
 	int			i;
 
+	// If $$ returns pid
 	temp = tokens;
 	while (temp && temp->token)
 	{
