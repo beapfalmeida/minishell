@@ -50,7 +50,8 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	char	*path;
 	char	**cmds;
 
-	if (ft_isbuiltin(tokens, shell) == 0)
+	find_expander(tokens, shell);
+	if (ft_isbuiltin(tokens, shell))
 		return (0); // Is a builtin
 	else
 	{
