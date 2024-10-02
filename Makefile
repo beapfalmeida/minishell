@@ -18,7 +18,7 @@ EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export
 INIT = init
 PARSER = assign_types parser process_args
 PRINTS = print
-UTILS = utils utils2 split
+UTILS = utils utils2 split cmds
 JSOBREIR = jsobreir-main
 
 # Directory for obj files

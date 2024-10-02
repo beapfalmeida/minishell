@@ -81,6 +81,7 @@ void		create_array(t_tokens **tokens, t_shell *args);
 int			exec_cmd(t_tokens *tokens, t_shell *shell);
 char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
+int			do_pipe(t_tokens *tokens, t_shell *shell);
 
 // Builtins
 int			ft_pwd(t_tokens *token);

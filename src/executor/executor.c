@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+/// @brief 
+/// @param paths 
 void	free_paths(char **paths)
 {
 	int	i;
@@ -12,6 +14,10 @@ void	free_paths(char **paths)
 	free(paths);
 }
 
+/// @brief 
+/// @param token 
+/// @param shell 
+/// @return 
 static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 {
 	if (ft_strncmp(token->token, "pwd", 4) == 0)
@@ -59,6 +65,10 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 
 	if (ft_isbuiltin(tokens, shell) == 0)
 		return (0); // Is a builtin
+	if (shell->n_pipes != 0)
+	{
+		pipex(tokens, shell);
+	}
 	else
 	{
 		pid = fork();
@@ -85,61 +95,4 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			wait(NULL);
 	}
 	return (0);
-}
-
-char	*get_path(char	*cmd, char **envp)
-{
-	char	**paths;
-	int		i;
-
-	while (*envp++)
-		if (ft_strncmp(*envp, "PATH", 4) == 0)
-			break ;
-	paths = ft_split(*envp + 5, ':');
-	if (!paths)
-		exit(EXIT_FAILURE);
-	i = 0;
-	while (paths[i++])
-	{
-		paths[i] = ft_strjoin(paths[i], "/");
-		paths[i] = ft_strjoin(paths[i], cmd);
-		if (!paths[i])
-		{
-			free_paths(paths);
-			return (NULL);
-		}
-		if (access(paths[i], R_OK) == 0)
-			return (paths[i]);
-	}
-	free(paths);
-	return (NULL);
-}
-
-char	**put_cmds(t_tokens	*token)
-{
-	char		**ret;
-	t_tokens	*temp;
-	int			i;
-
-	i = 0;
-	temp = token;
-	ret = malloc(sizeof(char *) * (count_args(token) + 1));
-	if (!ret)
-	{
-		// TODO:clean_exit
-		return (NULL);
-	}
-	while (temp && (temp->type == CMD || temp->type == ARG))
-	{
-		ret[i] = ft_strdup(temp->token);
-		if (!ret[i])
-		{
-			free_array(ret, i);
-			return (NULL);
-		}
-		i++;
-		temp = temp->next;
-	}
-	ret[i] = NULL;
-	return (ret);
 }

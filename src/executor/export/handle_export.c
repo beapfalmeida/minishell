@@ -52,6 +52,7 @@ int	ft_export(t_tokens *token, t_shell *shell)
 				i++;
 			}
 			new_envp[i] = ft_strdup(token->next->token);
+			new_envp[i + 1] = NULL;
 			order_alphabetically(new_envp);
 			shell->envp = new_envp;
 			token = token->next;
@@ -93,7 +94,8 @@ int	ft_unset(t_tokens *tokens, t_shell *shell)
 				found = 1;
 			}
 				envp++;
-		}		
+		}
+		*new_envp = NULL;
 		if (found == 0)
 			free(*new_envp);
 		shell->envp = tmp;
