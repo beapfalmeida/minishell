@@ -27,7 +27,6 @@ void	signals()
 	signal(SIGQUIT, handle_sigquit);
 }
 
-/* My main Function - jsobreir- Currently Segfaulting after ctrl-D due to not exiting cleanly */
 int	main(int argc, char **argv, char **envp)
 {
 	t_tokens	*tokens = NULL;

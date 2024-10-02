@@ -13,7 +13,7 @@ LIBFT_DIR = includes/libft/
 LIBFT_A = $(LIBFT_DIR)/libft.a
 
 # Directories containing source files
-SRC_DIR = src
+SRC_DIR = main
 EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export
 INIT = init
 PARSER = assign_types parser process_args
@@ -27,25 +27,26 @@ OBJ_DIR = obj
 # ------------------------------ Files ------------------------------ #
 # ------------------------------------------------------------------- #
 
-VPATHS =  	src/jsobreir/ \
-			src/executor/ \
-			src/executor/pwd \
-			src/executor/cd \
-			src/executor/echo \
-			src/executor/env \
+VPATHS =	src/				\
+			src/executor/ 		\
+			src/executor/pwd 	\
+			src/executor/cd 	\
+			src/executor/echo 	\
+			src/executor/env 	\
 			src/executor/export \
 			src/init/			\
 			src/parser/			\
 			src/prints/			\
-			src/utils/
+			src/utils/			\
 
 
-SRC	=	$(addsuffix .c, $(EXECUTOR))\
-		$(addsuffix .c, $(JSOBREIR))\
+SRC	=	$(addsuffix .c, $(SRC_DIR))	\
+		$(addsuffix .c, $(EXECUTOR))\
 		$(addsuffix .c, $(INIT))	\
 		$(addsuffix .c, $(PARSER))	\
 		$(addsuffix .c, $(PRINTS))	\
-		$(addsuffix .c, $(UTILS))
+		$(addsuffix .c, $(UTILS))	\
+
 
 
 # Convert source files to object files in the obj directory

@@ -1,6 +1,20 @@
 #include "minishell.h"
 
 /// @brief 
+/// @param paths 
+void	free_paths(char **paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i] != NULL)
+		i++;
+	while (i--)
+		free(paths[i]);
+	free(paths);
+}
+
+/// @brief 
 /// @param cmd 
 /// @param envp 
 /// @return 
