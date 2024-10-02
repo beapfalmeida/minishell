@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+static int	check_export(t_tokens *tokens)
+{
+	if (tokens->next && tokens->next->next && tokens->next->next->type == ARG)
+	{
+		// TODO return bad assignment when two args with export
+		return (1);
+	}
+	else if (ft_strncmp(tokens->token, "export", 7) != 0)
+	{
+		// TODO command not found
+		return (1);
+	}
+	return (0);
+}
+
 void	order_alphabetically(char **envp)
 {
 	int		i;
@@ -37,6 +52,8 @@ int	ft_export(t_tokens *token, t_shell *shell)
 	char	**new_envp;
 	int		i;
 
+	if (check_export(token) != 0)
+		return (1);
 	envp = shell->envp;
 	if (token->next && token->next->type == ARG)
 	{
@@ -70,36 +87,54 @@ int	ft_export(t_tokens *token, t_shell *shell)
 	return (0);
 }
 
-int	ft_unset(t_tokens *tokens, t_shell *shell)
+void	find_expander(t_tokens	*tokens, t_shell *shell)
 {
-	char	**envp;
-	char	*token;
-	char	**new_envp;
-	char	**tmp;
-	int		found;
+	t_tokens	*temp;
+	char		*new_token;
+	char		*token;
+	int			i;
 
-	token = tokens->next->token;
-	envp = shell->envp;
-	found = 0;
-	if (tokens->next)
+	temp = tokens;
+	while (temp && temp->token)
 	{
-		new_envp = malloc(sizeof(char *) * (arr_len(envp) + 1));
-		tmp = new_envp;
-		while (*envp)
+		token = temp->token;
+		i = 0;
+		while (token[i])
 		{
-			if (ft_strncmp(*envp, token, ft_strlen(token)) != 0)
+			if (token[i] == '$')
 			{
-				*new_envp = *envp;
-				new_envp++;
-				found = 1;
+				i++;
+				if (ft_isalpha(token[i]))
+				{
+					new_token = handle_expander(shell, &token[i]);
+					temp->token = new_token;
+				}
 			}
-				envp++;
+			i++;
 		}
-		*new_envp = NULL;
-		if (found == 0)
-			free(*new_envp);
-		shell->envp = tmp;
+		temp = temp->next;
 	}
-	return (0);
 }
 
+char	*handle_expander(t_shell *shell, char *var)
+{
+	char	**envp;
+	char	*trim;
+	char	*new_token;
+
+	envp = shell->envp;
+	new_token = NULL;
+	while (*envp)
+	{
+		if (ft_strncmp(*envp, var, ft_strlen(var)) == 0)
+		{
+			trim = ft_strjoin(var, "=");
+			new_token = ft_strtrim(*envp, trim);
+			new_token = ft_strtrim(new_token, "\"");
+			new_token = ft_strtrim(new_token, "\'");
+			break ;
+		}
+		envp++;
+	}
+	return (new_token);
+}

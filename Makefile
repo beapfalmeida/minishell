@@ -14,7 +14,7 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 
 # Directories containing source files
 SRC_DIR = main
-EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export
+EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export handle_unset
 INIT = init
 PARSER = assign_types parser process_args
 PRINTS = print
@@ -34,6 +34,7 @@ VPATHS =	src/				\
 			src/executor/echo 	\
 			src/executor/env 	\
 			src/executor/export \
+			src/executor/unset \
 			src/init/			\
 			src/parser/			\
 			src/prints/			\

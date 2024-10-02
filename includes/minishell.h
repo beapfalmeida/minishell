@@ -78,6 +78,8 @@ int			ft_echo(t_tokens *token);
 int			ft_env(t_shell *shell);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
+void		find_expander(t_tokens	*tokens, t_shell *shell);
+char		*handle_expander(t_shell *shell, char *var);
 
 // Free
 
