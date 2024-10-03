@@ -38,7 +38,7 @@ static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 			return (1);
 	}
 	else
-		return (1);
+		return (0);
 	return (0);
 }
 
@@ -50,7 +50,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	char	*path;
 	char	**cmds;
 
-	find_expander(tokens, shell);
+	//find_expander(tokens, shell);
 	if (ft_isbuiltin(tokens, shell))
 		return (0); // Is a builtin
 	else

@@ -52,8 +52,8 @@ void	create_tokens(t_tokens **tokens, char *input)
 	arr = ft_split_adapted(input);
 	if (!arr || !*arr)
 	{
-		if (*arr)
-			free(*arr);
+		// if (*arr)
+		// 	free(*arr);
 		return ;
 	}
 	while (arr[i])

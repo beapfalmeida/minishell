@@ -59,7 +59,7 @@ int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
 
 // Create shell struct
-t_shell		process_tokens(t_tokens **tokens);
+void		process_tokens(t_tokens **tokens, t_shell *args, char **envp);
 int			get_input(t_tokens **tokens);
 int			get_output(t_tokens **tokens);
 void		create_array(t_tokens **tokens, t_shell *args);
@@ -78,8 +78,8 @@ int			ft_echo(t_tokens *token);
 int			ft_env(t_shell *shell);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
-void		find_expander(t_tokens	*tokens, t_shell *shell);
-char		*handle_expander(t_shell *shell, char *var);
+void		find_expander(t_tokens	*tokens, char **envp);
+char		*handle_expander(char **envp, char *var);
 
 // Free
 

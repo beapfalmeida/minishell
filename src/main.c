@@ -35,7 +35,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	shell.envp = envp;
+	//shell.envp = envp;
 	// init_tokens(tokens);
 	while (1)
 	{
@@ -49,10 +49,11 @@ int	main(int argc, char **argv, char **envp)
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
 		create_tokens(&tokens, input_buffer);
+		//find_expander(tokens, envp);
+		process_tokens(&tokens, &shell, envp);
 		exec_cmd(tokens, &shell);
-		// free(input_buffer);
 		lstclear(&tokens);
-		
+		//TODO: dar free a shell
 	}
 	free(input_buffer);
 }

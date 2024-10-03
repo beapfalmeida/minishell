@@ -87,7 +87,7 @@ int	ft_export(t_tokens *token, t_shell *shell)
 	return (0);
 }
 
-void	find_expander(t_tokens	*tokens, t_shell *shell)
+void	find_expander(t_tokens	*tokens, char **envp)
 {
 	t_tokens	*temp;
 	char		*new_token;
@@ -107,7 +107,7 @@ void	find_expander(t_tokens	*tokens, t_shell *shell)
 				i++;
 				if (ft_isalpha(token[i]))
 				{
-					new_token = handle_expander(shell, &token[i]);
+					new_token = handle_expander(envp, &token[i]);
 					temp->token = new_token;
 				}
 			}
@@ -117,13 +117,11 @@ void	find_expander(t_tokens	*tokens, t_shell *shell)
 	}
 }
 
-char	*handle_expander(t_shell *shell, char *var)
+char	*handle_expander(char **envp, char *var)
 {
-	char	**envp;
 	char	*trim;
 	char	*new_token;
 
-	envp = shell->envp;
 	new_token = NULL;
 	while (*envp)
 	{
