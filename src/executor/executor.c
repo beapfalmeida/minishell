@@ -5,7 +5,7 @@
 /// @param token 
 /// @param shell 
 /// @return 
-static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
+int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 {
 	if (ft_strncmp(token->token, "pwd", 4) == 0)
 	{

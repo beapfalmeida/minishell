@@ -24,7 +24,7 @@ static void	assign_types(t_tokens **tokens)
 	{
 		if (!ft_strncmp(temp->token, "|", ft_strlen(temp->token)))
 		{
-			temp->type = PIPE; // sera so isto??
+			temp->type = PIPE;
 			temp = temp->next;
 		}
 		else if (!ft_strncmp(temp->token, ">", ft_strlen(temp->token)))
@@ -64,6 +64,4 @@ void	create_tokens(t_tokens **tokens, char *input)
 	}
 	free(arr);
 	assign_types(tokens);
-	print_tokens(tokens);
-	// process_tokens(tokens);
 }

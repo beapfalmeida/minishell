@@ -45,7 +45,6 @@ static int	countwords(char *s)
 			}
 		}
 	}
-	printf("count=%d", count);
 	return (count);
 }
 
@@ -134,7 +133,7 @@ void	split_words(char **arr, char *s, int j, int k)
 	}
 	arr[j] = 0;
 }
-//TODO: adicionar cena das aspas
+
 char	**ft_split_adapted(char *s)
 {
 	int		n;

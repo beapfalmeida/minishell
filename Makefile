@@ -19,6 +19,7 @@ INIT = init
 PARSER = assign_types parser process_args
 PRINTS = print
 UTILS = utils utils2 split cmds
+PIPEX = pipex
 
 # Directory for obj files
 OBJ_DIR = obj
@@ -39,7 +40,7 @@ VPATHS =	src/				\
 			src/parser/			\
 			src/prints/			\
 			src/utils/			\
-
+			src/pipex/			\
 
 SRC	=	$(addsuffix .c, $(SRC_DIR))	\
 		$(addsuffix .c, $(EXECUTOR))\
@@ -47,7 +48,7 @@ SRC	=	$(addsuffix .c, $(SRC_DIR))	\
 		$(addsuffix .c, $(PARSER))	\
 		$(addsuffix .c, $(PRINTS))	\
 		$(addsuffix .c, $(UTILS))	\
-
+		$(addsuffix .c, $(PIPEX))	\
 
 
 # Convert source files to object files in the obj directory
