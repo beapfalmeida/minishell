@@ -94,6 +94,7 @@ int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			free_array(char	**arr, int	len);
 void		free_paths(char **paths);
+int			find_quote(char *str);
 
 // testing
 void		print_tokens(t_tokens **begin_list);

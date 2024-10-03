@@ -38,3 +38,12 @@ int	free_array(char	**arr, int	len)
 	free(arr);
 	return (0);
 }
+
+int	find_quote(char *str)
+{
+	if (*str == '\"')
+		return (1);
+	else if (*str == '\'')
+		return (2);
+	return (0);
+}

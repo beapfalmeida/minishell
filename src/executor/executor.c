@@ -38,7 +38,7 @@ static int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 			return (1);
 	}
 	else
-		return (1);
+		return (0);
 	return (0);
 }
 
@@ -50,7 +50,10 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	char	*path;
 	char	**cmds;
 
-	find_expander(tokens, shell);
+	if (shell->fd_in != STDIN_FILENO)
+		dup2(shell->fd_in, STDIN_FILENO);
+	if (shell->fd_out != STDOUT_FILENO)
+		dup2(shell->fd_out, STDOUT_FILENO);
 	if (ft_isbuiltin(tokens, shell))
 		return (0); // Is a builtin
 	else
@@ -67,16 +70,21 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			if (!cmds)
 				return (1);
 			path = get_path(tokens->token, shell->envp);
-			if (!path)
-				return (free_array(cmds, arr_len(cmds)), 1);
+			// if (!path)
+			// 	return (free_array(cmds, arr_len(cmds)), 1);
 			if (execve(path, cmds, shell->envp) == -1)
 			{
+				// perror("error");
 				// TODO return error and clean exit
-				return (1);
+				// return (1);
 			}
 		}
 		else
 			wait(NULL);
 	}
+	if (shell->fd_in != STDIN_FILENO)
+		close(shell->fd_in);
+	if (shell->fd_out != STDOUT_FILENO)
+		close(shell->fd_out);
 	return (0);
 }

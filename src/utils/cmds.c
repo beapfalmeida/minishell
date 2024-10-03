@@ -30,7 +30,7 @@ char	*get_path(char	*cmd, char **envp)
 	if (!paths)
 		exit(EXIT_FAILURE);
 	i = 0;
-	while (paths[i++])
+	while (paths[i])
 	{
 		paths[i] = ft_strjoin(paths[i], "/");
 		paths[i] = ft_strjoin(paths[i], cmd);
@@ -41,6 +41,11 @@ char	*get_path(char	*cmd, char **envp)
 		}
 		if (access(paths[i], R_OK) == 0)
 			return (paths[i]);
+		i++;
+	}
+	if (access(paths[i], R_OK) != 0)
+	{
+		// printf error
 	}
 	free(paths);
 	return (NULL);
