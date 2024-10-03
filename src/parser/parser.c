@@ -49,7 +49,7 @@ void	create_tokens(t_tokens **tokens, char *input)
 	t_tokens	*item;
 
 	i = 0;
-	arr = ft_split(input , ' ');
+	arr = ft_split_adapted(input);
 	if (!arr || !*arr)
 	{
 		if (*arr)
@@ -64,5 +64,6 @@ void	create_tokens(t_tokens **tokens, char *input)
 	}
 	free(arr);
 	assign_types(tokens);
+	print_tokens(tokens);
 	// process_tokens(tokens);
 }

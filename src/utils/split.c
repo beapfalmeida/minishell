@@ -1,6 +1,22 @@
 #include "minishell.h"
 # include <stdlib.h>
 
+int	count_inquote(char *s, int i)
+{
+	if (s[i] == '\'')
+	{
+		i++;
+		while (s[i] && s[i] != '\'')
+			i++;
+	}
+	else if (s[i] == '\"')
+	{
+		i++;
+		while (s[i] && s[i] != '\"')
+			i++;
+	}
+	return (i + 1);
+}
 static int	countwords(char *s)
 {
 	int	i;
@@ -10,24 +26,43 @@ static int	countwords(char *s)
 	count = 0;
 	while (s[i])
 	{
-		if (s[i] == ' ' || s[i] == '|')
+		while (s[i] && s[i] == ' ')
 			i++;
+		if (s[i] == '|')
+		{
+			i++;
+			count++;
+		}
 		else
 		{
 			count++;
 			while (s[i] && s[i] != ' ' && s[i] != '|')
-				i++;
+			{
+				if (s[i] == '\'' || s[i] == '\"')
+					i = count_inquote(s, i);
+				else
+					i++;
+			}
 		}
 	}
+	printf("count=%d", count);
 	return (count);
 }
 
-static int	ft_word_len(char *s, int i)
+static int	ft_word_len(char *s, int i, char c)
 {
 	int count;
 
 	count = 0;
-	while (s[i] && s[i] != ' ' && s[i] != '|')
+	if (c != 0)
+	{
+		while (s[i] && s[i] != c)
+		{
+			count++;
+			i++;
+		}
+	}
+	while (s[i] && (s[i] != ' ' || s[i] != '|'))
 	{
 		count++;
 		i++;
@@ -64,9 +99,31 @@ void	split_words(char **arr, char *s, int j, int k)
 				return ;
 			arr[j][k++] = s[i++];
 		}
+		if (s[i] == '\"')
+		{
+			arr[j] = malloc(ft_word_len(s, i, '\"') * sizeof(char));
+			if (malloc_gone_wrong(arr, j))
+				return ;
+			arr[j][k++] = s[i++];
+			while (s[i] != '\"')
+				arr[j][k++] = s[i++];
+			while (s[i] && s[i] != ' ' && s[i] != '|')
+				arr[j][k++] = s[i++];
+		}
+		else if (s[i] == '\'')
+		{
+			arr[j] = malloc(ft_word_len(s, i, '\'') * sizeof(char));
+			if (malloc_gone_wrong(arr, j))
+				return ;
+			arr[j][k++] = s[i++];
+			while (s[i] != '\'')
+				arr[j][k++] = s[i++];
+			while (s[i] && s[i] != ' ' && s[i] != '|')
+				arr[j][k++] = s[i++];
+		}
 		else
 		{
-			arr[j] = malloc(ft_word_len(s, i) * sizeof(char));
+			arr[j] = malloc(ft_word_len(s, i, 0) * sizeof(char));
 			if (malloc_gone_wrong(arr, j))
 				return ;
 			while (s[i] && s[i] != ' ' && s[i] != '|')
@@ -98,18 +155,3 @@ char	**ft_split_adapted(char *s)
 		return (free(arr), NULL);
 	return (arr);
 }
-// #include <stdio.h>
-
-// int main(int ac, char **av)
-// {
-// 	(void)ac;
-// 	char **splited = ft_split_adapted(av[1]);
-// 	int i = 0;
-
-// 	while (splited[i])
-// 	{
-// 		printf("%s", splited[i]);
-// 		printf("\n");
-// 		i++;
-// 	}
-// }
