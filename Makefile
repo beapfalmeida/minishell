@@ -18,7 +18,7 @@ EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export ha
 INIT = init
 PARSER = assign_types parser process_args
 PRINTS = print
-UTILS = utils utils2 split cmds
+UTILS = utils utils2 split split_utils cmds
 PIPEX = pipex
 
 # Directory for obj files

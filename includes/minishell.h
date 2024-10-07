@@ -45,6 +45,15 @@ typedef struct s_shell
 	char	*last_path;
 }	t_shell;
 
+typedef struct split
+{
+	int	i;
+	int	j;
+	int	k;
+	char	*s;
+	char	**arr;
+}	t_split;
+
 // Init
 void		init_tokens(t_tokens *token);
 
@@ -90,11 +99,20 @@ t_tokens	*new_node(char *content);
 void		add_back_list(t_tokens **lst, t_tokens *new);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
-char		**ft_split_adapted(char *s);
-int			arr_len(char **arr);
-int			count_args(t_tokens *token);
+
 int			free_array(char	**arr, int	len);
 void		free_paths(char **paths);
+int			arr_len(char **arr);
+int			count_args(t_tokens *token);
+
+// Split
+char		**ft_split_adapted(char *s);
+void		split_words(t_split *sp);
+void		put_word(t_split *sp, int c);
+void		split_quotes(t_split *sp, char c);
+int			ft_word_len(char *s, int i, char c);
+int			countwords(char *s, int i, int count);
+int			count_inquote(char *s, int i);
 
 // testing
 void		print_tokens(t_tokens **begin_list);

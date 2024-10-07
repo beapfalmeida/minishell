@@ -1,75 +1,6 @@
 #include "minishell.h"
-# include <stdlib.h>
 
-int	count_inquote(char *s, int i)
-{
-	if (s[i] == '\'')
-	{
-		i++;
-		while (s[i] && s[i] != '\'')
-			i++;
-	}
-	else if (s[i] == '\"')
-	{
-		i++;
-		while (s[i] && s[i] != '\"')
-			i++;
-	}
-	return (i + 1);
-}
-static int	countwords(char *s)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (s[i])
-	{
-		while (s[i] && s[i] == ' ')
-			i++;
-		if (s[i] == '|')
-		{
-			i++;
-			count++;
-		}
-		else
-		{
-			count++;
-			while (s[i] && s[i] != ' ' && s[i] != '|')
-			{
-				if (s[i] == '\'' || s[i] == '\"')
-					i = count_inquote(s, i);
-				else
-					i++;
-			}
-		}
-	}
-	return (count);
-}
-
-static int	ft_word_len(char *s, int i, char c)
-{
-	int count;
-
-	count = 0;
-	if (c != 0)
-	{
-		while (s[i] && s[i] != c)
-		{
-			count++;
-			i++;
-		}
-	}
-	while (s[i] && (s[i] != ' ' || s[i] != '|'))
-	{
-		count++;
-		i++;
-	}
-	return (count + 1);
-}
-
-static int malloc_gone_wrong(char **arr, int j)
+int malloc_gone_wrong(char **arr, int j)
 {
 	if (!arr[j])
 	{
@@ -81,76 +12,75 @@ static int malloc_gone_wrong(char **arr, int j)
 	return (0);
 }
 
-void	split_words(char **arr, char *s, int j, int k)
+void	split_quotes(t_split *sp, char c)
 {
-	int i;
+	sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i, c) * sizeof(char));
+	if (malloc_gone_wrong(sp->arr, sp->j))
+		return ;
+	sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+	while (sp->s[sp->i] != c)
+		sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+	while (sp->s[sp->i] && sp->s[sp->i] != ' ' && sp->s[sp->i] != '|')
+		sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+}
 
-	i = 0;
-	while (s[i])
+void	put_word(t_split *sp, int c)
+{
+	if (c == 0)
 	{
-		k = 0;
-		while (s[i] && s[i] == ' ')
-			i++;
-		if (s[i] == '|')
-		{
-			arr[j] = malloc(2 * sizeof(char));
-			if (malloc_gone_wrong(arr, j))
-				return ;
-			arr[j][k++] = s[i++];
-		}
-		if (s[i] == '\"')
-		{
-			arr[j] = malloc(ft_word_len(s, i, '\"') * sizeof(char));
-			if (malloc_gone_wrong(arr, j))
-				return ;
-			arr[j][k++] = s[i++];
-			while (s[i] != '\"')
-				arr[j][k++] = s[i++];
-			while (s[i] && s[i] != ' ' && s[i] != '|')
-				arr[j][k++] = s[i++];
-		}
-		else if (s[i] == '\'')
-		{
-			arr[j] = malloc(ft_word_len(s, i, '\'') * sizeof(char));
-			if (malloc_gone_wrong(arr, j))
-				return ;
-			arr[j][k++] = s[i++];
-			while (s[i] != '\'')
-				arr[j][k++] = s[i++];
-			while (s[i] && s[i] != ' ' && s[i] != '|')
-				arr[j][k++] = s[i++];
-		}
-		else
-		{
-			arr[j] = malloc(ft_word_len(s, i, 0) * sizeof(char));
-			if (malloc_gone_wrong(arr, j))
-				return ;
-			while (s[i] && s[i] != ' ' && s[i] != '|')
-				arr[j][k++] = s[i++];
-		}
-		arr[j][k] = '\0';
-		j++;
+		sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i, 0) * sizeof(char));
+		if (malloc_gone_wrong(sp->arr, sp->j))
+			return ;
+		while (sp->s[sp->i] && sp->s[sp->i] != ' ' && sp->s[sp->i] != '|')
+			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
 	}
-	arr[j] = 0;
+	else if (c == PIPE)
+	{
+		sp->arr[sp->j] = malloc(2 * sizeof(char));
+		if (malloc_gone_wrong(sp->arr, sp->j))
+			return ;
+		sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+	}
+}
+
+void	split_words(t_split *sp)
+{
+	while (sp->s[sp->i])
+	{
+		sp->k = 0;
+		while (sp->s[sp->i] && sp->s[sp->i] == ' ')
+			sp->i++;
+		if (sp->s[sp->i] == '|')
+			put_word(sp, PIPE);
+		if (sp->s[sp->i] == '\"')
+			split_quotes(sp, '\"');
+		else if (sp->s[sp->i] == '\'')
+			split_quotes(sp, '\'');
+		else if (!sp->s[sp->i])
+			break ;
+		else
+			put_word(sp, 0);
+		sp->arr[sp->j][sp->k] = '\0';
+		sp->j++;
+	}
+	sp->arr[sp->j] = 0;
 }
 
 char	**ft_split_adapted(char *s)
 {
 	int		n;
-	char	**arr;
-	int	i;
-	int	j;
-	int	k;
+	t_split sp;
 
-	n = countwords(s);
-	i = 0;
-	j = 0;
-	k = 0;
-	arr = (char **)malloc((n + 1) * sizeof(char *));
-	if (!arr)
+	n = countwords(s, 0, 0);
+	sp.i = 0;
+	sp.j = 0;
+	sp.k = 0;
+	sp.s = s;
+	sp.arr = (char **)malloc((n + 1) * sizeof(char *));
+	if (!sp.arr)
 		return (NULL);
-	split_words(arr, s, j, k);
-	if (!*arr)
-		return (free(arr), NULL);
-	return (arr);
+	split_words(&sp);
+	if (!*(sp.arr))
+		return (free(sp.arr), NULL);
+	return (sp.arr);
 }
