@@ -40,7 +40,7 @@ typedef struct s_shell
 	char	**envp;
 	int		fd_in;
 	int		fd_out;
-	char	***cmds;
+	//char	***cmds;
 	int		n_pipes;
 	char	*last_path;
 }	t_shell;
@@ -71,7 +71,7 @@ void		loop_assigning(t_tokens **temp, int type);
 void		process_tokens(t_tokens **tokens, t_shell *args, char **envp);
 int			get_input(t_tokens **tokens);
 int			get_output(t_tokens **tokens);
-void		create_array(t_tokens **tokens, t_shell *args);
+//void		create_array(t_tokens **tokens, t_shell *args);
 
 // Executor
 
@@ -104,6 +104,9 @@ int			free_array(char	**arr, int	len);
 void		free_paths(char **paths);
 int			arr_len(char **arr);
 int			count_args(t_tokens *token);
+void		free_shell(t_shell *shell);
+
+void		free_cmds(t_shell *shell, int i, int j);
 
 // Split
 char		**ft_split_adapted(char *s);

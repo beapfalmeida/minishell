@@ -17,8 +17,11 @@ int	count_inquote(char *s, int i)
 	return (i + 1);
 }
 
-int	countwords(char *s, int i, int count)
+int	countwords(char *s, int j, int count)
 {
+	int	i;
+
+	i = j;
 	while (s[i])
 	{
 		while (s[i] && s[i] == ' ')
@@ -46,20 +49,21 @@ int	countwords(char *s, int i, int count)
 int	ft_word_len(char *s, int i, char c)
 {
 	int count;
+	int	j = i;
 
 	count = 0;
 	if (c != 0)
 	{
-		while (s[i] && s[i] != c)
+		while (s[j] && s[j] != c)
 		{
 			count++;
-			i++;
+			j++;
 		}
 	}
-	while (s[i] && (s[i] != ' ' || s[i] != '|'))
+	while (s[j] && s[j] != ' ' && s[j] != '|')
 	{
 		count++;
-		i++;
+		j++;
 	}
-	return (count + 1);
+	return (count);
 }

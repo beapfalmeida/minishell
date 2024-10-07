@@ -1,11 +1,12 @@
 #include "minishell.h"
 
-int malloc_gone_wrong(char **arr, int j)
+static int malloc_gone_wrong(char **arr, int j)
 {
-	if (!arr[j])
+	int i = j;
+	if (!arr[i])
 	{
-		while (j--)
-			free(arr[j]);
+		while (i--)
+			free(arr[i]);
 		free(arr);
 		return (1);
 	}
@@ -28,7 +29,7 @@ void	put_word(t_split *sp, int c)
 {
 	if (c == 0)
 	{
-		sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i, 0) * sizeof(char));
+		sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i, 0) * sizeof(char)); //TODO: Correct leaks
 		if (malloc_gone_wrong(sp->arr, sp->j))
 			return ;
 		while (sp->s[sp->i] && sp->s[sp->i] != ' ' && sp->s[sp->i] != '|')
@@ -36,7 +37,7 @@ void	put_word(t_split *sp, int c)
 	}
 	else if (c == PIPE)
 	{
-		sp->arr[sp->j] = malloc(2 * sizeof(char));
+		sp->arr[sp->j] = malloc(sizeof(char) + 1);
 		if (malloc_gone_wrong(sp->arr, sp->j))
 			return ;
 		sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
@@ -52,7 +53,7 @@ void	split_words(t_split *sp)
 			sp->i++;
 		if (sp->s[sp->i] == '|')
 			put_word(sp, PIPE);
-		if (sp->s[sp->i] == '\"')
+		else if (sp->s[sp->i] == '\"')
 			split_quotes(sp, '\"');
 		else if (sp->s[sp->i] == '\'')
 			split_quotes(sp, '\'');
@@ -81,6 +82,6 @@ char	**ft_split_adapted(char *s)
 		return (NULL);
 	split_words(&sp);
 	if (!*(sp.arr))
-		return (free(sp.arr), NULL);
+		return (free(sp.arr), NULL); //TODO: wtf
 	return (sp.arr);
 }

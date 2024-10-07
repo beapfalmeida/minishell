@@ -13,6 +13,7 @@ static void	do_pipe(t_tokens *tokens, t_shell *shell, int i)
 	int	new_fd[2];
 	int	pid;
 	int	res;
+	char **cmds;
 
 	if (pipe(new_fd) == -1)
 		; //TODO: Error pipe
@@ -29,11 +30,15 @@ static void	do_pipe(t_tokens *tokens, t_shell *shell, int i)
 			dup2(new_fd[1], STDOUT_FILENO);
 		close(new_fd[0]);
 		close(new_fd[1]);
+		cmds = put_cmds(tokens);
 		res = ft_isbuiltin(tokens, shell);
 		if (res)
+		{
 			exit(0);
-		else if (execve(get_path(shell->cmds[i][0], shell->envp), shell->cmds[i], NULL) == -1)
-			printf("Command not found: %s", shell->cmds[i][0]);
+			free_array(cmds, arr_len(cmds));
+		}
+		else if (execve(get_path(tokens->token, shell->envp), cmds, NULL) == -1)
+			;
 	}
 	else
 		parent_process(pid, new_fd);
@@ -42,15 +47,19 @@ static void	do_pipe(t_tokens *tokens, t_shell *shell, int i)
 void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
+	t_tokens	*temp;
+
+	temp = tokens;
 	if (shell->n_pipes)
 	{
 		i = -1;
 		while (++i < shell->n_pipes)
 		{
-			do_pipe(tokens, shell, i);
-			while (tokens && tokens->type != PIPE)
-				tokens = tokens->next;
-			tokens = tokens->next;
+			do_pipe(temp, shell, i);
+			while (temp && temp->type != PIPE)
+				temp = temp->next;
+			if (temp)
+				temp = temp->next;
 		}
 		waitpid(0, NULL, 0);
 	}

@@ -52,8 +52,8 @@ void	create_tokens(t_tokens **tokens, char *input)
 	arr = ft_split_adapted(input);
 	if (!arr || !*arr)
 	{
-		// if (*arr)
-		// 	free(*arr);
+		if (*arr)
+			free(*arr);
 		return ;
 	}
 	while (arr[i])
@@ -62,6 +62,6 @@ void	create_tokens(t_tokens **tokens, char *input)
 		add_back_list(tokens, item);
 		i++;
 	}
-	free(arr);
+	free_array(arr, arr_len(arr));
 	assign_types(tokens);
 }

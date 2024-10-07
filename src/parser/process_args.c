@@ -5,6 +5,7 @@ void	badopen(int fd, char *file)
 	if (fd == -1)
 		printf("No such file or directory: %s\n", file);
 }
+
 int	get_input(t_tokens **tokens)
 {
 	t_tokens	*temp;
@@ -61,36 +62,10 @@ int	get_output(t_tokens **tokens)
 		return (STDOUT_FILENO);
 }
 
-void	create_array(t_tokens **tokens, t_shell *args)
-{
-	t_tokens *temp;
-	int	j;
-	int i;
-
-	temp = *tokens;
-	j = 0;
-	i = 0;
-	while (temp)
-	{
-		if (temp->type == CMD || temp->type == ARG)
-		{
-			args->cmds[j][i] = strdup(temp->token);
-			i++;
-		}
-		else if (temp->type == PIPE)
-		{
-			j++;
-			i = 0;
-		}
-		temp = temp->next;
-	}
-}
-
 void	process_tokens(t_tokens **tokens, t_shell *args, char **envp)
 {
 	args->envp = envp;
 	args->fd_in = get_input(tokens);
 	args->fd_out = get_output(tokens);
 	args->n_pipes = count_pipes(tokens);
-	args->cmds = malloc((args->n_pipes + 1) * sizeof(char **) + 1);
 }

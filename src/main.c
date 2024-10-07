@@ -35,15 +35,11 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	//shell.envp = envp;
-	// init_tokens(tokens);
 	while (1)
 	{
 		signals();
 		shell.last_path = ft_strdup(getenv("PWD"));
 		input_buffer = readline("minishell: ");
-		if (ft_strnstr(input_buffer, "\n", ft_strlen(input_buffer)))
-			write(1, "minishell: ", 11);
 		if (!ft_strncmp(input_buffer, "exit", ft_strlen(input_buffer)))
 			break ;
 		if (input_buffer && *input_buffer)
@@ -54,7 +50,9 @@ int	main(int argc, char **argv, char **envp)
 		execute(tokens, &shell);
 		//exec_cmd(tokens, &shell);
 		lstclear(&tokens);
-		//TODO: dar free a shell
 	}
 	free(input_buffer);
+	free(shell.last_path);
+	if (tokens)
+		lstclear(&tokens);
 }
