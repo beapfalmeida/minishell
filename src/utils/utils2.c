@@ -1,4 +1,4 @@
-#include "minishell.h"
+# include "minishell.h"
 
 int	arr_len(char **arr)
 {
@@ -36,20 +36,4 @@ int	free_array(char	**arr, int	len)
 	}
 	free(arr);
 	return (0);
-}
-
-void	free_shell(t_shell *shell)
-{
-	int	i;
-
-	i = 0;
-	if (shell && shell->cmds && *(shell->cmds))
-	{
-		while (shell->cmds[i])
-		{
-			free_array(shell->cmds[i], arr_len(shell->cmds[i]));
-			i++;
-		}
-		free(shell->cmds);
-	}
 }

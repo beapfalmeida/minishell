@@ -104,9 +104,6 @@ int			free_array(char	**arr, int	len);
 void		free_paths(char **paths);
 int			arr_len(char **arr);
 int			count_args(t_tokens *token);
-void		free_shell(t_shell *shell);
-
-void		free_cmds(t_shell *shell, int i, int j);
 
 // Split
 char		**ft_split_adapted(char *s);
