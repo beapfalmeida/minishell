@@ -6,6 +6,47 @@ void	badopen(int fd, char *file)
 		printf("No such file or directory: %s\n", file);
 }
 
+void	find_limiter(t_tokens **tokens)
+{
+	int	fd[2];
+	t_tokens	*temp;
+	char	*limiter = NULL;
+	char	*input_buff = NULL;
+	char	*tem;
+
+	temp = *tokens;
+	while (temp)
+	{
+		if (temp->type == LIMITER)
+		{
+			limiter = temp->token;
+			break ;
+		}
+		temp = temp->next;
+	}
+	if (limiter)
+	{
+		pipe(fd);
+		limiter = ft_strjoin(limiter, "\n");
+		while (1)
+		{
+			input_buff = readline("> ");
+			tem = input_buff;
+			input_buff = ft_strjoin(input_buff, "\n");
+			free(tem);
+			write(fd[1], input_buff, ft_strlen(input_buff));
+			if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
+				break ;
+			free(input_buff);
+		}
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[1]);
+		close(fd[0]);
+	}
+	free(limiter);
+	free(input_buff);
+}
+
 int	get_input(t_tokens **tokens)
 {
 	t_tokens	*temp;
@@ -26,7 +67,10 @@ int	get_input(t_tokens **tokens)
 		temp = temp->next;
 	}
 	if (has_infile == 0)
+	{
+		find_limiter(tokens);
 		return (STDIN_FILENO);
+	}
 	else
 	{
 		fd = open(infile, O_RDONLY);
