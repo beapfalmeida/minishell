@@ -23,8 +23,8 @@ char	*get_path(char	*cmd, char **envp)
 	char	**paths;
 	int		i;
 
-	while (*envp++)
-		if (ft_strncmp(*envp, "PATH", 4) == 0)
+	while (envp && *envp++)
+		if (envp && *envp && ft_strncmp(*envp, "PATH", 4) == 0)
 			break ;
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)

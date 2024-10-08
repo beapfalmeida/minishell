@@ -51,8 +51,10 @@ int	main(int argc, char **argv, char **envp)
 		//exec_cmd(tokens, &shell);
 		lstclear(&tokens);
 	}
-	free(input_buffer);
-	free(shell.last_path);
+	if (input_buffer)
+		free(input_buffer);
+	if (shell.last_path)
+		free(shell.last_path);
 	if (tokens)
 		lstclear(&tokens);
 }

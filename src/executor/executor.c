@@ -80,3 +80,28 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	}
 	return (0);
 }
+
+void	execute(t_tokens *tokens, t_shell *shell)
+{
+	int		i;
+	t_tokens	*temp;
+	int fd_in = 6;
+
+	dup2(STDIN_FILENO, fd_in);
+	temp = tokens;
+	if (shell->n_pipes)
+	{
+		i = -1;
+		while (++i <= shell->n_pipes)
+		{
+			do_pipe(temp, shell, i);
+			while (temp && temp->type != PIPE)
+				temp = temp->next;
+			if (temp)
+				temp = temp->next;
+		}
+		dup2(fd_in, STDIN_FILENO);
+	}
+	else
+		exec_cmd(tokens, shell);
+}

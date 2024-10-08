@@ -116,7 +116,9 @@ int			count_inquote(char *s, int i);
 
 // testing
 void		print_tokens(t_tokens **begin_list);
+void		print_arr(char **arr);
 
 void		badopen(int fd, char *file);
+void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
 
 #endif

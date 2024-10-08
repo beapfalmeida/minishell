@@ -14,12 +14,11 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 
 # Directories containing source files
 SRC_DIR = main
-EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export handle_unset
+EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export handle_unset pipex
 INIT = init
 PARSER = assign_types parser process_args
 PRINTS = print
 UTILS = utils utils2 split split_utils cmds
-PIPEX = pipex
 
 # Directory for obj files
 OBJ_DIR = obj
@@ -40,7 +39,6 @@ VPATHS =	src/				\
 			src/parser/			\
 			src/prints/			\
 			src/utils/			\
-			src/pipex/			\
 
 SRC	=	$(addsuffix .c, $(SRC_DIR))	\
 		$(addsuffix .c, $(EXECUTOR))\

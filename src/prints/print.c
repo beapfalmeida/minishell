@@ -10,3 +10,15 @@ void	print_tokens(t_tokens **begin_list)
 		cur = cur->next;
 	}
 }
+
+void	print_arr(char **arr)
+{
+	int i;
+
+	i = 0;
+	while (arr[i])
+	{
+		printf("arr[%i] = %s\n", i, arr[i]);
+		i++;
+	}
+}
