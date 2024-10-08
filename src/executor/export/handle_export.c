@@ -93,14 +93,16 @@ void	find_expander(t_tokens	*tokens, char **envp)
 	char		*new_token;
 	char		*token;
 	int			i;
+	int			is_quoted;
 
 	// If $$ returns pid
 	temp = tokens;
-	while (temp && temp->token)
+	while (temp && temp->token && (*tokens->token != '\''))
 	{
 		token = temp->token;
 		i = 0;
-		while (token[i])
+		is_quoted = find_quote(&token[i]);
+		while (token[i] && is_quoted != 2)
 		{
 			if (token[i] == '$')
 			{
@@ -123,6 +125,7 @@ char	*handle_expander(char **envp, char *var)
 	char	*new_token;
 
 	new_token = NULL;
+	var = ft_strtrim(var, "\"");
 	while (*envp)
 	{
 		if (ft_strncmp(*envp, var, ft_strlen(var)) == 0)
