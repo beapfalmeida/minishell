@@ -67,12 +67,13 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			if (!cmds)
 				return (1);
 			path = get_path(tokens->token, shell->envp);
-			if (!path)
-				return (free_array(cmds, arr_len(cmds)), 1);
+			// if (!path)
+			// 	return (free_array(cmds, arr_len(cmds)), 1);
 			if (execve(path, cmds, shell->envp) == -1)
 			{
+				// perror("error");
 				// TODO return error and clean exit
-				return (1);
+				// return (1);
 			}
 		}
 		else

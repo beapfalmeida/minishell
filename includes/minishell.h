@@ -113,6 +113,7 @@ void		split_quotes(t_split *sp, char c);
 int			ft_word_len(char *s, int i, char c);
 int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
+int			find_quote(char *str);
 
 // testing
 void		print_tokens(t_tokens **begin_list);
