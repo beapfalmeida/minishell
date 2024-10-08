@@ -49,11 +49,6 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	int		pid;
 	char	*path;
 	char	**cmds;
-
-	if (shell->fd_in != STDIN_FILENO)
-		dup2(shell->fd_in, STDIN_FILENO);
-	if (shell->fd_out != STDOUT_FILENO)
-		dup2(shell->fd_out, STDOUT_FILENO);
 	if (ft_isbuiltin(tokens, shell))
 		return (0); // Is a builtin
 	else
@@ -82,9 +77,5 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 		else
 			wait(NULL);
 	}
-	if (shell->fd_in != STDIN_FILENO)
-		close(shell->fd_in);
-	if (shell->fd_out != STDOUT_FILENO)
-		close(shell->fd_out);
 	return (0);
 }
