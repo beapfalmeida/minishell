@@ -5,7 +5,6 @@ void	badopen(int fd, char *file)
 	if (fd == -1)
 		printf("No such file or directory: %s\n", file);
 }
-
 void	find_limiter(t_tokens **tokens)
 {
 	int	fd[2];
