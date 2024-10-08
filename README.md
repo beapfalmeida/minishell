@@ -80,47 +80,47 @@ These are the subsystems that make executing commands possible:
 - Subshells: Arguments between `` are executed and it's output is sent to the input of the shell.
   
 ## Task List
-- [ ] **Shell Features**
-  - [ ] **Prompt**: Display a shell prompt and await user input.
-  - [ ] **Command History**: Implement a command history using `readline()`.
+- [x] **Shell Features**
+  - [x] **Prompt**: Display a shell prompt and await user input.
+  - [x] **Command History**: Implement a command history using `readline()`.
   - [x] **Signal Handling**: Properly handle signals (e.g., `ctrl-C`, `ctrl-D`, `ctrl-\`).
 
 - [ ] **Parser**
-  - [ ] Implement a **Lexer** (tokenizer) to separate the input into tokens (commands and arguments).
-  - [ ] Build the **Command Table** to store commands and arguments.
-  - [ ] Implement rules for handling builtins (`echo`, `cd`, `pwd`, etc.) and external commands.
-  - [ ] Implement error handling for invalid input.
+  - [x] Implement a **Lexer** (tokenizer) to separate the input into tokens (commands and arguments).
+  - [x] Build the **Command Table** to store commands and arguments.
+  - [x] Implement rules for handling builtins (`echo`, `cd`, `pwd`, etc.) and external commands.
+  - [ ] Implement error handling for invalid input. - Bea
 
-- [ ] **Built-ins**
-  - [ ] **echo**: Implement with `-n` option.
-  - [ ] **cd**: Implement with relative or absolute path.
-  - [ ] **pwd**: Print the current directory.
-  - [ ] **export**: Handle environment variable exportation.
-  - [ ] **unset**: Remove environment variables.
-  - [ ] **env**: Print all environment variables.
-  - [ ] **exit**: Exit the shell with a status.
+- [x] **Built-ins**
+  - [x] **echo**: Implement with `-n` option.
+  - [x] **cd**: Implement with relative or absolute path.
+  - [x] **pwd**: Print the current directory.
+  - [x] **export**: Handle environment variable exportation.
+  - [x] **unset**: Remove environment variables.
+  - [x] **env**: Print all environment variables.
+  - [x] **exit**: Exit the shell with a status.
 
 - [ ] **Expanders**
-  - [ ] **Environment Variables**: Expand `$VAR` expressions.
-  - [ ] **Handle brackets**: single and double and both.
-  - [ ] **Exit Status**: Implement `$?` to hold the exit status of the last executed command.
+  - [x] **Environment Variables**: Expand `$VAR` expressions.
+  - [ ] **Handle brackets in expander**: single and double and both. - Bea
+  - [ ] **Exit Status**: Implement `$?` to hold the exit status of the last executed command. - Bea
       
-// fazer um grafico antes de comecar esta parte
-- [ ] **Executor**
-  - [ ] Create child processes using `fork()` for each command.
-  - [ ] Use `execve()` to execute external commands.
-  - [ ] Implement builtins in the parent process where applicable (`cd`, `export`, etc.).
-  - [ ] Ensure the last child process waits to complete using `waitpid()`.
+- [x] **Executor**
+  - [x] Create child processes using `fork()` for each command.
+  - [x] Use `execve()` to execute external commands.
+  - [x] Implement builtins in the parent process where applicable (`cd`, `export`, etc.).
+  - [x] Ensure the last child process waits to complete using `waitpid()`.
 
 - [ ] **Redirections**
-  - [ ] Implement input redirection (`< infile`).
-  - [ ] Implement output redirection (`> outfile`).
-  - [ ] Implement append output redirection (`>> outfile`).
-  - [ ] Implement heredoc (`<< delimiter`).
+  - [x] Implement input redirection (`< infile`).
+  - [x] Implement output redirection (`> outfile`).
+  - [ ] Skip redirectors and files - Joao
+  - [ ] Implement append output redirection (`>> outfile`). - Joao
+  - [ ] Implement heredoc (`<< delimiter`). - Joao
 
 - [ ] **Pipes**
-  - [ ] Implement pipes (`|`) to connect commands in a pipeline.
-  - [ ] Redirect stdout of one command to stdin of the next using `pipe()` and `dup2()`.
+  - [x] Implement pipes (`|`) to connect commands in a pipeline.
+  - [x] Redirect stdout of one command to stdin of the next using `pipe()` and `dup2()`.
 
 - [ ] **Testing**
   - [ ] Create test cases for all possible scenarios, including edge cases.
