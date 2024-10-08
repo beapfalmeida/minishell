@@ -68,7 +68,7 @@ int	get_input(t_tokens **tokens)
 	}
 	if (has_infile == 0)
 	{
-		find_limiter(tokens);
+		//find_limiter(tokens);
 		return (STDIN_FILENO);
 	}
 	else
