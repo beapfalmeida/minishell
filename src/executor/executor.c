@@ -106,3 +106,21 @@ void	execute(t_tokens *tokens, t_shell *shell)
 	else
 		exec_cmd(tokens, shell);
 }
+
+// Check this function
+t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell)
+{
+	t_tokens	*new_tokens;
+
+	while (tokens->token)
+	{
+		if (tokens->type == REDIRECT_IN || tokens->type == REDIRECT_OUT)
+		{
+			tokens = tokens->next;
+			if (tokens->type == INPUT || tokens->type == OUTPUT)
+				tokens = tokens->next;
+		}
+		add_back_list(new_tokens, new_node(tokens->token));
+	}
+	return (new_tokens);
+}
