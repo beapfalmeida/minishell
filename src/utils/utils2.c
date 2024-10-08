@@ -46,3 +46,16 @@ int	find_quote(char *str)
 		return (2);
 	return (0);
 }
+
+int	ft_strclen(char *str, char c)
+{
+	int	len;
+
+	len = 0;
+	while (str && *str && *str != c)
+	{
+		str++;
+		len++;
+	}
+	return (len);
+}
