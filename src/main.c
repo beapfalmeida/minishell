@@ -35,18 +35,20 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	shell.envp = envp;
+	shell.last_path = ft_strdup(getenv("PWD"));
 	while (1)
 	{
 		signals();
-		shell.last_path = ft_strdup(getenv("PWD"));
 		input_buffer = readline("minishell: ");
 		if (!ft_strncmp(input_buffer, "exit", ft_strlen(input_buffer)))
 			break ;
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
 		create_tokens(&tokens, input_buffer);
-		find_expander(tokens, envp);
-		process_tokens(&tokens, &shell, envp);
+		process_tokens(&tokens, &shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
+		tokens = skip_redirects(tokens);
+		find_expander(tokens, shell.envp);
 		execute(tokens, &shell);
 		//exec_cmd(tokens, &shell);
 		lstclear(&tokens);

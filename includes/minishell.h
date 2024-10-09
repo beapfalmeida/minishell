@@ -68,7 +68,7 @@ int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
 
 // Create shell struct
-void		process_tokens(t_tokens **tokens, t_shell *args, char **envp);
+void		process_tokens(t_tokens **tokens, t_shell *args);
 int			get_input(t_tokens **tokens);
 int			get_output(t_tokens **tokens);
 //void		create_array(t_tokens **tokens, t_shell *args);
@@ -80,6 +80,7 @@ char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
 int			ft_isbuiltin(t_tokens *token, t_shell *shell);
 void		execute(t_tokens *token, t_shell *shell);
+t_tokens	*skip_redirects(t_tokens *tokens);
 
 // Builtins
 int			ft_pwd(t_tokens *token);
@@ -104,6 +105,7 @@ int			free_array(char	**arr, int	len);
 void		free_paths(char **paths);
 int			arr_len(char **arr);
 int			count_args(t_tokens *token);
+int			ft_strclen(char *str, char c);
 
 // Split
 char		**ft_split_adapted(char *s);

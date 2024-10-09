@@ -62,9 +62,8 @@ int	get_output(t_tokens **tokens)
 		return (STDOUT_FILENO);
 }
 
-void	process_tokens(t_tokens **tokens, t_shell *args, char **envp)
+void	process_tokens(t_tokens **tokens, t_shell *args)
 {
-	args->envp = envp;
 	args->fd_in = get_input(tokens);
 	args->fd_out = get_output(tokens);
 	args->n_pipes = count_pipes(tokens);
