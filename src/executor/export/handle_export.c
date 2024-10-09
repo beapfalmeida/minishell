@@ -53,7 +53,7 @@ int	ft_export(t_tokens *token, t_shell *shell)
 	int		i;
 
 	if (check_export(token) != 0)
-		return (1);
+		return (0);
 	envp = shell->envp;
 	if (token->next && token->next->type == ARG)
 	{
@@ -84,7 +84,7 @@ int	ft_export(t_tokens *token, t_shell *shell)
 			envp++;
 		}
 	}
-	return (0);
+	return (1);
 }
 
 void	find_expander(t_tokens	*tokens, char **envp)
