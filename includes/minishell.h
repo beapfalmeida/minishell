@@ -111,7 +111,7 @@ char		**ft_split_adapted(char *s);
 void		split_words(t_split *sp);
 void		put_word(t_split *sp, int c);
 void		split_quotes(t_split *sp, char c);
-int			ft_word_len(char *s, int i, char c);
+int			ft_word_len(char *s, int i);
 int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
 int			find_quote(char *str);

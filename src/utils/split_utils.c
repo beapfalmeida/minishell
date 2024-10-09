@@ -45,25 +45,38 @@ int	countwords(char *s, int j, int count)
 	}
 	return (count);
 }
-
-int	ft_word_len(char *s, int i, char c)
+//TODO: melhorar esta cena - e capaz de estar errado - isto so afeta leaks
+int	ft_word_len(char *s, int i)
 {
 	int count;
 	int	j = i;
 
-	count = 0;
-	if (c != 0)
+	count = 1;
+	while (s[j])
 	{
-		while (s[j] && s[j] != c)
+		while (s[j] && s[j] == ' ')
+			j++;
+		if (s[j] && s[j] == '\"')
+		{
+			j++;
+			while (s[j] && s[j] != '\"')
+				j++;
+		}
+		if (s[j] && s[j] == '\'')
+		{
+			j++;
+			while (s[j] && s[j] != '\'')
+				j++;
+		}
+		while (s[j] && s[j] != ' ' && s[j] != '|' && s[j] != '\"' && s[j] != '\'')
+				j++;
+		if (s[j] && s[j] == '|') 
 		{
 			count++;
 			j++;
 		}
-	}
-	while (s[j] && s[j] != ' ' && s[j] != '|')
-	{
-		count++;
-		j++;
+		if (s[j] && s[j] == ' ')
+			count++;
 	}
 	return (count);
 }

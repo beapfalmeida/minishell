@@ -15,30 +15,37 @@ static int malloc_gone_wrong(char **arr, int j)
 
 void	split_quotes(t_split *sp, char c)
 {
-	sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i, c) * sizeof(char));
-	if (malloc_gone_wrong(sp->arr, sp->j))
-		return ;
 	sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
 	while (sp->s[sp->i] && sp->s[sp->i] != c)
 		sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+	sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
 }
 
 void	put_word(t_split *sp, int c)
 {
-	if (c == 0)
-	{
-		sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i, 0) * sizeof(char)); //TODO: Correct leaks
-		if (malloc_gone_wrong(sp->arr, sp->j))
-			return ;
-		while (sp->s[sp->i] && sp->s[sp->i] != ' ' && sp->s[sp->i] != '|' && sp->s[sp->i] != '\"' && sp->s[sp->i] != '\'')
-			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-	}
-	else if (c == PIPE)
+	if (c == PIPE)
 	{
 		sp->arr[sp->j] = malloc(sizeof(char) + 1);
 		if (malloc_gone_wrong(sp->arr, sp->j))
 			return ;
 		sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+	}
+	else
+	{
+		sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i) * sizeof(char)); //TODO: Correct leaks
+		if (malloc_gone_wrong(sp->arr, sp->j))
+			return ;
+		while (sp->s[sp->i])
+		{
+			if (sp->s[sp->i] && sp->s[sp->i] == '\"')
+				split_quotes(sp, '\"');
+			if (sp->s[sp->i] && sp->s[sp->i] == '\'')
+				split_quotes(sp, '\'');
+			while (sp->s[sp->i] && sp->s[sp->i] != ' ' && sp->s[sp->i] != '|' && sp->s[sp->i] != '\"' && sp->s[sp->i] != '\'')
+				sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+			if (sp->s[sp->i] && (sp->s[sp->i] == '|' || sp->s[sp->i] == ' '))
+				break ;
+		}
 	}
 }
 
@@ -50,24 +57,8 @@ void	split_words(t_split *sp)
 			sp->i++;
 		if (sp->s[sp->i] == '|')
 			put_word(sp, PIPE);
-		else if (sp->s[sp->i] == '\"')
-		{
-			split_quotes(sp, '\"');
-			continue ;
-		}
-		else if (sp->s[sp->i] == '\'')
-		{
-			split_quotes(sp, '\'');
-			continue ;
-		}
-		else if (!sp->s[sp->i])
-			break ;
 		else
-		{
 			put_word(sp, 0);
-			if (sp->s[sp->i] == '\"' || sp->s[sp->i] == '\'')
-				continue ;
-		}
 		sp->arr[sp->j][sp->k] = '\0';
 		sp->j++;
 		sp->k = 0;
