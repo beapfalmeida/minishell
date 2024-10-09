@@ -97,7 +97,10 @@ int	get_output(t_tokens **tokens)
 	}
 	if (outfile != NULL)
 	{
-		fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (temp->prev->type == REDIRECT_OUT)
+			fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else
+			fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		badopen(fd, outfile);
 		return (fd);
 	}
