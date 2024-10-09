@@ -125,5 +125,6 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 			tokens = tokens->next;
 		}
 	}
+	assign_types(&new_tokens);
 	return (new_tokens);
 }
