@@ -10,5 +10,5 @@ int	ft_env(t_shell *shell)
 		printf("%s\n", *envp);
 		envp++;
 	}
-	return (0);
+	return (1);
 }
