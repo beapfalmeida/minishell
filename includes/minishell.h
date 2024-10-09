@@ -66,6 +66,7 @@ void		append_in(t_tokens **temp);
 void		command(t_tokens **temp);
 int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
+void		assign_types(t_tokens **tokens);
 
 // Create shell struct
 void		process_tokens(t_tokens **tokens, t_shell *args);

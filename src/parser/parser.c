@@ -15,7 +15,7 @@ int	is_symbol(char *token)
 	return (0);
 }
 
-static void	assign_types(t_tokens **tokens)
+void	assign_types(t_tokens **tokens)
 {
 	t_tokens	*temp;
 
