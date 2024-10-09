@@ -50,7 +50,6 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	char	*path;
 	char	**cmds;
 
-	//find_expander(tokens, shell);
 	if (ft_isbuiltin(tokens, shell))
 		return (0); // Is a builtin
 	else
@@ -107,12 +106,12 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		exec_cmd(tokens, shell);
 }
 
-// Check this function
-t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell)
+t_tokens	*skip_redirects(t_tokens *tokens)
 {
 	t_tokens	*new_tokens;
 
-	while (tokens->token)
+	new_tokens = NULL;
+	while (tokens && tokens->token)
 	{
 		if (tokens->type == REDIRECT_IN || tokens->type == REDIRECT_OUT)
 		{
@@ -120,7 +119,11 @@ t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell)
 			if (tokens->type == INPUT || tokens->type == OUTPUT)
 				tokens = tokens->next;
 		}
-		add_back_list(new_tokens, new_node(tokens->token));
+		if (tokens && tokens->token)
+		{
+			add_back_list(&new_tokens, new_node(tokens->token));
+			tokens = tokens->next;
+		}
 	}
 	return (new_tokens);
 }

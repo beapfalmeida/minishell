@@ -80,7 +80,7 @@ char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
 int			ft_isbuiltin(t_tokens *token, t_shell *shell);
 void		execute(t_tokens *token, t_shell *shell);
-t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell);
+t_tokens	*skip_redirects(t_tokens *tokens);
 
 // Builtins
 int			ft_pwd(t_tokens *token);

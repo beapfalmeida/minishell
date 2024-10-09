@@ -46,10 +46,9 @@ int	main(int argc, char **argv, char **envp)
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
 		create_tokens(&tokens, input_buffer);
-		// New function : TEST 
-		tokens = skip_redirects(tokens, &shell); // Comenta se nao funcitonar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		process_tokens(&tokens, &shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
+		tokens = skip_redirects(tokens);
 		find_expander(tokens, shell.envp);
-		process_tokens(&tokens, &shell);
 		execute(tokens, &shell);
 		//exec_cmd(tokens, &shell);
 		lstclear(&tokens);
