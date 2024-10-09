@@ -62,6 +62,11 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 		}
 		if (pid == 0)
 		{
+			dup2(shell->pipe_fd[0], STDIN_FILENO);
+			if (shell->pipe_fd[1])
+				close(shell->pipe_fd[1]);
+			if (shell->pipe_fd[0])
+				close(shell->pipe_fd[0]);
 			cmds = put_cmds(tokens);
 			if (!cmds)
 				return (1);
@@ -76,7 +81,13 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			}
 		}
 		else
+		{
+			if (shell->pipe_fd[1])
+				close(shell->pipe_fd[1]);
+			if (shell->pipe_fd[0])
+				close(shell->pipe_fd[0]);
 			wait(NULL);
+		}
 	}
 	return (0);
 }
@@ -85,8 +96,9 @@ void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
 	t_tokens	*temp;
-	int fd_in = 6;
+	int fd_in;
 
+	fd_in = 6; // Random number just to init
 	dup2(STDIN_FILENO, fd_in);
 	temp = tokens;
 	if (shell->n_pipes)
