@@ -24,7 +24,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 	}
 	else if (ft_strncmp(token->token, "env", 3) == 0)
 	{
-		if ((ft_env(shell) != 0))
+		if ((ft_env(shell, token) != 0))
 			return (1);
 	}
 	else if (ft_strncmp(token->token, "export", 6) == 0)
@@ -76,13 +76,10 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 				close(shell->fd_out);
 			}
 			path = get_path(tokens->token, shell->envp);
-			// if (!path)
-			// 	return (free_array(cmds, arr_len(cmds)), 1);
 			if (execve(path, cmds, shell->envp) == -1)
 			{
-				// perror("error");
-				// TODO return error and clean exit
-				// return (1);
+				printf(get_error(ERROR_CMD), tokens->token);
+				//TODO: free ?
 			}
 		}
 		else

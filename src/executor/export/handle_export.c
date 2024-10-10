@@ -2,14 +2,9 @@
 
 static int	check_export(t_tokens *tokens)
 {
-	if (tokens->next && tokens->next->next && tokens->next->next->type == ARG)
+	if (ft_strncmp(tokens->token, "export", 7) != 0)
 	{
-		// TODO return bad assignment when two args with export
-		return (1);
-	}
-	else if (ft_strncmp(tokens->token, "export", 7) != 0)
-	{
-		// TODO command not found
+		printf(get_error(ERROR_CMD), tokens->token);
 		return (1);
 	}
 	return (0);
