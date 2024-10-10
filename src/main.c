@@ -45,11 +45,18 @@ int	main(int argc, char **argv, char **envp)
 	{
 		signals();
 		input_buffer = readline("minishell: ");
+		if (!*input_buffer)
+			continue ;
 		if (!ft_strncmp(input_buffer, "exit", ft_strlen(input_buffer)))
+		{
+			printf("exit\n");
 			break ;
+		}
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
 		create_tokens(&tokens, input_buffer);
+		if (!tokens)
+			continue ;
 		process_tokens(&tokens, &shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 		tokens = skip_redirects(tokens);
 		find_expander(tokens, shell.envp);
