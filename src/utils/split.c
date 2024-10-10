@@ -55,13 +55,16 @@ void	split_words(t_split *sp)
 	{
 		while (sp->s[sp->i] && sp->s[sp->i] == ' ')
 			sp->i++;
-		if (sp->s[sp->i] == '|')
-			put_word(sp, PIPE);
-		else
-			put_word(sp, 0);
-		sp->arr[sp->j][sp->k] = '\0';
-		sp->j++;
-		sp->k = 0;
+		if (sp->s[sp->i])
+		{
+			if (sp->s[sp->i] == '|')
+				put_word(sp, PIPE);
+			else
+				put_word(sp, 0);
+			sp->arr[sp->j][sp->k] = '\0';
+			sp->j++;
+			sp->k = 0;
+		}
 	}
 	sp->arr[sp->j] = 0;
 }

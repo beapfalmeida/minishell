@@ -45,38 +45,48 @@ int	countwords(char *s, int j, int count)
 	}
 	return (count);
 }
-//TODO: melhorar esta cena - e capaz de estar errado - isto so afeta leaks
+
 int	ft_word_len(char *s, int i)
 {
 	int count;
 	int	j = i;
 
-	count = 1;
+	count = 0;	
+	while (s[j] && s[j] == ' ')
+		j++;
 	while (s[j])
 	{
-		while (s[j] && s[j] == ' ')
-			j++;
-		if (s[j] && s[j] == '\"')
+		if (s[j] == '\'')
 		{
 			j++;
-			while (s[j] && s[j] != '\"')
-				j++;
-		}
-		if (s[j] && s[j] == '\'')
-		{
-			j++;
+			count++;
 			while (s[j] && s[j] != '\'')
+			{
+				count++;
 				j++;
+			}
+			count++;
+			j++;
 		}
-		while (s[j] && s[j] != ' ' && s[j] != '|' && s[j] != '\"' && s[j] != '\'')
+		if (s[j] == '\"')
+		{
+			j++;
+			count++;
+			while (s[j] && s[j] != '\"')
+			{
+				count++;
 				j++;
-		if (s[j] && s[j] == '|') 
+			}
+			j++;
+			count++;
+		}
+		while (s[j] && s[j] != '\"' && s[j] != '\'' && s[j] != ' ' && s[j] != '|')
 		{
 			count++;
 			j++;
 		}
-		if (s[j] && s[j] == ' ')
-			count++;
+		if (s[j] == ' ' || s[j] == '|')
+			break ;
 	}
-	return (count);
+	return (count + 1);
 }
