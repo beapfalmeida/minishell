@@ -34,19 +34,24 @@ int	find_limiter(t_tokens **tokens)
 			tem = input_buff;
 			input_buff = ft_strjoin(input_buff, "\n");
 			free(tem);
-			write(pipe_fd[1], input_buff, ft_strlen(input_buff));
 			if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
 				break ;
+			write(pipe_fd[1], input_buff, ft_strlen(input_buff));
 			free(input_buff);
 		}
 		close(pipe_fd[1]);
 		dup2(pipe_fd[0], STDIN_FILENO);
 		close(pipe_fd[0]);
-		return (1);
+		free(limiter);
+		free(input_buff);
+		return (STDIN_FILENO);
 	}
-	free(limiter);
-	free(input_buff);
-	return (0);
+	else
+	{
+		free(limiter);
+		free(input_buff);
+		return (-1);
+	}
 }
 
 int	get_input(t_tokens **tokens)
@@ -69,13 +74,12 @@ int	get_input(t_tokens **tokens)
 		}
 		temp = temp->next;
 	}
-	find_limiter(tokens);
-	if (has_infile)
+	if (find_limiter(tokens) < 0 && has_infile)
 	{
 		fd = open(infile, O_RDONLY);
 		badopen(fd, infile);
+		return (fd);
 	}
-	return (fd);
 	return (STDIN_FILENO);
 }
 
