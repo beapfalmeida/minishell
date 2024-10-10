@@ -4,28 +4,29 @@ void	badopen(int fd, char *file)
 {
 	if (fd == -1)
 		printf("No such file or directory: %s\n", file);
+	// TODO dont execute rest of program!
 }
-void	find_limiter(t_tokens **tokens)
+int	find_limiter(t_tokens **tokens)
 {
-	int	fd[2];
 	t_tokens	*temp;
 	char	*limiter = NULL;
 	char	*input_buff = NULL;
 	char	*tem;
+	int		pipe_fd[2];
 
 	temp = *tokens;
 	while (temp)
 	{
 		if (temp->type == LIMITER)
 		{
-			limiter = temp->token;
+			limiter = ft_strdup(temp->token);
 			break ;
 		}
 		temp = temp->next;
 	}
 	if (limiter)
 	{
-		pipe(fd);
+		pipe(pipe_fd);
 		limiter = ft_strjoin(limiter, "\n");
 		while (1)
 		{
@@ -33,17 +34,24 @@ void	find_limiter(t_tokens **tokens)
 			tem = input_buff;
 			input_buff = ft_strjoin(input_buff, "\n");
 			free(tem);
-			write(fd[1], input_buff, ft_strlen(input_buff));
 			if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
 				break ;
+			write(pipe_fd[1], input_buff, ft_strlen(input_buff));
 			free(input_buff);
 		}
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[1]);
-		close(fd[0]);
+		close(pipe_fd[1]);
+		dup2(pipe_fd[0], STDIN_FILENO);
+		close(pipe_fd[0]);
+		free(limiter);
+		free(input_buff);
+		return (STDIN_FILENO);
 	}
-	free(limiter);
-	free(input_buff);
+	else
+	{
+		free(limiter);
+		free(input_buff);
+		return (-1);
+	}
 }
 
 int	get_input(t_tokens **tokens)
@@ -55,6 +63,7 @@ int	get_input(t_tokens **tokens)
 
 	temp = *tokens;
 	has_infile = 0;
+	fd = 0;
 	infile = NULL;
 	while (temp)
 	{
@@ -65,17 +74,13 @@ int	get_input(t_tokens **tokens)
 		}
 		temp = temp->next;
 	}
-	if (has_infile == 0)
-	{
-		//find_limiter(tokens);
-		return (STDIN_FILENO);
-	}
-	else
+	if (find_limiter(tokens) < 0 && has_infile)
 	{
 		fd = open(infile, O_RDONLY);
 		badopen(fd, infile);
 		return (fd);
 	}
+	return (STDIN_FILENO);
 }
 
 int	get_output(t_tokens **tokens)

@@ -27,6 +27,9 @@
 # define LIMITER 9
 # define ARG 10
 
+// # define STDIN STDIN_FILENO
+// # define STDOUT STDOUT_FILENO
+
 typedef struct s_tokens
 {
 	char			*token;
@@ -42,6 +45,8 @@ typedef struct s_shell
 	int		fd_out;
 	int		n_pipes;
 	char	*last_path;
+	int		original_stdin;
+	int		original_stdout;
 }	t_shell;
 
 typedef struct split

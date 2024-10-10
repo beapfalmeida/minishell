@@ -37,6 +37,10 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell.envp = envp;
 	shell.last_path = ft_strdup(getenv("PWD"));
+	shell.original_stdin = 6;
+	shell.original_stdout = 6;
+	dup2(STDIN_FILENO, shell.original_stdin);
+	// dup2(STDOUT_FILENO, shell.original_stdout);
 	while (1)
 	{
 		signals();
@@ -57,6 +61,8 @@ int	main(int argc, char **argv, char **envp)
 		tokens = skip_redirects(tokens);
 		find_expander(tokens, shell.envp);
 		execute(tokens, &shell);
+		//exec_cmd(tokens, &shell);
+		dup2(shell.original_stdin, STDIN_FILENO);
 		lstclear(&tokens);
 	}
 	if (input_buffer)
@@ -65,4 +71,6 @@ int	main(int argc, char **argv, char **envp)
 		free(shell.last_path);
 	if (tokens)
 		lstclear(&tokens);
+	close(shell.original_stdin);
+	close(shell.original_stdout);
 }

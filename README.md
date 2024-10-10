@@ -115,10 +115,10 @@ These are the subsystems that make executing commands possible:
   - [x] Implement input redirection (`< infile`).
   - [x] Implement output redirection (`> outfile`).
   - [ ] Skip redirectors and files - Joao
-  - [ ] Implement append output redirection (`>> outfile`). - Joao
+  - [x] Implement append output redirection (`>> outfile`).
   - [ ] Implement heredoc (`<< delimiter`). - Joao
 
-- [ ] **Pipes**
+- [x] **Pipes**
   - [x] Implement pipes (`|`) to connect commands in a pipeline.
   - [x] Redirect stdout of one command to stdin of the next using `pipe()` and `dup2()`.
 
