@@ -1,9 +1,2 @@
-total 88
-drwxr-xr-x 7 jsobreir 2023_porto   181 Oct  9 13:54 .
-drwxr-xr-x 8 jsobreir 2023_porto  4096 Oct  9 13:43 .git
--rw-r--r-- 1 jsobreir 2023_porto    18 Oct  8 14:41 .gitignore
--rw-r--r-- 1 jsobreir 2023_porto  2144 Oct  8 13:54 Makefile
-drwxr-xr-x 3 jsobreir 2023_porto    38 Oct  9 13:43 includes
--rwxr-xr-x 1 jsobreir 2023_porto 58104 Oct  9 13:54 minishell
--rw-r--r-- 1 jsobreir 2023_porto    85 Oct  2 14:25 readline.supp
-drwxr-xr-x 7 jsobreir 2023_porto    89 Oct  9 13:43 src
+;qwd
+wqd
