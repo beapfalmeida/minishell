@@ -4,12 +4,7 @@ static int check_pwd(t_tokens *tokens)
 {
     if (ft_strncmp(tokens->token, "pwd", 4))
     {
-        // TODO return invalid command
-        return (1);
-    }
-    else if (tokens->next && tokens->next->type == ARG)
-    {
-        // TODO return too many commands
+        printf(get_error(ERROR_CMD), tokens->token);
         return (1);
     }
     return (0);
@@ -22,15 +17,11 @@ int	ft_pwd(t_tokens *token)
 {
     char    cwd[MAX_PATH_SIZE];
 
-    check_pwd(token);
+    if (check_pwd(token))
+		return (0);
     if (getcwd(cwd, sizeof(cwd)) != NULL)
     {
         printf("%s\n", cwd);
-    }
-    else
-    {
-        // Handle Error
-        return (0);
     }
     return (1);
 }

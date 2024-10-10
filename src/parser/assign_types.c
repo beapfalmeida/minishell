@@ -12,7 +12,7 @@ void	redirect_in(t_tokens **temp)
 {
 	(*temp)->type = REDIRECT_IN;
 	(*temp)->next->type = INPUT;
-	if (((*temp)->prev && (*temp)->prev->type == CMD))
+	if (((*temp)->prev && ((*temp)->prev->type == CMD || (*temp)->prev->type == INPUT)))
 	{
 		(*temp) = (*temp)->next->next;
 		loop_assigning(temp, INPUT);

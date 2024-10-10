@@ -32,7 +32,7 @@ void	put_word(t_split *sp, int c)
 	}
 	else
 	{
-		sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i) * sizeof(char)); //TODO: Correct leaks
+		sp->arr[sp->j] = malloc(ft_word_len(sp->s, sp->i) * sizeof(char));
 		if (malloc_gone_wrong(sp->arr, sp->j))
 			return ;
 		while (sp->s[sp->i])

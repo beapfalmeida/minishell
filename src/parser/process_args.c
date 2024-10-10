@@ -77,7 +77,6 @@ int	get_input(t_tokens **tokens)
 	if (find_limiter(tokens) < 0 && has_infile)
 	{
 		fd = open(infile, O_RDONLY);
-		badopen(fd, infile);
 		return (fd);
 	}
 	return (STDIN_FILENO);
@@ -106,7 +105,6 @@ int	get_output(t_tokens **tokens)
 			fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
 			fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		badopen(fd, outfile);
 		return (fd);
 	}
 	else

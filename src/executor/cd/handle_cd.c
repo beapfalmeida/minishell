@@ -1,16 +1,35 @@
 #include "minishell.h"
 
+static int	is_file(char *arg)
+{
+	int	fd;
+
+	fd = open(arg, O_RDONLY);
+	if (fd == -1)
+		return (0);
+	else
+	{
+		close(fd);
+		return (1);
+	}
+}
+
 static int	check_cd(t_tokens *token)
 {
 	if (token->next && token->next->type == ARG &&
 		token->next->next && token->next->next->type == ARG)
 	{
-		// TODO cd: string not in pwd: obj
+		printf(get_error(ERROR_2ARGS), token->token);
+		return (1);
+	}
+	if (is_file(token->next->token))
+	{
+		printf(get_error(ERROR_NDIR), token->token);
 		return (1);
 	}
 	else if (ft_strncmp(token->token, "cd", 3) != 0)
 	{
-		// TODO zsh:command not found: name of cmd
+		printf(get_error(ERROR_CMD), token->token);
 		return (1);
 	}
 	return (0);
@@ -43,9 +62,8 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 	}
 	if (chdir(path))
 	{
-		// Handle Error
-		// TODO path doesnt exist
-		return (1);
+		printf(get_error(ERROR_OPEN), tokens->token, path);
+		return (0);
 	}
-	return (0);
+	return (1);
 }

@@ -27,8 +27,13 @@
 # define LIMITER 9
 # define ARG 10
 
-// # define STDIN STDIN_FILENO
-// # define STDOUT STDOUT_FILENO
+typedef enum e_code
+{
+	ERROR_CMD,
+	ERROR_OPEN,
+	ERROR_2ARGS,
+	ERROR_NDIR,
+}	t_error;
 
 typedef struct s_tokens
 {
@@ -90,7 +95,7 @@ t_tokens	*skip_redirects(t_tokens *tokens);
 int			ft_pwd(t_tokens *token);
 int			ft_cd(t_tokens *tokens, t_shell *shell);
 int			ft_echo(t_tokens *token);
-int			ft_env(t_shell *shell);
+int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 void		find_expander(t_tokens	*tokens, char **envp);
@@ -121,11 +126,16 @@ int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
 int			find_quote(char *str);
 
+//signals
+void	signals();
+void	handle_sigquit(int sig);
+void	handle_sigint(int sig);
+
 // testing
 void		print_tokens(t_tokens **begin_list);
 void		print_arr(char **arr);
 
-void		badopen(int fd, char *file);
 void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
+char		*get_error(t_error i);
 
 #endif
