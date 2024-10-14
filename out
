@@ -1,6 +1,5 @@
 CC = cc
-CFLAGS = -W[Kminishell: [?2004l
-./includes
+CFLAGS = -Wextra -Wall -Werror -g -I./includes
 
 READLINE_PATH = vendor/readline/
 RLFLAG = -L$(READLINE_PATH)/lib -lreadline

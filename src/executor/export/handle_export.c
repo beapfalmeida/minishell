@@ -119,6 +119,32 @@ void	find_expander(t_tokens	*tokens, char **envp)
 	}
 }
 
+char	*find_expander2(char *token, char **envp)
+{
+	char		*new_token;
+	int			i;
+	bool		to_expand;
+
+	i = 0;
+	while (token[i])
+	{
+		if (token[i] == '\"')
+		{
+			to_expand = true;
+		}
+		if (token[i] == '$' && to_expand == true)
+		{
+			i++;
+			if (ft_isalpha(token[i]))
+			{
+				new_token = handle_expander(envp, &token[i]);
+			}
+		}
+		i++;
+	}
+	return (new_token);
+}
+
 char	*handle_expander(char **envp, char *var)
 {
 	char	*trim;

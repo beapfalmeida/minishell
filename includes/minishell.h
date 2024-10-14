@@ -12,6 +12,7 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <stdbool.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
@@ -71,6 +72,8 @@ void		command(t_tokens **temp);
 int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
+char 		*find_expander2(char	*token, char **envp);
+t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 
 // Create shell struct
 void		process_tokens(t_tokens **tokens, t_shell *args);
