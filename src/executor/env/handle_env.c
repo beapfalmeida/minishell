@@ -2,14 +2,14 @@
 
 static int	check_env(t_tokens *tokens, t_shell *shell)
 {
-	if (tokens->next && tokens->next->type == ARG)
-	{
-		do_error(tokens, shell, ERROR_2ARGS);
-		return (1);
-	}
-	else if (ft_strncmp(tokens->token, "env", 4) != 0)
+	if (ft_strncmp(tokens->token, "env", 4) != 0)
 	{
 		do_error(tokens, shell, ERROR_CMD);
+		return (1);
+	}
+	else if (tokens->next && tokens->next->type == ARG)
+	{
+		do_error(tokens, shell, ERROR_2ARGS);
 		return (1);
 	}
 	return (0);
