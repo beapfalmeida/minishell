@@ -1,17 +1,14 @@
 #include "minishell.h"
 
-static int	is_file(char *arg)
+static int	is_file(char *file_name)
 {
-	int	fd;
+	struct stat	file_info;
 
-	fd = open(arg, O_RDONLY);
-	if (fd == -1)
-		return (0);
-	else
-	{
-		close(fd);
+	stat(file_name, &file_info); // get the statistics of a file or directory
+	if (S_ISREG(file_info.st_mode)) // check if is a regular file
 		return (1);
-	}
+	else
+		return (0);
 }
 
 static int	check_cd(t_tokens *token, t_shell *shell)
@@ -65,5 +62,5 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 		do_error(tokens, shell, ERROR_OPEN);
 		return (1);
 	}
-	return (0);
+	return (1);
 }

@@ -12,6 +12,7 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+#include <sys/stat.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
