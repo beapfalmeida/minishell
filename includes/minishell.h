@@ -27,6 +27,8 @@
 # define LIMITER 9
 # define ARG 10
 
+extern int g_signal;
+
 typedef enum e_code
 {
 	ERROR_CMD,
@@ -52,6 +54,7 @@ typedef struct s_shell
 	char	*last_path;
 	int		original_stdin;
 	int		original_stdout;
+	int		exit_code;
 }	t_shell;
 
 typedef struct split
@@ -92,14 +95,15 @@ void		execute(t_tokens *token, t_shell *shell);
 t_tokens	*skip_redirects(t_tokens *tokens);
 
 // Builtins
-int			ft_pwd(t_tokens *token);
+int			ft_pwd(t_tokens *token, t_shell *shell);
 int			ft_cd(t_tokens *tokens, t_shell *shell);
-int			ft_echo(t_tokens *token);
+int			ft_echo(t_tokens *token, t_shell *shell);
 int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var);
+void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
 
 // Free
 
@@ -126,16 +130,16 @@ int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
 int			find_quote(char *str);
 
+// Error handling
+char		*get_error(t_error i);
+void		do_error(t_tokens *tokens, t_shell *shell, t_error error);
+
 //signals
 void	signals();
-void	handle_sigquit(int sig);
 void	handle_sigint(int sig);
 
 // testing
 void		print_tokens(t_tokens **begin_list);
 void		print_arr(char **arr);
-
-void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
-char		*get_error(t_error i);
 
 #endif

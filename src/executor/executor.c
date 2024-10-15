@@ -9,7 +9,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 {
 	if (ft_strncmp(token->token, "pwd", 4) == 0)
 	{
-		if (ft_pwd(token) != 0)
+		if (ft_pwd(token, shell) != 0)
 			return (1);
 	}
 	else if (ft_strncmp(token->token, "cd", 2) == 0)
@@ -19,7 +19,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 	}
 	else if (ft_strncmp(token->token, "echo", 4) == 0)
 	{
-		if ((ft_echo(token) != 0))
+		if ((ft_echo(token, shell) != 0))
 			return (1);
 	}
 	else if (ft_strncmp(token->token, "env", 3) == 0)

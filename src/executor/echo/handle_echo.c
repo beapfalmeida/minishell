@@ -1,22 +1,22 @@
 #include "minishell.h"
 
-static int	check_echo(t_tokens *token)
+static int	check_echo(t_tokens *tokens, t_shell *shell)
 {
-	if (ft_strncmp(token->token, "env", 4) != 0)
+	if (ft_strncmp(tokens->token, "env", 4) != 0)
 	{
-		printf(get_error(ERROR_CMD), token->token);
+		do_error(tokens, shell, ERROR_CMD);
 		return (1);
 	}
 	return (0);
 }
 
-int	ft_echo(t_tokens *token)
+int	ft_echo(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 
-	temp = token;
+	temp = tokens;
 	temp = temp->next;
-	if (check_echo(token))
+	if (check_echo(tokens, shell))
 		return (1);
 	while (temp->token && temp->type == ARG)
 	{
