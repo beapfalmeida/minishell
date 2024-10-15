@@ -72,7 +72,7 @@ void		command(t_tokens **temp);
 int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
-char 		*find_expander2(char	*token, char **envp);
+// char 		*find_expander2(char	*token, char **envp);
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 
 // Create shell struct
@@ -96,7 +96,7 @@ int			ft_echo(t_tokens *token);
 int			ft_env(t_shell *shell);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
-void		find_expander(t_tokens	*tokens, char **envp);
+// void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var);
 
 // Free

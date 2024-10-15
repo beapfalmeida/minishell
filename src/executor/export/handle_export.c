@@ -87,63 +87,63 @@ int	ft_export(t_tokens *token, t_shell *shell)
 	return (1);
 }
 
-void	find_expander(t_tokens	*tokens, char **envp)
-{
-	t_tokens	*temp;
-	char		*new_token;
-	char		*token;
-	int			i;
-	int			is_quoted;
+// void	find_expander(t_tokens	*tokens, char **envp)
+// {
+// 	t_tokens	*temp;
+// 	char		*new_token;
+// 	char		*token;
+// 	int			i;
+// 	int			is_quoted;
 
-	// If $$ returns pid
-	temp = tokens;
-	while (temp && temp->token && (*temp->token != '\''))
-	{
-		token = temp->token;
-		i = 0;
-		is_quoted = find_quote(&token[i]);
-		while (token[i] && is_quoted != 2)
-		{
-			if (token[i] == '$')
-			{
-				i++;
-				if (ft_isalpha(token[i]))
-				{
-					new_token = handle_expander(envp, &token[i]);
-					temp->token = new_token;
-				}
-			}
-			i++;
-		}
-		temp = temp->next;
-	}
-}
+// 	// If $$ returns pid
+// 	temp = tokens;
+// 	while (temp && temp->token && (*temp->token != '\''))
+// 	{
+// 		token = temp->token;
+// 		i = 0;
+// 		is_quoted = find_quote(&token[i]);
+// 		while (token[i] && is_quoted != 2)
+// 		{
+// 			if (token[i] == '$')
+// 			{
+// 				i++;
+// 				if (ft_isalpha(token[i]))
+// 				{
+// 					new_token = handle_expander(envp, &token[i]);
+// 					temp->token = new_token;
+// 				}
+// 			}
+// 			i++;
+// 		}
+// 		temp = temp->next;
+// 	}
+// }
 
-char	*find_expander2(char *token, char **envp)
-{
-	char		*new_token;
-	int			i;
-	bool		to_expand;
+// char	*find_expander2(char *token, char **envp)
+// {
+// 	char		*new_token;
+// 	int			i;
+// 	bool		to_expand;
 
-	i = 0;
-	while (token[i])
-	{
-		if (token[i] == '\"')
-		{
-			to_expand = true;
-		}
-		if (token[i] == '$' && to_expand == true)
-		{
-			i++;
-			if (ft_isalpha(token[i]))
-			{
-				new_token = handle_expander(envp, &token[i]);
-			}
-		}
-		i++;
-	}
-	return (new_token);
-}
+// 	i = 0;
+// 	while (token[i])
+// 	{
+// 		if (token[i] == '\"')
+// 		{
+// 			to_expand = true;
+// 		}
+// 		if (token[i] == '$' && to_expand == true)
+// 		{
+// 			i++;
+// 			if (ft_isalpha(token[i]))
+// 			{
+// 				new_token = handle_expander(envp, &token[i]);
+// 			}
+// 		}
+// 		i++;
+// 	}
+// 	return (new_token);
+// }
 
 char	*handle_expander(char **envp, char *var)
 {
