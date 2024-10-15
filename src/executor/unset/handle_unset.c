@@ -46,5 +46,5 @@ int	ft_unset(t_tokens *tokens, t_shell *shell)
 			free(*new_envp);
 		shell->envp = tmp;
 	}
-	return (0);
+	return (1);
 }
