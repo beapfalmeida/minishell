@@ -23,6 +23,7 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 	close(shell->original_stdout);
 }
 
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_tokens	*tokens = NULL;
@@ -53,8 +54,11 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		process_tokens(&tokens, &shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 		tokens = skip_redirects(tokens);
-		find_expander(tokens, shell.envp);
-		execute(tokens, &shell);
+		tokens = handle_quotes(tokens, &shell);
+		// find_expander(tokens, shell.envp);
+		if (shell.fd_in != -1 && shell.fd_out != -1)
+			execute(tokens, &shell);
+		// else printa erro
 		dup2(shell.original_stdin, STDIN_FILENO);
 		lstclear(&tokens);
 	}
