@@ -20,7 +20,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 		return (1);
 	while (temp->token && temp->type == ARG)
 	{
-		printf("%s ", temp->token);
+		printf("%s", temp->token);
 		temp = temp->next;
 		if (temp == NULL)
 			break ;

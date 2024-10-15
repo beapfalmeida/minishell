@@ -13,6 +13,11 @@ static int	is_file(char *file_name)
 
 static int	check_cd(t_tokens *token, t_shell *shell)
 {
+	if (ft_strncmp(token->token, "cd", 3) != 0)
+	{
+		do_error(token, shell, ERROR_CMD);
+		return (1);
+	}
 	if (token->next && token->next->type == ARG &&
 		token->next->next && token->next->next->type == ARG)
 	{
@@ -22,11 +27,6 @@ static int	check_cd(t_tokens *token, t_shell *shell)
 	if (is_file(token->next->token))
 	{
 		do_error(token, shell, ERROR_NDIR);
-		return (1);
-	}
-	else if (ft_strncmp(token->token, "cd", 3) != 0)
-	{
-		do_error(token, shell, ERROR_CMD);
 		return (1);
 	}
 	return (0);
