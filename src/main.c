@@ -27,6 +27,67 @@ void	signals()
 	signal(SIGQUIT, handle_sigquit);
 }
 
+t_tokens *handle_quotes(t_tokens *tokens, t_shell *shell)
+{
+	t_tokens *temp;
+	char		*token;
+	int			i;
+	char		*new_token;
+
+	i = 0;
+	temp = tokens;
+	while (temp && temp->token)
+	{
+		token = temp->token;
+		i = 0;
+		while (token[i])
+		{
+			if (token[i] == '\"')
+			{
+				// new_token = ft_strjoin(new_token, token[i]);
+				while (token[++i] != '\"')
+				{
+					if (token[i] == '$')
+					{
+						i++;
+						if (ft_isalpha(token[i]))
+							new_token = ft_strjoin(new_token, handle_expander(shell->envp, &token[i]));
+						while (token[i++] && (token[i] != ' ' || token[i] != '\"' || token[i] != '\''));
+					}
+					new_token = ft_strjoin(new_token, &token[i]);
+				}
+			}
+			else if (token[i] == '\'')
+			{
+				while (token[++i] != '\"')
+				{
+					if (token[i] == '$')
+					{
+						i++;
+						if (ft_isalpha(token[i]))
+							new_token = ft_strjoin(new_token, handle_expander(shell->envp, &token[i]));
+						while (token[i++] && (token[i++] != ' ' || token[i] != '\"' || token[i] != '\''));
+					}
+					new_token = ft_strjoin(new_token, &token[i]);
+				}
+			}
+			else
+			{
+				if (token[i] == '$')
+				{
+					i++;
+					if (ft_isalpha(token[i]))
+						new_token = ft_strjoin(new_token, handle_expander(shell->envp, &token[i]));
+					while (token[i++] && (token[i++] != ' ' || token[i] != '\"' || token[i] != '\''));
+				}
+				new_token = ft_strjoin(new_token, &token[i]);
+			}
+			i++;
+		}
+		temp = temp->next;
+	}
+	return (tokens);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
