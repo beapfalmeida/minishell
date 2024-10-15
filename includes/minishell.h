@@ -27,6 +27,7 @@
 # define APPEND_OUT 8
 # define LIMITER 9
 # define ARG 10
+# define DIR_FILE 11
 
 extern int g_signal;
 
@@ -36,6 +37,8 @@ typedef enum e_code
 	ERROR_OPEN,
 	ERROR_2ARGS,
 	ERROR_NDIR,
+	IS_DIR,
+	P_DENY,
 }	t_error;
 
 typedef struct s_tokens
@@ -71,7 +74,7 @@ typedef struct split
 void		init_tokens(t_tokens *token);
 
 // Parser
-void		create_tokens(t_tokens **tokens, char *input);
+void		create_tokens(t_tokens **tokens, char *input, t_shell *shell);
 void		redirect_in(t_tokens **temp);
 void		redirect_out(t_tokens **temp);
 void		append_out(t_tokens **temp);
@@ -79,7 +82,7 @@ void		append_in(t_tokens **temp);
 void		command(t_tokens **temp);
 int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
-void		assign_types(t_tokens **tokens);
+void		assign_types(t_tokens **tokens, t_shell *shell);
 
 // Create shell struct
 void		process_tokens(t_tokens **tokens, t_shell *args);
@@ -93,7 +96,7 @@ char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
 int			ft_isbuiltin(t_tokens *token, t_shell *shell);
 void		execute(t_tokens *token, t_shell *shell);
-t_tokens	*skip_redirects(t_tokens *tokens);
+t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell);
 
 // Builtins
 int			ft_pwd(t_tokens *token, t_shell *shell);
@@ -120,6 +123,8 @@ void		free_paths(char **paths);
 int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
+
+int	is_file(char *file_name);
 
 // Split
 char		**ft_split_adapted(char *s);

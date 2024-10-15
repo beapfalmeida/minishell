@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 /// @brief 
 /// @param token 
 /// @param shell 
@@ -78,7 +77,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (execve(path, cmds, shell->envp) == -1)
 			{
-				printf(get_error(ERROR_CMD), tokens->token);
+				do_error(tokens, shell, ERROR_CMD);
 				//TODO: free ?
 			}
 		}
@@ -113,7 +112,7 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		exec_cmd(tokens, shell);
 }
 
-t_tokens	*skip_redirects(t_tokens *tokens)
+t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*new_tokens;
 
@@ -132,6 +131,6 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 			tokens = tokens->next;
 		}
 	}
-	assign_types(&new_tokens);
+	assign_types(&new_tokens, shell);
 	return (new_tokens);
 }
