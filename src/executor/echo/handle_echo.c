@@ -2,7 +2,7 @@
 
 static int	check_echo(t_tokens *tokens, t_shell *shell)
 {
-	if (ft_strncmp(tokens->token, "env", 4) != 0)
+	if (ft_strncmp(tokens->token, "echo", 4) != 0)
 	{
 		do_error(tokens, shell, ERROR_CMD);
 		return (1);
@@ -26,5 +26,5 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 			break ;
 	}
 	printf("\n");
-	return (0);
+	return (1);
 }
