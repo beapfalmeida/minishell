@@ -89,12 +89,34 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
+static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
+{
+	char *token;
+
+	token = tokens->token;
+	if (!strncmp(token, ".", ft_strlen(token)))
+		do_error(tokens, shell, ERROR_FAR);
+	else if (!strncmp(token, "~", ft_strlen(token)))
+		do_error(tokens, shell, ERROR_TILD);
+	else if (is_file(tokens->token) == 2)
+		do_error(tokens, shell, IS_DIR);
+	else if (is_file(tokens->token) == 1)
+		do_error(tokens, shell, P_DENY);
+	else if (!is_file(tokens->token))
+		do_error(tokens, shell, ERROR_NSFD);
+}
+
 void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
 	t_tokens	*temp;
 
 	temp = tokens;
+	if (temp->type == DIR_FILE)
+	{
+		handle_dir_file(temp, shell);
+		return ;
+	}
 	if (shell->n_pipes)
 	{
 		i = -1;
@@ -112,7 +134,7 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		exec_cmd(tokens, shell);
 }
 
-t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell)
+t_tokens	*skip_redirects(t_tokens *tokens)
 {
 	t_tokens	*new_tokens;
 
@@ -131,6 +153,6 @@ t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell)
 			tokens = tokens->next;
 		}
 	}
-	assign_types(&new_tokens, shell);
+	assign_types(&new_tokens);
 	return (new_tokens);
 }

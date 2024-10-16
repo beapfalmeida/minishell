@@ -39,6 +39,9 @@ typedef enum e_code
 	ERROR_NDIR,
 	IS_DIR,
 	P_DENY,
+	ERROR_FAR,
+	ERROR_TILD,
+	ERROR_NSFD,
 }	t_error;
 
 typedef struct s_tokens
@@ -74,7 +77,7 @@ typedef struct split
 void		init_tokens(t_tokens *token);
 
 // Parser
-void		create_tokens(t_tokens **tokens, char *input, t_shell *shell);
+void		create_tokens(t_tokens **tokens, char *input);
 void		redirect_in(t_tokens **temp);
 void		redirect_out(t_tokens **temp);
 void		append_out(t_tokens **temp);
@@ -82,7 +85,7 @@ void		append_in(t_tokens **temp);
 void		command(t_tokens **temp);
 int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
-void		assign_types(t_tokens **tokens, t_shell *shell);
+void		assign_types(t_tokens **tokens);
 
 // Create shell struct
 void		process_tokens(t_tokens **tokens, t_shell *args);
@@ -96,7 +99,7 @@ char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
 int			ft_isbuiltin(t_tokens *token, t_shell *shell);
 void		execute(t_tokens *token, t_shell *shell);
-t_tokens	*skip_redirects(t_tokens *tokens, t_shell *shell);
+t_tokens	*skip_redirects(t_tokens *tokens);
 
 // Builtins
 int			ft_pwd(t_tokens *token, t_shell *shell);

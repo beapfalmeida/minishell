@@ -1,21 +1,31 @@
 #include "minishell.h"
 
-int check_dir_cmd(t_tokens *tokens, t_shell *shell)
+static int	has_bars(char *token)
+{
+	int	i;
+
+	i = 0;
+	while (token[i])
+	{
+		if (token[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static int check_dir_cmd(t_tokens **tokens)
 {
 	char *token;
 
-	token = tokens->token;
-	if (*token == '.' || *token == '~' || *token == '/')
+	token = (*tokens)->token;
+	if (*token == '.' || *token == '~' || has_bars(token))
 	{
-		if (is_file(token) == 2)
-			do_error(tokens, shell, IS_DIR);
-		else if (is_file(token) == 1)
-			do_error(tokens, shell, P_DENY);
-		tokens->type = DIR_FILE;
-		tokens = tokens->next;
+		(*tokens)->type = DIR_FILE;
+		(*tokens) = (*tokens)->next;
 	}
 	else
-		command(&tokens);
+		command(tokens);
 	return (0);
 }
 
@@ -34,7 +44,7 @@ int	is_symbol(char *token)
 	return (0);
 }
 
-void	assign_types(t_tokens **tokens, t_shell *shell)
+void	assign_types(t_tokens **tokens)
 {
 	t_tokens	*temp;
 
@@ -58,15 +68,15 @@ void	assign_types(t_tokens **tokens, t_shell *shell)
 			command(&temp);
 		else if (!temp->prev)
 		{
-			if (check_dir_cmd(temp, shell))
-				return ;
+			if (check_dir_cmd(&temp))
+				break ;
 		}
 		else
 			loop_assigning(&temp, ARG);
 	}
 }
 
-void	create_tokens(t_tokens **tokens, char *input, t_shell *shell)
+void	create_tokens(t_tokens **tokens, char *input)
 {
 	char		**arr;
 	int			i;
@@ -87,5 +97,4 @@ void	create_tokens(t_tokens **tokens, char *input, t_shell *shell)
 		i++;
 	}
 	free_array(arr, arr_len(arr));
-	assign_types(tokens, shell);
 }

@@ -14,6 +14,23 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 	close(shell->original_stdout);
 }
 
+static void	keep_parsing(t_tokens *tokens, t_shell *shell)
+{
+	find_expander(tokens, shell->envp);
+	assign_types(&tokens);
+	process_tokens(&tokens, shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
+	tokens = skip_redirects(tokens);
+}
+
+static void	init_shell(t_shell *shell, char **envp)
+{
+	shell->envp = envp;
+	shell->exit_code = 0;
+	shell->last_path = ft_strdup(getenv("PWD"));
+	shell->original_stdin = dup(STDIN_FILENO);
+	shell->original_stdout = dup(STDOUT_FILENO);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_tokens	*tokens = NULL;
@@ -22,11 +39,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	shell.envp = envp;
-	shell.exit_code = 0;
-	shell.last_path = ft_strdup(getenv("PWD"));
-	shell.original_stdin = dup(STDIN_FILENO);
-	shell.original_stdout = dup(STDOUT_FILENO);
+	init_shell(&shell, envp);
 	while (1)
 	{
 		signals();
@@ -40,15 +53,14 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
-		create_tokens(&tokens, input_buffer, &shell);
+		create_tokens(&tokens, input_buffer);
 		if (!tokens)
 			continue ;
-		process_tokens(&tokens, &shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
-		tokens = skip_redirects(tokens);
-		find_expander(tokens, shell.envp);
+		keep_parsing(tokens, &shell);
 		execute(tokens, &shell);
 		dup2(shell.original_stdin, STDIN_FILENO);
 		lstclear(&tokens);
+		free(input_buffer);
 	}
 	free_all(tokens, &shell, input_buffer);
 }
