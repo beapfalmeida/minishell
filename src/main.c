@@ -16,7 +16,7 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 
 static void	keep_parsing(t_tokens *tokens, t_shell *shell)
 {
-	find_expander(tokens, shell->envp);
+	// find_expander(tokens, shell->envp);
 	assign_types(&tokens);
 	process_tokens(&tokens, shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 	tokens = skip_redirects(tokens);
