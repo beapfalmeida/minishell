@@ -1,5 +1,34 @@
 #include "minishell.h"
 
+static int	has_bars(char *token)
+{
+	int	i;
+
+	i = 0;
+	while (token[i])
+	{
+		if (token[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static int check_dir_cmd(t_tokens **tokens)
+{
+	char *token;
+
+	token = (*tokens)->token;
+	if (*token == '.' || *token == '~' || has_bars(token))
+	{
+		(*tokens)->type = DIR_FILE;
+		(*tokens) = (*tokens)->next;
+	}
+	else
+		command(tokens);
+	return (0);
+}
+
 int	is_symbol(char *token)
 {
 	if (!ft_strncmp(token, "|", ft_strlen(token)))
@@ -35,8 +64,13 @@ void	assign_types(t_tokens **tokens)
 			append_out(&temp);
 		else if (!ft_strncmp(temp->token, "<<", ft_strlen(temp->token)))
 			append_in(&temp);
-		else if ((temp->prev && (temp->prev->type == PIPE || temp->prev->type == OUTPUT)) || !temp->prev)
+		else if ((temp->prev && (temp->prev->type == PIPE || temp->prev->type == OUTPUT)))
 			command(&temp);
+		else if (!temp->prev)
+		{
+			if (check_dir_cmd(&temp))
+				break ;
+		}
 		else
 			loop_assigning(&temp, ARG);
 	}
@@ -63,5 +97,4 @@ void	create_tokens(t_tokens **tokens, char *input)
 		i++;
 	}
 	free_array(arr, arr_len(arr));
-	assign_types(tokens);
 }

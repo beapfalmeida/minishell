@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-static int	check_export(t_tokens *tokens)
+static int	check_export(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "export", 7) != 0)
 	{
-		printf(get_error(ERROR_CMD), tokens->token);
+		do_error(tokens, shell, ERROR_CMD);
 		return (1);
 	}
 	return (0);
@@ -40,19 +40,19 @@ void	order_alphabetically(char **envp)
 	}
 }
 
-int	ft_export(t_tokens *token, t_shell *shell)
+int	ft_export(t_tokens *tokens, t_shell *shell)
 {
 	char	**envp;
 	char	**temp_envp;
 	char	**new_envp;
 	int		i;
 
-	if (check_export(token) != 0)
+	if (check_export(tokens, shell) != 0)
 		return (0);
 	envp = shell->envp;
-	if (token->next && token->next->type == ARG)
+	if (tokens->next && tokens->next->type == ARG)
 	{
-		while (token->next && token->next->type == ARG)
+		while (tokens->next && tokens->next->type == ARG)
 		{
 			envp = shell->envp;
 			new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
@@ -63,11 +63,11 @@ int	ft_export(t_tokens *token, t_shell *shell)
 				new_envp[i] = ft_strdup(temp_envp[i]);
 				i++;
 			}
-			new_envp[i] = ft_strdup(token->next->token);
+			new_envp[i] = ft_strdup(tokens->next->token);
 			new_envp[i + 1] = NULL;
 			order_alphabetically(new_envp);
 			shell->envp = new_envp;
-			token = token->next;
+			tokens = tokens->next;
 		}
 	}
 	else
