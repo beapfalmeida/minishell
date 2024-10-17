@@ -9,20 +9,14 @@ void	handle_sigint(int sig)
     rl_replace_line("", 0);// Replaces line buffer with new string.
     rl_on_new_line();
     rl_redisplay();
-}
-
-/// @brief Function to handle signals of type SIGQUIT (ctrl-D), by calling exit_clean to exit the shell.
-/// @param sig Signal code (type SIGQUIT)
-void	handle_sigquit(int sig)
-{
-	(void)sig;
-	printf("exit\n");
-	// exit_clean(); TBI -------------------- Currently segfaulting
+	g_signal = SIGINT;
 }
 
 /// @brief The C library signal() function allows user to handle asynchronous event during the program execution
-void	signals()
+void	signals(t_shell *shell)
 {
 	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
+	signal(SIGQUIT, SIG_IGN);
+	if (g_signal == SIGINT)
+		shell->exit_code = 130;
 }

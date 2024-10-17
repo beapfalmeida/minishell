@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 /// @brief 
 /// @param token 
 /// @param shell 
@@ -9,7 +8,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 {
 	if (ft_strncmp(token->token, "pwd", 4) == 0)
 	{
-		if (ft_pwd(token) != 0)
+		if (ft_pwd(token, shell) != 0)
 			return (1);
 	}
 	else if (ft_strncmp(token->token, "cd", 2) == 0)
@@ -19,7 +18,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 	}
 	else if (ft_strncmp(token->token, "echo", 4) == 0)
 	{
-		if ((ft_echo(token) != 0))
+		if ((ft_echo(token, shell) != 0))
 			return (1);
 	}
 	else if (ft_strncmp(token->token, "env", 3) == 0)
@@ -78,7 +77,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (execve(path, cmds, shell->envp) == -1)
 			{
-				printf(get_error(ERROR_CMD), tokens->token);
+				do_error(tokens, shell, ERROR_CMD);
 				//TODO: free ?
 			}
 		}
@@ -90,12 +89,34 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
+static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
+{
+	char *token;
+
+	token = tokens->token;
+	if (!strncmp(token, ".", ft_strlen(token)))
+		do_error(tokens, shell, ERROR_FAR);
+	else if (!strncmp(token, "~", ft_strlen(token)))
+		do_error(tokens, shell, ERROR_TILD);
+	else if (is_file(tokens->token) == 2)
+		do_error(tokens, shell, IS_DIR);
+	else if (is_file(tokens->token) == 1)
+		do_error(tokens, shell, P_DENY);
+	else if (!is_file(tokens->token))
+		do_error(tokens, shell, ERROR_NSFD);
+}
+
 void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
 	t_tokens	*temp;
 
 	temp = tokens;
+	if (temp->type == DIR_FILE)
+	{
+		handle_dir_file(temp, shell);
+		return ;
+	}
 	if (shell->n_pipes)
 	{
 		i = -1;

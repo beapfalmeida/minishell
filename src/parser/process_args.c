@@ -1,11 +1,5 @@
 #include "minishell.h"
 
-void	badopen(int fd, char *file)
-{
-	if (fd == -1)
-		printf("No such file or directory: %s\n", file);
-	// TODO dont execute rest of program!
-}
 int	find_limiter(t_tokens **tokens)
 {
 	t_tokens	*temp;
