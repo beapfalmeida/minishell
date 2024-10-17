@@ -12,6 +12,7 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+#include <sys/stat.h>
 # include <stdbool.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
@@ -27,6 +28,9 @@
 # define APPEND_OUT 8
 # define LIMITER 9
 # define ARG 10
+# define DIR_FILE 11
+
+extern int g_signal;
 
 typedef enum e_code
 {
@@ -34,6 +38,11 @@ typedef enum e_code
 	ERROR_OPEN,
 	ERROR_2ARGS,
 	ERROR_NDIR,
+	IS_DIR,
+	P_DENY,
+	ERROR_FAR,
+	ERROR_TILD,
+	ERROR_NSFD,
 }	t_error;
 
 typedef struct s_tokens
@@ -53,6 +62,7 @@ typedef struct s_shell
 	char	*last_path;
 	int		original_stdin;
 	int		original_stdout;
+	int		exit_code;
 }	t_shell;
 
 typedef struct split
@@ -95,14 +105,15 @@ void		execute(t_tokens *token, t_shell *shell);
 t_tokens	*skip_redirects(t_tokens *tokens);
 
 // Builtins
-int			ft_pwd(t_tokens *token);
+int			ft_pwd(t_tokens *token, t_shell *shell);
 int			ft_cd(t_tokens *tokens, t_shell *shell);
-int			ft_echo(t_tokens *token);
+int			ft_echo(t_tokens *token, t_shell *shell);
 int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var);
+void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
 
 // Free
 
@@ -119,6 +130,8 @@ int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
 
+int	is_file(char *file_name);
+
 // Split
 char		**ft_split_adapted(char *s);
 void		split_words(t_split *sp);
@@ -129,16 +142,16 @@ int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
 int			find_quote(char *str);
 
+// Error handling
+char		*get_error(t_error i);
+void		do_error(t_tokens *tokens, t_shell *shell, t_error error);
+
 //signals
 void	signals();
-void	handle_sigquit(int sig);
 void	handle_sigint(int sig);
 
 // testing
 void		print_tokens(t_tokens **begin_list);
 void		print_arr(char **arr);
-
-void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
-char		*get_error(t_error i);
 
 #endif
