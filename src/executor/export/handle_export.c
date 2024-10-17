@@ -82,37 +82,37 @@ int	ft_export(t_tokens *token, t_shell *shell)
 	return (1);
 }
 
-// void	find_expander(t_tokens	*tokens, char **envp)
-// {
-// 	t_tokens	*temp;
-// 	char		*new_token;
-// 	char		*token;
-// 	int			i;
-// 	int			is_quoted;
+void	find_expander(t_tokens	*tokens, char **envp)
+{
+	t_tokens	*temp;
+	char		*new_token;
+	char		*token;
+	int			i;
+	int			is_quoted;
 
-// 	// If $$ returns pid
-// 	temp = tokens;
-// 	while (temp && temp->token && (*temp->token != '\''))
-// 	{
-// 		token = temp->token;
-// 		i = 0;
-// 		is_quoted = find_quote(&token[i]);
-// 		while (token[i] && is_quoted != 2)
-// 		{
-// 			if (token[i] == '$')
-// 			{
-// 				i++;
-// 				if (ft_isalpha(token[i]))
-// 				{
-// 					new_token = handle_expander(envp, &token[i]);
-// 					temp->token = new_token;
-// 				}
-// 			}
-// 			i++;
-// 		}
-// 		temp = temp->next;
-// 	}
-// }
+	// If $$ returns pid
+	temp = tokens;
+	while (temp && temp->token && (*temp->token != '\''))
+	{
+		token = temp->token;
+		i = 0;
+		is_quoted = find_quote(&token[i]);
+		while (token[i] && is_quoted != 2)
+		{
+			if (token[i] == '$')
+			{
+				i++;
+				if (ft_isalpha(token[i]))
+				{
+					new_token = handle_expander(envp, &token[i]);
+					temp->token = new_token;
+				}
+			}
+			i++;
+		}
+		temp = temp->next;
+	}
+}
 
 // char	*find_expander2(char *token, char **envp)
 // {

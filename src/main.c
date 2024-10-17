@@ -23,66 +23,100 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 	close(shell->original_stdout);
 }
 
-t_tokens *handle_quotes(t_tokens *tokens, t_shell *shell)
+char	*get_var(char *token)
 {
-	t_tokens *temp;
-	char		*token;
-	int			i;
-	char		*new_token;
+	int		i;
 
-	i = 0;
-	temp = tokens;
-	while (temp && temp->token)
+	i = 1;
+	while (token[i])
 	{
-		token = temp->token;
+		if (token[i] == '$' || token[i] == '\"' || token[i] == '\'')
+			break ;
+		i++;
+	}
+	token[i] = '\0';
+	return (token);
+}
+
+char	*trim_quotes(char *token, const char *quote_type, bool *sq, bool *dq)
+{
+	char	*temp;
+	int		i;
+
+	i = ft_strclen(&token[1], quote_type[0]);
+	if (ft_strclen(token, '$') && ft_strclen(token, '$') > i)
+	{
+		if (quote_type[0] == '\"')
+			dq = false;
+		else if (quote_type[0] == '\'')
+			sq = false;
+	}
+	temp = ft_strdup(token);
+	temp[i + 1] = '\0';
+	temp = ft_strtrim(temp, quote_type);
+	token = ft_strjoin(temp, token + i + 2);
+	free(temp);
+	return (token);
+}
+
+t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
+{
+	t_tokens	*ret;
+	char	*token;
+	char	*temp;
+	char	*envp_var;
+	bool	dq;
+	bool	sq;
+	int		i;
+
+	ret = tokens;
+
+	sq = false;
+	dq = false;
+	while (tokens && tokens->token)
+	{
+		sq = false;
+		dq = false;
+		token = tokens->token;
 		i = 0;
 		while (token[i])
 		{
-			if (token[i] == '\"')
+			if (token[i] == '\'' && dq == false)
 			{
-				// new_token = ft_strjoin(new_token, token[i]);
-				while (token[++i] != '\"')
-				{
-					if (token[i] == '$')
-					{
-						i++;
-						if (ft_isalpha(token[i]))
-							new_token = ft_strjoin(new_token, handle_expander(shell->envp, &token[i]));
-						while (token[i++] && (token[i] != ' ' || token[i] != '\"' || token[i] != '\''));
-					}
-					new_token = ft_strjoin(new_token, &token[i]);
-				}
+				sq = !sq;
+				char *trimed = trim_quotes(&token[i], "\'", &sq, &dq);
+				token[i] = '\0';
+				token = ft_strjoin(token, trimed);
+				continue ;
 			}
-			else if (token[i] == '\'')
+			else if (token[i] == '\"' && sq == false)
 			{
-				while (token[++i] != '\"')
-				{
-					if (token[i] == '$')
-					{
-						i++;
-						if (ft_isalpha(token[i]))
-							new_token = ft_strjoin(new_token, handle_expander(shell->envp, &token[i]));
-						while (token[i++] && (token[i++] != ' ' || token[i] != '\"' || token[i] != '\''));
-					}
-					new_token = ft_strjoin(new_token, &token[i]);
-				}
+				dq = !dq;
+				char *trimed = trim_quotes(&token[i], "\"", &sq, &dq);
+				token[i] = '\0';
+				token = ft_strjoin(token, trimed);
+				continue ;
+			}
+			if (token[i] == '$' && sq == false)
+			{
+				envp_var = get_var(ft_strdup(&token[i + 1]));
+				temp = ft_strdup(&token[i + ft_strlen(envp_var) + 1]);
+				token[i] = '\0';
+				// Free token after strjoin
+				token = ft_strjoin(token, handle_expander(shell->envp, envp_var));
+				token = ft_strjoin(token, temp);
+				free(temp);
+				free(envp_var);
+				i = 0;
+				continue ;
 			}
 			else
-			{
-				if (token[i] == '$')
-				{
-					i++;
-					if (ft_isalpha(token[i]))
-						new_token = ft_strjoin(new_token, handle_expander(shell->envp, &token[i]));
-					while (token[i++] && (token[i++] != ' ' || token[i] != '\"' || token[i] != '\''));
-				}
-				new_token = ft_strjoin(new_token, &token[i]);
-			}
-			i++;
+				i++;
 		}
-		temp = temp->next;
+		tokens->token = token;
+		tokens = tokens->next;
 	}
-	return (tokens);
+	return (ret);
 }
 
 int	main(int argc, char **argv, char **envp)
