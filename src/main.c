@@ -138,7 +138,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		signals();
 		input_buffer = readline("minishell: ");
-		if (!input_buffer || (ft_strlen(input_buffer) && !ft_strncmp(input_buffer, "exit", ft_strlen(input_buffer)))) // agora esta a dar merda - quando dou enter
+		if (!input_buffer || (ft_strlen(input_buffer) && !ft_strncmp(input_buffer, "exit", 4)))
 		{
 			printf("exit\n");
 			break ;

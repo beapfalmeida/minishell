@@ -78,6 +78,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			if (execve(path, cmds, shell->envp) == -1)
 			{
 				do_error(tokens, shell, ERROR_CMD);
+				exit(1);
 				//TODO: free ?
 			}
 		}
