@@ -146,13 +146,15 @@ char	*handle_expander(char **envp, char *var)
 	char	*new_token;
 
 	new_token = NULL;
-	var = ft_strtrim(var, "\"");
+	// var = ft_strtrim(var, "\"");
 	while (*envp)
 	{
 		if (ft_strncmp(*envp, var, ft_strclen(var, ' ')) == 0)
 		{
 			trim = ft_strjoin(var, "=");
-			new_token = ft_strtrim(*envp, trim);
+			new_token = ft_strdup(*envp);
+			new_token += ft_strlen(trim);
+			// new_token = ft_strtrim(*envp, trim);
 			new_token = ft_strtrim(new_token, "\"");
 			new_token = ft_strtrim(new_token, "\'");
 			break ;
