@@ -43,10 +43,10 @@ char	*get_path(char	*cmd, char **envp)
 			return (paths[i]);
 		i++;
 	}
-	if (access(paths[i], R_OK) != 0)
-	{
-		// printf error
-	}
+	// if (access(paths[i], R_OK) != 0)
+	// {
+	// 	// printf error
+	// }
 	free(paths);
 	return (NULL);
 }

@@ -75,7 +75,13 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 				close(shell->fd_out);
 			}
 			path = get_path(tokens->token, shell->envp);
-			if (execve(path, cmds, shell->envp) == -1)
+			if (!path)
+			{
+				free_array(cmds, arr_len(cmds));
+				do_error(tokens, shell, ERROR_CMD);
+				exit(1);
+			}
+			if (!path || execve(path, cmds, shell->envp) == -1)
 			{
 				do_error(tokens, shell, ERROR_CMD);
 				//TODO: free ?
@@ -149,12 +155,19 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 				|| tokens->type == OUTPUT || tokens->type == LIMITER))
 				tokens = tokens->next;
 		}
-		if (tokens && tokens->token)
+		if (tokens && tokens->token && !(tokens->type == REDIRECT_IN 
+			|| tokens->type == REDIRECT_OUT || tokens->type == APPEND_IN 
+			|| tokens->type == APPEND_OUT))
 		{
 			add_back_list(&new_tokens, new_node(tokens->token));
 			tokens = tokens->next;
 		}
 	}
-	assign_types(&new_tokens);
-	return (new_tokens);
+	if (new_tokens)
+	{
+		assign_types(&new_tokens);
+		return (new_tokens);
+	}
+	else
+		return (0);
 }
