@@ -141,10 +141,12 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 	new_tokens = NULL;
 	while (tokens && tokens->token)
 	{
-		if (tokens->type == REDIRECT_IN || tokens->type == REDIRECT_OUT)
+		if (tokens->type == REDIRECT_IN || tokens->type == REDIRECT_OUT 
+			|| tokens->type == APPEND_IN || tokens->type == APPEND_OUT)
 		{
 			tokens = tokens->next;
-			if (tokens->type == INPUT || tokens->type == OUTPUT)
+			while (tokens && (tokens->type == INPUT 
+				|| tokens->type == OUTPUT || tokens->type == LIMITER))
 				tokens = tokens->next;
 		}
 		if (tokens && tokens->token)

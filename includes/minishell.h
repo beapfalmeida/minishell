@@ -13,6 +13,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 #include <sys/stat.h>
+# include <stdbool.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
@@ -86,6 +87,8 @@ void		command(t_tokens **temp);
 int			is_symbol(char *token);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
+// char 		*find_expander2(char	*token, char **envp);
+t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 
 // Create shell struct
 void		process_tokens(t_tokens **tokens, t_shell *args);
@@ -108,7 +111,7 @@ int			ft_echo(t_tokens *token, t_shell *shell);
 int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
-void		find_expander(t_tokens	*tokens, char **envp);
+// void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var);
 void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
 
@@ -120,7 +123,7 @@ t_tokens	*new_node(char *content);
 void		add_back_list(t_tokens **lst, t_tokens *new);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
-
+char		**ft_arrdup(char **arr);
 int			free_array(char	**arr, int	len);
 void		free_paths(char **paths);
 int			arr_len(char **arr);

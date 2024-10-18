@@ -35,7 +35,7 @@ VPATHS =	src/				\
 			src/executor/echo 	\
 			src/executor/env 	\
 			src/executor/export \
-			src/executor/unset \
+			src/executor/unset  \
 			src/init/			\
 			src/parser/			\
 			src/prints/			\
