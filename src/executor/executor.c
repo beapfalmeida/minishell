@@ -75,13 +75,11 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 				close(shell->fd_out);
 			}
 			path = get_path(tokens->token, shell->envp);
-			if (!path)
-				return (free_array(cmds, arr_len(cmds)), 1);
 			if (execve(path, cmds, shell->envp) == -1)
 			{
 				do_error(tokens, shell, ERROR_CMD);
 				exit(1);
-				free_array(cmds, arr_len(cmds));
+				//TODO: free ?
 			}
 		}
 		else
