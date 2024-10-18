@@ -135,12 +135,14 @@ int	is_file(char *file_name);
 // Split
 char		**ft_split_adapted(char *s);
 void		split_words(t_split *sp);
-void		put_word(t_split *sp, int c);
+// void		put_word(t_split *sp, int c);
 void		split_quotes(t_split *sp, char c);
 int			ft_word_len(char *s, int i);
 int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
 int			find_quote(char *str);
+int 		malloc_gone_wrong(char **arr, int j);
+int			check_new_token(char *s);
 
 // Error handling
 char		*get_error(t_error i);
