@@ -1,25 +1,13 @@
 #include "minishell.h"
 
-static int	has_bars(char *token)
-{
-	int	i;
 
-	i = 0;
-	while (token[i])
-	{
-		if (token[i] == '/')
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 static int check_dir_cmd(t_tokens **tokens)
 {
 	char *token;
 
 	token = (*tokens)->token;
-	if (*token == '.' || *token == '~' || has_bars(token))
+	if (*token == '.' || *token == '~' || has_char(token, '/'))
 	{
 		(*tokens)->type = DIR_FILE;
 		(*tokens) = (*tokens)->next;

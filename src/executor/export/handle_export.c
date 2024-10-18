@@ -40,6 +40,48 @@ void	order_alphabetically(char **envp)
 	}
 }
 
+static void	add_var(char **env, int i, t_tokens *tokens)
+{
+	int j;
+
+	j = 0;
+	while (env[j])
+	{
+		if (!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
+		{
+			if (has_char(tokens->token, '='))
+				env[j] = ft_strdup(tokens->token);
+			env[i] = NULL;
+			return ;
+		}
+		j++;
+	}
+	env[i] = ft_strdup(tokens->token);
+	env[i + 1] = NULL;
+}
+
+static void	print_export(char *envp)
+{
+	int i;
+	int	equal_sign;
+
+	i = 0;
+	equal_sign = 0;
+	while (envp[i])
+	{
+		write(1, &envp[i], 1);
+		if (envp[i] == '=')
+		{
+			write(1, "\"", 1);
+			equal_sign = 1;
+		}
+		i++;
+	}
+	if (equal_sign == 1)
+		write(1, "\"", 1);
+	write(1, "\n", 1);
+}
+
 int	ft_export(t_tokens *tokens, t_shell *shell)
 {
 	char	**envp;
@@ -48,7 +90,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	int		i;
 
 	if (check_export(tokens, shell) != 0)
-		return (0);
+		return (1);
 	envp = shell->envp;
 	if (tokens->next && tokens->next->type == ARG)
 	{
@@ -63,8 +105,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 				new_envp[i] = ft_strdup(temp_envp[i]);
 				i++;
 			}
-			new_envp[i] = ft_strdup(tokens->next->token);
-			new_envp[i + 1] = NULL;
+			add_var(new_envp, i, tokens->next);
 			order_alphabetically(new_envp);
 			shell->envp = new_envp;
 			tokens = tokens->next;
@@ -74,71 +115,13 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	{
 		while (*envp)
 		{
-			printf("declare -x ");
-			printf("%s\n", *envp);
+			write(1, "declare -x ", 11);
+			print_export(*envp);
 			envp++;
 		}
 	}
 	return (1);
 }
-
-// void	find_expander(t_tokens	*tokens, char **envp)
-// {
-// 	t_tokens	*temp;
-// 	char		*new_token;
-// 	char		*token;
-// 	int			i;
-// 	int			is_quoted;
-
-// 	// If $$ returns pid
-// 	temp = tokens;
-// 	while (temp && temp->token && (*temp->token != '\''))
-// 	{
-// 		token = temp->token;
-// 		i = 0;
-// 		is_quoted = find_quote(&token[i]);
-// 		while (token[i] && is_quoted != 2)
-// 		{
-// 			if (token[i] == '$')
-// 			{
-// 				i++;
-// 				if (ft_isalpha(token[i]))
-// 				{
-// 					new_token = handle_expander(envp, &token[i]);
-// 					temp->token = new_token;
-// 				}
-// 			}
-// 			i++;
-// 		}
-// 		temp = temp->next;
-// 	}
-// }
-
-// char	*find_expander2(char *token, char **envp)
-// {
-// 	char		*new_token;
-// 	int			i;
-// 	bool		to_expand;
-
-// 	i = 0;
-// 	while (token[i])
-// 	{
-// 		if (token[i] == '\"')
-// 		{
-// 			to_expand = true;
-// 		}
-// 		if (token[i] == '$' && to_expand == true)
-// 		{
-// 			i++;
-// 			if (ft_isalpha(token[i]))
-// 			{
-// 				new_token = handle_expander(envp, &token[i]);
-// 			}
-// 		}
-// 		i++;
-// 	}
-// 	return (new_token);
-// }
 
 char	*handle_expander(char **envp, char *var)
 {

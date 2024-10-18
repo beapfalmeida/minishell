@@ -15,3 +15,17 @@ int	is_file(char *file_name)
 	else
 		return (3);
 }
+
+int	has_char(char *token, char c)
+{
+	int	i;
+
+	i = 0;
+	while (token[i])
+	{
+		if (token[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
+}

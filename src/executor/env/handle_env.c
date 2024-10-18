@@ -32,14 +32,17 @@ static int	check_env(t_tokens *tokens, t_shell *shell)
 int	ft_env(t_shell *shell, t_tokens *tokens)
 {
 	char	**envp;
+	char	*trim;
 
 	if (check_env(tokens, shell))
 		return (1);
 	envp = shell->envp;
 	while (*envp)
 	{
-		if (has_value(*envp))
-			printf("%s\n", *envp);
+		trim = ft_strtrim(*envp, "\"");
+		if (has_value(trim))
+			printf("%s\n", trim);
+		free(trim);
 		envp++;
 	}
 	return (1);
