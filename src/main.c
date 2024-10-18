@@ -6,8 +6,8 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 {
 	if (input_buffer)
 	free(input_buffer);
-	if (shell->last_path)
-		free(shell->last_path);
+	// if (shell->last_path)
+		// free(shell->last_path);
 	if (tokens)
 		lstclear(&tokens);
 	close(shell->original_stdin);
@@ -16,7 +16,7 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 
 static void	keep_parsing(t_tokens *tokens, t_shell *shell)
 {
-	// find_expander(tokens, shell->envp);
+	handle_quotes(tokens, shell);
 	assign_types(&tokens);
 	process_tokens(&tokens, shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 	tokens = skip_redirects(tokens);
@@ -35,7 +35,7 @@ char	*get_var(char *token)
 {
 	int		i;
 
-	i = 1;
+	i = 0;
 	while (token[i])
 	{
 		if (token[i] == '$' || token[i] == '\"' || token[i] == '\'')
@@ -46,25 +46,18 @@ char	*get_var(char *token)
 	return (token);
 }
 
-char	*trim_quotes(char *token, const char *quote_type, bool *sq, bool *dq)
+char	*skip_quote(char *token, const char *quote_type, bool *sq, bool *dq, bool *first_encounter)
 {
-	char	*temp;
-	int		i;
+	char	*ret;
 
-	i = ft_strclen(&token[1], quote_type[0]);
-	if (ft_strclen(token, '$') && ft_strclen(token, '$') > i)
-	{
-		if (quote_type[0] == '\"')
-			dq = false;
-		else if (quote_type[0] == '\'')
-			sq = false;
-	}
-	temp = ft_strdup(token);
-	temp[i + 1] = '\0';
-	temp = ft_strtrim(temp, quote_type);
-	token = ft_strjoin(temp, token + i + 2);
-	free(temp);
-	return (token);
+	ret = ft_strdup(token);
+	if (quote_type[0] == '\'' && *sq == true && *first_encounter == false)
+		*sq = false;
+	else if (quote_type[0] == '\"' && *dq == true && *first_encounter == false)
+		*dq = false;
+	*first_encounter = false;
+	ret++;
+	return (ret);
 }
 
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
@@ -75,24 +68,28 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 	char	*envp_var;
 	bool	dq;
 	bool	sq;
+	bool	first_encounter;
 	int		i;
 
 	ret = tokens;
 
 	sq = false;
 	dq = false;
+	first_encounter = true;
 	while (tokens && tokens->token)
 	{
 		sq = false;
 		dq = false;
+		first_encounter = true;
 		token = tokens->token;
 		i = 0;
 		while (token[i])
 		{
+			first_encounter = true;
 			if (token[i] == '\'' && dq == false)
 			{
 				sq = !sq;
-				char *trimed = trim_quotes(&token[i], "\'", &sq, &dq);
+				char *trimed = skip_quote(&token[i], "\'", &sq, &dq, &first_encounter);
 				token[i] = '\0';
 				token = ft_strjoin(token, trimed);
 				continue ;
@@ -100,7 +97,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 			else if (token[i] == '\"' && sq == false)
 			{
 				dq = !dq;
-				char *trimed = trim_quotes(&token[i], "\"", &sq, &dq);
+				char *trimed = skip_quote(&token[i], "\"", &sq, &dq, &first_encounter);
 				token[i] = '\0';
 				token = ft_strjoin(token, trimed);
 				continue ;
@@ -112,10 +109,10 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 				token[i] = '\0';
 				// Free token after strjoin
 				token = ft_strjoin(token, handle_expander(shell->envp, envp_var));
+				i += ft_strlen(handle_expander(shell->envp, envp_var));
 				token = ft_strjoin(token, temp);
 				free(temp);
 				free(envp_var);
-				i = 0;
 				continue ;
 			}
 			else

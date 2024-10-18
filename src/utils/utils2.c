@@ -38,13 +38,21 @@ int	free_array(char	**arr, int	len)
 	return (0);
 }
 
-int	find_quote(char *str)
+char	**ft_arrdup(char **arr)
 {
-	if (*str == '\"')
-		return (1);
-	else if (*str == '\'')
-		return (2);
-	return (0);
+	char	**ret;
+	int		i;
+
+	i = 0;
+	ret = malloc(arr_len(arr) * sizeof(char *) + 1);
+	while (arr && *arr)
+	{
+		ret[i] = ft_strdup(*arr);
+		i++;
+		arr++;
+	}
+	ret[i] = NULL;
+	return (ret);
 }
 
 int	ft_strclen(char *str, char c)

@@ -13,7 +13,7 @@ static int	check_cd(t_tokens *token, t_shell *shell)
 		do_error(token, shell, ERROR_2ARGS);
 		return (1);
 	}
-	if (is_file(token->next->token) == 1)
+	if (token->next && is_file(token->next->token) == 1)
 	{
 		do_error(token, shell, ERROR_NDIR);
 		return (1);

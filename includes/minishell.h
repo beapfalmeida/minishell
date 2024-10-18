@@ -123,7 +123,7 @@ t_tokens	*new_node(char *content);
 void		add_back_list(t_tokens **lst, t_tokens *new);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
-
+char		**ft_arrdup(char **arr);
 int			free_array(char	**arr, int	len);
 void		free_paths(char **paths);
 int			arr_len(char **arr);
