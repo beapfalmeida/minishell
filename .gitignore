@@ -4,3 +4,5 @@ extras
 minishell
 libft.a
 ft_printf.a
+out
+in
