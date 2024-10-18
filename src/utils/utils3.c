@@ -6,7 +6,7 @@ int	is_file(char *file_name)
 	int res;
 
 	res = stat(file_name, &file_info); // get the statistics of a file or directory
-	if (res == -1)
+	if (res == -1) // if theres no such file or dir
 		return (0);
 	if (S_ISREG(file_info.st_mode)) // check if is a regular file
 		return (1);

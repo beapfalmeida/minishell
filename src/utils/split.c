@@ -105,6 +105,6 @@ char	**ft_split_adapted(char *s)
 		return (NULL);
 	split_words(&sp);
 	if (!*(sp.arr))
-		return (free(sp.arr), NULL); //TODO: wtf
+		return (free(sp.arr), NULL);
 	return (sp.arr);
 }
