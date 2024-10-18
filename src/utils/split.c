@@ -1,18 +1,5 @@
 #include "minishell.h"
 
-static int malloc_gone_wrong(char **arr, int j)
-{
-	int i = j;
-	if (!arr[i])
-	{
-		while (i--)
-			free(arr[i]);
-		free(arr);
-		return (1);
-	}
-	return (0);
-}
-
 void	split_quotes(t_split *sp, char c)
 {
 	sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
@@ -21,9 +8,9 @@ void	split_quotes(t_split *sp, char c)
 	sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
 }
 
-void	put_word(t_split *sp, int c)
+static void	put_word(t_split *sp, int c)
 {
-	if (c == PIPE)
+	if (c == PIPE || c == REDIRECT_IN || c == REDIRECT_OUT)
 	{
 		sp->arr[sp->j] = malloc(sizeof(char) + 1);
 		if (malloc_gone_wrong(sp->arr, sp->j))
@@ -41,11 +28,41 @@ void	put_word(t_split *sp, int c)
 				split_quotes(sp, '\"');
 			if (sp->s[sp->i] && sp->s[sp->i] == '\'')
 				split_quotes(sp, '\'');
-			while (sp->s[sp->i] && sp->s[sp->i] != ' ' && sp->s[sp->i] != '|' && sp->s[sp->i] != '\"' && sp->s[sp->i] != '\'')
+			while (check_new_token(&sp->s[sp->i]) == 3 && sp->s[sp->i] != '\"' && sp->s[sp->i] != '\'')
 				sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-			if (sp->s[sp->i] && (sp->s[sp->i] == '|' || sp->s[sp->i] == ' '))
+			if (sp->s[sp->i] && (check_new_token(&sp->s[sp->i]) == 1 || sp->s[sp->i] == ' '))
 				break ;
 		}
+	}
+}
+
+static void	put_word_extra(t_split *sp, int c)
+{
+	if (c == REDIRECT_IN)
+	{
+		if (sp->s[sp->i + 1] == '<')
+		{
+			sp->arr[sp->j] = malloc(sizeof(char) + 2);
+			if (malloc_gone_wrong(sp->arr, sp->j))
+				return ;
+			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+		}
+		else
+			put_word(sp, REDIRECT_IN);
+	}
+	else if (c == REDIRECT_OUT)
+	{
+		if (sp->s[sp->i + 1] == '>')
+		{
+			sp->arr[sp->j] = malloc(sizeof(char) + 2);
+			if (malloc_gone_wrong(sp->arr, sp->j))
+				return ;
+			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+		}
+		else
+			put_word(sp, REDIRECT_OUT);
 	}
 }
 
@@ -59,6 +76,10 @@ void	split_words(t_split *sp)
 		{
 			if (sp->s[sp->i] == '|')
 				put_word(sp, PIPE);
+			else if (sp->s[sp->i] == '<')
+				put_word_extra(sp, REDIRECT_IN);
+			else if (sp->s[sp->i] == '>')
+				put_word_extra(sp, REDIRECT_OUT);
 			else
 				put_word(sp, 0);
 			sp->arr[sp->j][sp->k] = '\0';
