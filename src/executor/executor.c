@@ -46,6 +46,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 int	exec_cmd(t_tokens *tokens, t_shell *shell)
 {
 	int		pid;
+	int		status;
 	char	*path;
 	char	**cmds;
 
@@ -77,7 +78,6 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (!path || execve(path, cmds, shell->envp) == -1)
 			{
-				do_error(tokens, shell, ERROR_CMD);
 				free_paths(cmds);
 				if (path)
 					free(path);
@@ -88,7 +88,10 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 		}
 		else
 		{
-			wait(NULL);
+			wait(&status);
+			if (WIFEXITED(status))
+				if (WEXITSTATUS(status) == 1)
+					do_error(tokens, shell, ERROR_CMD);
 		}
 	}
 	return (0);

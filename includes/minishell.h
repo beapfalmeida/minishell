@@ -62,7 +62,7 @@ typedef struct s_shell
 	char	*last_path;
 	int		original_stdin;
 	int		original_stdout;
-	int		exit_code;
+	char	*exit_code;
 }	t_shell;
 
 typedef struct split
@@ -112,7 +112,7 @@ int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
-char		*handle_expander(char **envp, char *var);
+char		*handle_expander(char **envp, char *var, t_shell *shell);
 void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
 
 // Free

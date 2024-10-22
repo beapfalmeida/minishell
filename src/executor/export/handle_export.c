@@ -123,13 +123,14 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	return (1);
 }
 
-char	*handle_expander(char **envp, char *var)
+char	*handle_expander(char **envp, char *var, t_shell *shell)
 {
 	char	*trim;
 	char	*new_token;
 
 	new_token = NULL;
-	// var = ft_strtrim(var, "\"");
+	if (!strncmp(var, "?", 1))
+		return (shell->exit_code);
 	while (*envp)
 	{
 		if (ft_strncmp(*envp, var, ft_strclen(var, ' ')) == 0)

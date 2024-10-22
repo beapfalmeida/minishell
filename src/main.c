@@ -31,7 +31,7 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 static void	init_shell(t_shell *shell, char **envp)
 {
 	shell->envp = envp;
-	shell->exit_code = 0;
+	shell->exit_code = "0";
 	shell->last_path = ft_strdup(getenv("PWD"));
 	shell->original_stdin = dup(STDIN_FILENO);
 	shell->original_stdout = dup(STDOUT_FILENO);
@@ -65,7 +65,7 @@ char	*skip_quote(char *token, const char *quote_type, bool *sq, bool *dq, bool *
 	ret++;
 	return (ret);
 }
-
+//TODO: free string_joins
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*ret;
@@ -114,8 +114,8 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 				temp = ft_strdup(&token[i + ft_strlen(envp_var) + 1]);
 				token[i] = '\0';
 				// Free token after strjoin
-				token = ft_strjoin(token, handle_expander(shell->envp, envp_var));
-				i += ft_strlen(handle_expander(shell->envp, envp_var));
+				token = ft_strjoin(token, handle_expander(shell->envp, envp_var, shell));
+				i += ft_strlen(handle_expander(shell->envp, envp_var, shell));
 				token = ft_strjoin(token, temp);
 				free(temp);
 				free(envp_var);
@@ -143,6 +143,11 @@ int	main(int argc, char **argv, char **envp)
 	{
 		signals();
 		input_buffer = readline("minishell: ");
+		if (g_signal == SIGINT)
+		{
+			shell.exit_code = "130";
+			g_signal = 0;
+		}
 		if (!input_buffer || (ft_strlen(input_buffer) && !ft_strncmp(input_buffer, "exit", 4)))
 		{
 			printf("exit\n");

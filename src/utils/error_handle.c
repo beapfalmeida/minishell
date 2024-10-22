@@ -25,11 +25,11 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 	else
 		printf(get_error(error), tokens->token);
 	if (error == ERROR_2ARGS || error == ERROR_NDIR  || error == ERROR_CMD)
-		shell->exit_code = 1;
+		shell->exit_code = "1";
 	else if (error == ERROR_FAR)
-		shell->exit_code = 2;
+		shell->exit_code = "2";
 	else if (error == ERROR_OPEN)
-		shell->exit_code = 127;
+		shell->exit_code = "127";
 	else if (error == IS_DIR || error == ERROR_TILD)
-		shell->exit_code = 126;
+		shell->exit_code = "126";
 }

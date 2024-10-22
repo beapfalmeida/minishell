@@ -63,6 +63,7 @@ int	countwords(char *s, int j, int count)
 	return (count);
 }
 
+//TODO: change this with << and <
 int	ft_word_len(char *s, int i)
 {
 	int count;
