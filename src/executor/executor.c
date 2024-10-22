@@ -81,7 +81,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 				free_paths(cmds);
 				if (path)
 					free(path);
-				exit(1);
+				exit(10);
 			}
 			free_array(cmds, arr_len(cmds));
 			free(path);
@@ -90,7 +90,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 		{
 			wait(&status);
 			if (WIFEXITED(status))
-				if (WEXITSTATUS(status) == 1)
+				if (WEXITSTATUS(status) == 10)
 					do_error(tokens, shell, ERROR_CMD);
 		}
 	}
