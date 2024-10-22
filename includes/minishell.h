@@ -131,6 +131,7 @@ int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
 
 int	is_file(char *file_name);
+int	has_char(char *token, char c);
 
 // Split
 char		**ft_split_adapted(char *s);

@@ -5,9 +5,9 @@ int g_signal;
 static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 {
 	if (input_buffer)
-	free(input_buffer);
-	// if (shell->last_path)
-		// free(shell->last_path);
+		free(input_buffer);
+	if (shell->last_path)
+		free(shell->last_path);
 	if (tokens)
 		lstclear(&tokens);
 	close(shell->original_stdin);
@@ -16,10 +16,15 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 
 static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 {
+	t_tokens *temp;
 	handle_quotes(tokens, shell);
+	if (*tokens->token == '\0')
+		return (NULL);
 	assign_types(&tokens);
 	process_tokens(&tokens, shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
+	temp = tokens;
 	tokens = skip_redirects(tokens);
+	lstclear(&temp);
 	return (tokens);
 }
 
@@ -138,7 +143,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		signals();
 		input_buffer = readline("minishell: ");
-		if (!input_buffer || (ft_strlen(input_buffer) && !ft_strncmp(input_buffer, "exit", ft_strlen(input_buffer)))) // agora esta a dar merda - quando dou enter
+		if (!input_buffer || (ft_strlen(input_buffer) && !ft_strncmp(input_buffer, "exit", 4)))
 		{
 			printf("exit\n");
 			break ;
@@ -151,8 +156,9 @@ int	main(int argc, char **argv, char **envp)
 		if (!tokens)
 			continue ;
 		tokens = keep_parsing(tokens, &shell);
-		if (tokens)
-			execute(tokens, &shell);
+		if (!tokens)
+			continue ;
+		execute(tokens, &shell);
 		dup2(shell.original_stdin, STDIN_FILENO);
 		lstclear(&tokens);
 		free(input_buffer);
