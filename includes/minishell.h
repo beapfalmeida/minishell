@@ -38,7 +38,7 @@ extern int g_signal;
 typedef enum e_code
 {
 	ERROR_CMD,
-	ERROR_OPEN,
+	ERROR_CD,
 	ERROR_2ARGS,
 	ERROR_NDIR,
 	IS_DIR,
@@ -47,6 +47,8 @@ typedef enum e_code
 	ERROR_TILD,
 	ERROR_NSFD,
 	ERROR_SYNTAX,
+	ERROR_OPEN,
+	ERROR_OPENCMD,
 }	t_error;
 
 typedef struct s_tokens
@@ -95,7 +97,7 @@ void		assign_types(t_tokens **tokens);
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 
 // Create shell struct
-void		process_tokens(t_tokens **tokens, t_shell *args);
+int			process_tokens(t_tokens **tokens, t_shell *args);
 int			get_input(t_tokens **tokens, t_shell *shell);
 int			get_output(t_tokens **tokens);
 

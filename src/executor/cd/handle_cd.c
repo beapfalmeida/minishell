@@ -48,7 +48,7 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 	}
 	if (chdir(path))
 	{
-		do_error(tokens, shell, ERROR_OPEN);
+		do_error(tokens, shell, ERROR_CD);
 		return (1);
 	}
 	return (1);
