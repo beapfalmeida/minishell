@@ -24,7 +24,7 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	process_tokens(&tokens, shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 	temp = tokens;
 	tokens = skip_redirects(tokens);
-	free(temp);
+	lstclear(&temp);
 	return (tokens);
 }
 

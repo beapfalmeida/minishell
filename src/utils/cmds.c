@@ -22,6 +22,8 @@ char	*get_path(char	*cmd, char **envp)
 {
 	char	**paths;
 	int		i;
+	char	*joined;
+	char	*temp;
 
 	while (envp && *envp++)
 		if (envp && *envp && ft_strncmp(*envp, "PATH", 4) == 0)
@@ -32,18 +34,24 @@ char	*get_path(char	*cmd, char **envp)
 	i = 0;
 	while (paths[i])
 	{
-		paths[i] = ft_strjoin(paths[i], "/");
-		paths[i] = ft_strjoin(paths[i], cmd);
-		if (!paths[i])
+		joined = ft_strjoin(paths[i], "/");
+		temp = joined;
+		joined = ft_strjoin(joined, cmd);
+		free(temp);
+		if (!joined)
 		{
 			free_paths(paths);
 			return (NULL);
 		}
-		if (access(paths[i], R_OK) == 0)
-			return (paths[i]);
+		if (access(joined, R_OK) == 0)
+		{
+			free_paths(paths);
+			return (joined);
+		}
 		i++;
+		free(joined);
 	}
-	free(paths);
+	free_paths(paths);
 	return (NULL);
 }
 
