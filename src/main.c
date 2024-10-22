@@ -18,9 +18,11 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens *temp;
 	handle_quotes(tokens, shell);
-	if (*tokens->token == '\0')
-		return (NULL);
+	// if (*tokens->token == '\0')
+	// 	return (NULL);
 	assign_types(&tokens);
+	if (has_sintax_error(tokens))
+		return (do_error(tokens, shell, ERROR_SYNTAX), NULL);
 	process_tokens(&tokens, shell); // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 	temp = tokens;
 	tokens = skip_redirects(tokens);
@@ -110,15 +112,26 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 			}
 			if (token[i] == '$' && sq == false)
 			{
-				envp_var = get_var(ft_strdup(&token[i + 1]));
-				temp = ft_strdup(&token[i + ft_strlen(envp_var) + 1]);
-				token[i] = '\0';
-				// Free token after strjoin
-				token = ft_strjoin(token, handle_expander(shell->envp, envp_var, shell));
-				i += ft_strlen(handle_expander(shell->envp, envp_var, shell));
-				token = ft_strjoin(token, temp);
-				free(temp);
-				free(envp_var);
+				if (token[i + 1])
+				{
+					envp_var = get_var(ft_strdup(&token[i + 1]));
+					temp = ft_strdup(&token[i + ft_strlen(envp_var) + 1]);
+					token[i] = '\0';
+					// Free token after strjoin
+					token = ft_strjoin(token, handle_expander(shell->envp, envp_var, shell));
+					i += ft_strlen(handle_expander(shell->envp, envp_var, shell));
+					token = ft_strjoin(token, temp);
+					free(temp);
+					free(envp_var);
+				}
+				else
+					break ;
+				if (!*token)
+				{
+					tokens->token = token;
+					tokens->type = SKIP;
+					return (ret);
+				}
 				continue ;
 			}
 			else

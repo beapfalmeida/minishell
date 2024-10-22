@@ -131,6 +131,8 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 	new_token = NULL;
 	if (!strncmp(var, "?", 1))
 		return (shell->exit_code);
+	if (!var || !*var)
+		return (NULL);
 	while (*envp)
 	{
 		if (ft_strncmp(*envp, var, ft_strclen(var, ' ')) == 0)

@@ -2,9 +2,9 @@
 
 char	*get_error(t_error i)
 {
-	char	*str[9];
+	char	*str[10];
 
-	str[0] = "bash: %s: Command not found\n";
+	str[0] = "%s: Command not found\n";
 	str[1] = "bash: %s: %s: No such file or directory\n";
 	str[2] = "bash: %s: too many arguments\n";
 	str[3] = "bash: %s: %s: Not a directory\n";
@@ -13,6 +13,7 @@ char	*get_error(t_error i)
 	str[6] = "bash: .: filename argument required\n";
 	str[7] = str[4];
 	str[8] = "bash: %s: No such file or directory\n";
+	str[9] = "bash: syntax error near unexpected token 'newline'\n";
 	return (str[i]);
 }
 
@@ -24,11 +25,11 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		printf(get_error(IS_DIR), getenv("HOME"));
 	else
 		printf(get_error(error), tokens->token);
-	if (error == ERROR_2ARGS || error == ERROR_NDIR  || error == ERROR_CMD)
+	if (error == ERROR_2ARGS || error == ERROR_NDIR)
 		shell->exit_code = "1";
-	else if (error == ERROR_FAR)
+	else if (error == ERROR_FAR || error == ERROR_SYNTAX)
 		shell->exit_code = "2";
-	else if (error == ERROR_OPEN)
+	else if (error == ERROR_OPEN || error == ERROR_CMD)
 		shell->exit_code = "127";
 	else if (error == IS_DIR || error == ERROR_TILD)
 		shell->exit_code = "126";
