@@ -1,54 +1,43 @@
 #include "minishell.h"
 
-int	find_limiter(t_tokens **tokens)
+static int	find_limiter(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
-	char	*limiter = NULL;
-	char	*input_buff = NULL;
-	char	*tem;
-	int		pipe_fd[2];
+	char		*limiter = NULL;
+	char		*input_buff = NULL;
+	int			pipe_fd[2];
 
 	temp = *tokens;
 	while (temp)
 	{
 		if (temp->type == LIMITER)
 		{
+			dup2(shell->original_stdin, STDIN_FILENO);
 			limiter = ft_strdup(temp->token);
-			break ;
+			pipe(pipe_fd);
+			limiter = ft_strjoin(limiter, "\n");
+			while (1)
+			{
+				input_buff = readline("> ");
+				if (input_buff)
+					input_buff = ft_strjoin(input_buff, "\n");
+				if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
+					break ;
+				write(pipe_fd[1], input_buff, ft_strlen(input_buff));
+				free(input_buff);
+			}
+			close(pipe_fd[1]);
+			dup2(pipe_fd[0], STDIN_FILENO);
+			close(pipe_fd[0]);
+			free(limiter);
+			free(input_buff);
 		}
 		temp = temp->next;
 	}
-	if (limiter)
-	{
-		pipe(pipe_fd);
-		limiter = ft_strjoin(limiter, "\n");
-		while (1)
-		{
-			input_buff = readline("> ");
-			tem = input_buff;
-			input_buff = ft_strjoin(input_buff, "\n");
-			free(tem);
-			if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
-				break ;
-			write(pipe_fd[1], input_buff, ft_strlen(input_buff));
-			free(input_buff);
-		}
-		close(pipe_fd[1]);
-		dup2(pipe_fd[0], STDIN_FILENO);
-		close(pipe_fd[0]);
-		free(limiter);
-		free(input_buff);
-		return (STDIN_FILENO);
-	}
-	else
-	{
-		free(limiter);
-		free(input_buff);
-		return (-1);
-	}
+	return (STDIN_FILENO);
 }
 
-int	get_input(t_tokens **tokens)
+int	get_input(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 	char		*infile;
@@ -68,7 +57,7 @@ int	get_input(t_tokens **tokens)
 		}
 		temp = temp->next;
 	}
-	if (find_limiter(tokens) < 0 && has_infile)
+	if (find_limiter(tokens, shell) != shell->original_stdin && has_infile)
 	{
 		fd = open(infile, O_RDONLY);
 		return (fd);
@@ -107,7 +96,7 @@ int	get_output(t_tokens **tokens)
 
 void	process_tokens(t_tokens **tokens, t_shell *args)
 {
-	args->fd_in = get_input(tokens);
+	args->fd_in = get_input(tokens, args);
 	args->fd_out = get_output(tokens);
 	args->n_pipes = count_pipes(tokens);
 }

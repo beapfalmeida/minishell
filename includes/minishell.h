@@ -92,7 +92,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 
 // Create shell struct
 void		process_tokens(t_tokens **tokens, t_shell *args);
-int			get_input(t_tokens **tokens);
+int			get_input(t_tokens **tokens, t_shell *shell);
 int			get_output(t_tokens **tokens);
 
 // Executor
@@ -149,8 +149,8 @@ char		*get_error(t_error i);
 void		do_error(t_tokens *tokens, t_shell *shell, t_error error);
 
 //signals
-void	signals();
-void	handle_sigint(int sig);
+void		signals();
+void		handle_sigint(int sig);
 
 // testing
 void		print_tokens(t_tokens **begin_list);

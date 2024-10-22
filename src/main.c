@@ -151,7 +151,8 @@ int	main(int argc, char **argv, char **envp)
 		if (!tokens)
 			continue ;
 		tokens = keep_parsing(tokens, &shell);
-		execute(tokens, &shell);
+		if (tokens)
+			execute(tokens, &shell);
 		dup2(shell.original_stdin, STDIN_FILENO);
 		lstclear(&tokens);
 		free(input_buffer);
