@@ -154,12 +154,19 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 				|| tokens->type == OUTPUT || tokens->type == LIMITER))
 				tokens = tokens->next;
 		}
-		if (tokens && tokens->token)
+		if (tokens && tokens->token && !(tokens->type == REDIRECT_IN 
+			|| tokens->type == REDIRECT_OUT || tokens->type == APPEND_IN 
+			|| tokens->type == APPEND_OUT))
 		{
 			add_back_list(&new_tokens, new_node(tokens->token));
 			tokens = tokens->next;
 		}
 	}
-	assign_types(&new_tokens);
-	return (new_tokens);
+	if (new_tokens)
+	{
+		assign_types(&new_tokens);
+		return (new_tokens);
+	}
+	else
+		return (0);
 }
