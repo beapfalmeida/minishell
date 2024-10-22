@@ -90,7 +90,7 @@ void		redirect_out(t_tokens **temp);
 void		append_out(t_tokens **temp);
 void		append_in(t_tokens **temp);
 void		command(t_tokens **temp);
-int			is_symbol(char *token);
+int			is_symbol(char *token, int len);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
 // char 		*find_expander2(char	*token, char **envp);

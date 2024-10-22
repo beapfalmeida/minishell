@@ -2,7 +2,7 @@
 
 void	loop_assigning(t_tokens **temp, int type)
 {
-	while ((*temp) && !is_symbol((*temp)->token))
+	while ((*temp) && !is_symbol((*temp)->token, ft_strlen((*temp)->token)))
 	{
 		(*temp)->type = type;
 		(*temp) = (*temp)->next;

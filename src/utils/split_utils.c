@@ -63,50 +63,29 @@ int	countwords(char *s, int j, int count)
 	return (count);
 }
 
-//TODO: change this with << and <
-int	ft_word_len(char *s, int i)
+int	ft_word_len(char *s, int j)
 {
-	int count;
-	int	j = i;
+	bool	dq;
+	bool	sq;
+	int		count;
+	int		i;
 
-	count = 0;	
-	while (s[j] && s[j] == ' ')
-		j++;
-	while (s[j])
+	sq = false;
+	dq = false;
+	count = 0;
+	i = j;
+	while (s[i])
 	{
-		if (s[j] == '\'')
-		{
-			j++;
-			count++;
-			while (s[j] && s[j] != '\'')
-			{
-				count++;
-				j++;
-			}
-			count++;
-			j++;
-		}
-		if (s[j] == '\"')
-		{
-			j++;
-			count++;
-			while (s[j] && s[j] != '\"')
-			{
-				count++;
-				j++;
-			}
-			j++;
-			count++;
-		}
-		while (s[j] && s[j] != '\"' && s[j] != '\'' && s[j] != ' ' && s[j] != '|')
-		{
-			count++;
-			j++;
-		}
-		if (s[j] == ' ' || s[j] == '|')
+		if (s[i] == '\'' && dq == false)
+			sq = !sq;
+		else if (s[i] == '\"' && sq == false)
+			dq = !dq;
+		else if ((s[i] == ' ' || is_symbol(&s[i], 1)) && sq == false && dq == false)
 			break ;
+		i++;
+		count++;
 	}
-	return (count + 1);
+	return (count);
 }
 
 int malloc_gone_wrong(char **arr, int j)

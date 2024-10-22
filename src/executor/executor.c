@@ -83,7 +83,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 					free(path);
 				exit(10);
 			}
-			free_array(cmds, arr_len(cmds));
+			free_paths(cmds);
 			free(path);
 		}
 		else

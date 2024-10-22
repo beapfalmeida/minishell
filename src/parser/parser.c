@@ -15,17 +15,17 @@ static int check_dir_cmd(t_tokens **tokens)
 	return (0);
 }
 
-int	is_symbol(char *token)
+int	is_symbol(char *token, int len)
 {
-	if (!ft_strncmp(token, "|", ft_strlen(token)))
+	if (!ft_strncmp(token, "|", len))
 		return (PIPE);
-	if (!ft_strncmp(token, "<", ft_strlen(token)))
+	if (!ft_strncmp(token, "<", len))
 		return (REDIRECT_IN);
-	if (!ft_strncmp(token, ">", ft_strlen(token)))
+	if (!ft_strncmp(token, ">", len))
 		return (REDIRECT_OUT);
-	if (!ft_strncmp(token, ">>", ft_strlen(token)))
+	if (!ft_strncmp(token, ">>", len))
 		return (APPEND_OUT);
-	if (!ft_strncmp(token, "<<", ft_strlen(token)))
+	if (!ft_strncmp(token, "<<", len))
 		return (1);
 	return (0);
 }
