@@ -85,7 +85,7 @@ These are the subsystems that make executing commands possible:
   - [x] **Command History**: Implement a command history using `readline()`.
   - [x] **Signal Handling**: Properly handle signals (e.g., `ctrl-C`, `ctrl-D`, `ctrl-\`).
 
-- [ ] **Parser**
+- [x] **Parser**
   - [x] Implement a **Lexer** (tokenizer) to separate the input into tokens (commands and arguments).
   - [x] Build the **Command Table** to store commands and arguments.
   - [x] Implement rules for handling builtins (`echo`, `cd`, `pwd`, etc.) and external commands.
@@ -100,10 +100,10 @@ These are the subsystems that make executing commands possible:
   - [x] **env**: Print all environment variables.
   - [x] **exit**: Exit the shell with a status.
 
-- [ ] **Expanders**
+- [x] **Expanders**
   - [x] **Environment Variables**: Expand `$VAR` expressions.
-  - [ ] **Handle brackets in expander**: single and double and both. - Bea
-  - [ ] **Exit Status**: Implement `$?` to hold the exit status of the last executed command. - Bea
+  - [x] **Handle brackets in expander**: single and double and both.
+  - [x] **Exit Status**: Implement `$?` to hold the exit status of the last executed command.
       
 - [x] **Executor**
   - [x] Create child processes using `fork()` for each command.
@@ -111,12 +111,12 @@ These are the subsystems that make executing commands possible:
   - [x] Implement builtins in the parent process where applicable (`cd`, `export`, etc.).
   - [x] Ensure the last child process waits to complete using `waitpid()`.
 
-- [ ] **Redirections**
+- [x] **Redirections**
   - [x] Implement input redirection (`< infile`).
   - [x] Implement output redirection (`> outfile`).
-  - [ ] Skip redirectors and files - Joao
+  - [ ] Skip redirectors and files
   - [x] Implement append output redirection (`>> outfile`).
-  - [ ] Implement heredoc (`<< delimiter`). - Joao
+  - [x] Implement heredoc (`<< delimiter`).
 
 - [x] **Pipes**
   - [x] Implement pipes (`|`) to connect commands in a pipeline.
