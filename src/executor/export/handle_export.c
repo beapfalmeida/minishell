@@ -105,15 +105,17 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 				new_envp[i] = ft_strdup(temp_envp[i]);
 				i++;
 			}
+			new_envp[i] = NULL;
 			add_var(new_envp, i, tokens->next);
 			order_alphabetically(new_envp);
+			free_array(shell->envp, arr_len(shell->envp));
 			shell->envp = new_envp;
 			tokens = tokens->next;
 		}
 	}
 	else
 	{
-		while (*envp)
+		while (envp && *envp)
 		{
 			write(1, "declare -x ", 11);
 			print_export(*envp);
@@ -145,4 +147,4 @@ char	*handle_expander(char **envp, char *var)
 		envp++;
 	}
 	return (new_token);
-}  
+}
