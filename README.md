@@ -114,7 +114,7 @@ These are the subsystems that make executing commands possible:
 - [x] **Redirections**
   - [x] Implement input redirection (`< infile`).
   - [x] Implement output redirection (`> outfile`).
-  - [ ] Skip redirectors and files
+  - [x] Skip redirectors and files
   - [x] Implement append output redirection (`>> outfile`).
   - [x] Implement heredoc (`<< delimiter`).
 
