@@ -122,30 +122,3 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	}
 	return (1);
 }
-
-char	*handle_expander(char **envp, char *var, t_shell *shell)
-{
-	char	*trim;
-	char	*new_token;
-
-	new_token = NULL;
-	if (!strncmp(var, "?", 1))
-		return (shell->exit_code);
-	if (!var || !*var)
-		return (NULL);
-	while (*envp)
-	{
-		if (ft_strncmp(*envp, var, ft_strclen(var, ' ')) == 0)
-		{
-			trim = ft_strjoin(var, "=");
-			new_token = ft_strdup(*envp);
-			new_token += ft_strlen(trim);
-			// new_token = ft_strtrim(*envp, trim);
-			new_token = ft_strtrim(new_token, "\"");
-			new_token = ft_strtrim(new_token, "\'");
-			break ;
-		}
-		envp++;
-	}
-	return (new_token);
-}  

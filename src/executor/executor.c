@@ -118,62 +118,29 @@ void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
 	t_tokens	*temp;
+	int		*pid;
 
 	temp = tokens;
 	if (temp->type == DIR_FILE)
-	{
-		handle_dir_file(temp, shell);
-		return ;
-	}
+		return (handle_dir_file(temp, shell));
 	if (shell->n_pipes)
 	{
 		i = -1;
+		pid = malloc((shell->n_pipes + 1) * sizeof(int));
 		while (++i <= shell->n_pipes)
 		{
-			do_pipe(temp, shell, i);
+			pid[i] = fork();
+			do_pipe(temp, shell, i, pid[i]);
 			while (temp && temp->type != PIPE)
 				temp = temp->next;
 			if (temp)
 				temp = temp->next;
 		}
+		i = -1;
+		while (++i <= shell->n_pipes)
+			waitpid(pid[i], NULL, 0);
 		dup2(shell->original_stdin, STDIN_FILENO);
 	}
 	else
 		exec_cmd(tokens, shell);
-}
-
-t_tokens	*skip_redirects(t_tokens *tokens)
-{
-	t_tokens	*new_tokens;
-
-	new_tokens = NULL;
-	while (tokens && tokens->token)
-	{
-		if (tokens->type == REDIRECT_IN || tokens->type == REDIRECT_OUT 
-			|| tokens->type == APPEND_IN || tokens->type == APPEND_OUT
-			|| tokens->type == SKIP)
-		{
-			tokens = tokens->next;
-			while (tokens && (tokens->type == INPUT 
-				|| tokens->type == OUTPUT || tokens->type == LIMITER))
-				tokens = tokens->next;
-		}
-		if (tokens && tokens->token && !(tokens->type == REDIRECT_IN 
-			|| tokens->type == REDIRECT_OUT || tokens->type == APPEND_IN 
-			|| tokens->type == APPEND_OUT || tokens->type == SKIP))
-		{
-			if (tokens->prev && tokens->prev->type == SKIP)
-				add_back_list(&new_tokens, new_node(tokens->token, NOT_FILE));
-			else
-				add_back_list(&new_tokens, new_node(tokens->token, 0));
-			tokens = tokens->next;
-		}
-	}
-	if (new_tokens)
-	{
-		assign_types(&new_tokens);
-		return (new_tokens);
-	}
-	else
-		return (0);
 }
