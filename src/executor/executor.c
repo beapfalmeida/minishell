@@ -62,6 +62,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 		}
 		if (pid == 0)
 		{
+			signal(SIGINT, SIG_DFL);
 			cmds = put_cmds(tokens);
 			if (!cmds)
 				return (1);
@@ -88,6 +89,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 		}
 		else
 		{
+			signal(SIGINT, signore);
 			wait(&status);
 			if (WIFEXITED(status))
 				if (WEXITSTATUS(status) == 10)
@@ -117,6 +119,7 @@ static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
 void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
+	int		status;
 	t_tokens	*temp;
 	int		*pid;
 
@@ -138,7 +141,12 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		}
 		i = -1;
 		while (++i <= shell->n_pipes)
-			waitpid(pid[i], NULL, 0);
+		{
+			waitpid(pid[i], &status, 0);
+			if (WIFEXITED(status))
+				if (WEXITSTATUS(status) == 10)
+					do_error(tokens, shell, ERROR_CMD);
+		}
 		dup2(shell->original_stdin, STDIN_FILENO);
 	}
 	else

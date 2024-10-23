@@ -18,3 +18,8 @@ void	signals()
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
 }
+void	signore(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+}

@@ -159,6 +159,7 @@ void		do_error(t_tokens *tokens, t_shell *shell, t_error error);
 //signals
 void		signals();
 void		handle_sigint(int sig);
+void		signore(int sig);
 
 // testing
 void		print_tokens(t_tokens **begin_list);

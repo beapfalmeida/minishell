@@ -40,6 +40,7 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, int i, int pid)
 		;
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
 		if (i == 0 && shell->fd_in != STDIN_FILENO)
 			dup2(shell->fd_in, STDIN_FILENO);
 		if (i == shell->n_pipes && shell->fd_out != STDOUT_FILENO)
@@ -50,5 +51,7 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, int i, int pid)
 		close(fd[0]);
 		prepare_exec(tokens, shell);
 	}
+	else
+		signal(SIGINT, signore);
 	parent_process(fd);
 }
