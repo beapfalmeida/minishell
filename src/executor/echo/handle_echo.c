@@ -45,14 +45,14 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 	if (temp)
 	while (temp->token && temp->type == ARG)
 	{
-		printf("%s", temp->token);
+		write(shell->fd_out, temp->token, ft_strlen(temp->token));
 		if (temp->next && temp->next->type == ARG)
-			printf(" ");
+			write(shell->fd_out, " ", 1);
 		temp = temp->next;
 		if (temp == NULL)
 			break ;
 	}
 	if (!flag)
-		printf("\n");
+		write(shell->fd_out, "\n", 1);
 	return (1);
 }
