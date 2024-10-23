@@ -88,8 +88,7 @@ static void	print_export(char **envp)
 			i++;
 		}
 		if (equal_sign == 1)
-			wri			add_var(temp_envp, new_envp, tokens->next);
-te(1, "\"", 1);
+			write(1, "\"", 1);
 		write(1, "\n", 1);
 		envp++;
 	}
