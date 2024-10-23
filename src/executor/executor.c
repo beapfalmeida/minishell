@@ -116,10 +116,32 @@ static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
 		do_error(tokens, shell, ERROR_NSFD);
 }
 
+void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
+{
+	int	i;
+	int	status;
+
+	i = -1;
+	while (++i <= shell->n_pipes)
+	{
+		waitpid(pid[i], &status, 0);
+		if (WIFEXITED(status))
+			if (WEXITSTATUS(status) == 10)
+				do_error(tokens, shell, ERROR_CMD);
+	}
+}
+
+static void	set_next_pipe(t_tokens **temp)
+{
+	while (*temp && (*temp)->type != PIPE)
+		*temp = (*temp)->next;
+	if (*temp)
+		*temp = (*temp)->next;
+}
+
 void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
-	int		status;
 	t_tokens	*temp;
 	int		*pid;
 
@@ -134,19 +156,9 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		{
 			pid[i] = fork();
 			do_pipe(temp, shell, i, pid[i]);
-			while (temp && temp->type != PIPE)
-				temp = temp->next;
-			if (temp)
-				temp = temp->next;
+			set_next_pipe(&temp);
 		}
-		i = -1;
-		while (++i <= shell->n_pipes)
-		{
-			waitpid(pid[i], &status, 0);
-			if (WIFEXITED(status))
-				if (WEXITSTATUS(status) == 10)
-					do_error(tokens, shell, ERROR_CMD);
-		}
+		wait_allchildren(tokens, shell, pid);
 		dup2(shell->original_stdin, STDIN_FILENO);
 	}
 	else

@@ -120,6 +120,7 @@ int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
 void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int pid);
+int	find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Free
 

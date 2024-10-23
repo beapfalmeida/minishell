@@ -7,11 +7,6 @@ int	check_unset(t_tokens *tokens, t_shell *shell)
 		do_error(tokens, shell, ERROR_CMD);
 		return (1);
 	}
-	// if (tokens->next->next && tokens->next->next->type == ARG)
-	// {
-	// 	// TODO return bad assignment
-	// 	return (1);
-	// } nao entendi para que isto servia e estava a provocar core dumped quando so tinha "unset" como unico token;
 	return (0);
 }
 int	ft_unset(t_tokens *tokens, t_shell *shell)
