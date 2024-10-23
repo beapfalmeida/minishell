@@ -25,9 +25,7 @@ void	order_alphabetically(char **envp)
 		while (envp[j])
 		{
 			if (ft_strncmp(envp[lowest_index], envp[j], ft_strlen(envp[j])) > 0)
-			{
 				lowest_index = j;
-			}
 			j++;
 		}
 		if (lowest_index != i)
@@ -40,11 +38,18 @@ void	order_alphabetically(char **envp)
 	}
 }
 
-static void	add_var(char **env, int i, t_tokens *tokens)
+static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
 {
+	int	i;
 	int j;
 
 	j = 0;
+	i = 0;
+	while (temp_envp[i])
+	{
+		env[i] = ft_strdup(temp_envp[i]);
+		i++;
+	}
 	while (env[j])
 	{
 		if (!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
@@ -60,26 +65,33 @@ static void	add_var(char **env, int i, t_tokens *tokens)
 	env[i + 1] = NULL;
 }
 
-static void	print_export(char *envp)
+static void	print_export(char **envp)
 {
 	int i;
 	int	equal_sign;
+	char	*env;
 
-	i = 0;
-	equal_sign = 0;
-	while (envp[i])
+	while (envp && *envp)
 	{
-		write(1, &envp[i], 1);
-		if (envp[i] == '=')
+		i = 0;
+		equal_sign = 0;
+		env = *envp;
+		write(1, "declare -x ", 11);
+		while (env[i])
 		{
-			write(1, "\"", 1);
-			equal_sign = 1;
+			write(1, &env[i], 1);
+			if (env[i] == '=')
+			{
+				write(1, "\"", 1);
+				equal_sign = 1;
+			}
+			i++;
 		}
-		i++;
+		if (equal_sign == 1)
+			write(1, "\"", 1);
+		write(1, "\n", 1);
+		envp++;
 	}
-	if (equal_sign == 1)
-		write(1, "\"", 1);
-	write(1, "\n", 1);
 }
 
 int	ft_export(t_tokens *tokens, t_shell *shell)
@@ -87,7 +99,6 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	char	**envp;
 	char	**temp_envp;
 	char	**new_envp;
-	int		i;
 
 	if (check_export(tokens, shell) != 0)
 		return (1);
@@ -99,26 +110,13 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 			envp = shell->envp;
 			new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
 			temp_envp = envp;
-			i = 0;
-			while (temp_envp[i])
-			{
-				new_envp[i] = ft_strdup(temp_envp[i]);
-				i++;
-			}
-			add_var(new_envp, i, tokens->next);
+			add_var(temp_envp, new_envp, tokens->next);
 			order_alphabetically(new_envp);
 			shell->envp = new_envp;
 			tokens = tokens->next;
 		}
 	}
 	else
-	{
-		while (*envp)
-		{
-			write(1, "declare -x ", 11);
-			print_export(*envp);
-			envp++;
-		}
-	}
+		print_export(envp);
 	return (1);
 }

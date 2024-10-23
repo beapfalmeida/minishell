@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
+{
+	int	i;
+	int	status;
+
+	i = -1;
+	while (++i <= shell->n_pipes)
+	{
+		waitpid(pid[i], &status, 0);
+		if (WIFEXITED(status))
+			if (WEXITSTATUS(status) == 10)
+				do_error(tokens, shell, ERROR_CMD);
+	}
+}
+
 static void	parent_process(int *new_fd)
 {
  	dup2(new_fd[0], STDIN_FILENO);

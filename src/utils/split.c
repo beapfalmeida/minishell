@@ -28,9 +28,11 @@ static void	put_word(t_split *sp, int c)
 				split_quotes(sp, '\"');
 			if (sp->s[sp->i] && sp->s[sp->i] == '\'')
 				split_quotes(sp, '\'');
-			while (check_new_token(&sp->s[sp->i]) == 3 && sp->s[sp->i] != '\"' && sp->s[sp->i] != '\'')
+			while (check_new_token(&sp->s[sp->i]) == 3
+				&& sp->s[sp->i] != '\"' && sp->s[sp->i] != '\'')
 				sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-			if (sp->s[sp->i] && (check_new_token(&sp->s[sp->i]) == 2 || sp->s[sp->i] == ' '))
+			if (sp->s[sp->i]
+				&& (check_new_token(&sp->s[sp->i]) == 2 || sp->s[sp->i] == ' '))
 				break ;
 		}
 	}
@@ -93,7 +95,7 @@ void	split_words(t_split *sp)
 char	**ft_split_adapted(char *s)
 {
 	int		n;
-	t_split sp;
+	t_split	sp;
 
 	n = countwords(s, 0, 0);
 	sp.i = 0;

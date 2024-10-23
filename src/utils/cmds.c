@@ -14,23 +14,29 @@ void	free_arr(char **paths)
 	free(paths);
 }
 
-/// @brief 
-/// @param cmd 
-/// @param envp 
-/// @return 
-char	*get_path(char	*cmd, char **envp)
+static char	**get_patharr(char **envp)
 {
 	char	**paths;
-	int		i;
-	char	*joined;
-	char	*temp;
 
 	while (envp && *envp++)
 		if (envp && *envp && ft_strncmp(*envp, "PATH", 4) == 0)
 			break ;
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)
-		exit(EXIT_FAILURE);
+		return (exit(EXIT_FAILURE), NULL);
+	return (paths);
+}
+
+char	*get_path(char	*cmd, char **env)
+{
+	int		i;
+	char	*joined;
+	char	*temp;
+	char	**envp;
+	char	**paths;
+
+	envp = env;
+	paths = get_patharr(envp);
 	i = 0;
 	while (paths[i])
 	{
@@ -39,15 +45,9 @@ char	*get_path(char	*cmd, char **envp)
 		joined = ft_strjoin(joined, cmd);
 		free(temp);
 		if (!joined)
-		{
-			free_arr(paths);
-			return (NULL);
-		}
+			return (free_arr(paths), NULL);
 		if (access(joined, R_OK) == 0)
-		{
-			free_arr(paths);
-			return (joined);
-		}
+			return (free_arr(paths), joined);
 		i++;
 		free(joined);
 	}
@@ -73,10 +73,7 @@ char	**put_cmds(t_tokens	*token)
 	{
 		ret[i] = ft_strdup(temp->token);
 		if (!ret[i])
-		{
-			rev_free(ret, i);
-			return (NULL);
-		}
+			return (rev_free(ret, i), NULL);
 		i++;
 		temp = temp->next;
 	}

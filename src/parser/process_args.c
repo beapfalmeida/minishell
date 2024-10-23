@@ -1,42 +1,5 @@
 #include "minishell.h"
 
-static int	find_limiter(t_tokens **tokens, t_shell *shell)
-{
-	t_tokens	*temp;
-	char		*limiter = NULL;
-	char		*input_buff = NULL;
-	int			pipe_fd[2];
-
-	temp = *tokens;
-	while (temp)
-	{
-		if (temp->type == LIMITER)
-		{
-			dup2(shell->original_stdin, STDIN_FILENO);
-			limiter = ft_strdup(temp->token);
-			pipe(pipe_fd);
-			limiter = ft_strjoin(limiter, "\n");
-			while (1)
-			{
-				input_buff = readline("> ");
-				if (input_buff)
-					input_buff = ft_strjoin(input_buff, "\n");
-				if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
-					break ;
-				write(pipe_fd[1], input_buff, ft_strlen(input_buff));
-				free(input_buff);
-			}
-			close(pipe_fd[1]);
-			dup2(pipe_fd[0], STDIN_FILENO);
-			close(pipe_fd[0]);
-			free(limiter);
-			free(input_buff);
-		}
-		temp = temp->next;
-	}
-	return (STDIN_FILENO);
-}
-
 int	get_input(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
