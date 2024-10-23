@@ -8,6 +8,8 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 		free(input_buffer);
 	if (shell->last_path)
 		free(shell->last_path);
+	if (shell->envp)
+		free_array(shell->envp, arr_len(shell->envp));
 	if (tokens)
 		lstclear(&tokens);
 	close(shell->original_stdin);
@@ -33,7 +35,18 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 
 static void	init_shell(t_shell *shell, char **envp)
 {
-	shell->envp = envp;
+	char	**envp_array;
+	int		i;
+
+	envp_array = malloc((arr_len(envp) + 1) * sizeof(char *));
+	i = 0;
+	while (envp[i])
+	{
+		envp_array[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	envp_array[i] = NULL;
+	shell->envp = envp_array;
 	shell->exit_code = "0";
 	shell->last_path = ft_strdup(getenv("PWD"));
 	shell->original_stdin = dup(STDIN_FILENO);

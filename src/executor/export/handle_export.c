@@ -112,6 +112,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 			temp_envp = envp;
 			add_var(temp_envp, new_envp, tokens->next);
 			order_alphabetically(new_envp);
+			free_array(shell->envp, arr_len(shell->envp));
 			shell->envp = new_envp;
 			tokens = tokens->next;
 		}
