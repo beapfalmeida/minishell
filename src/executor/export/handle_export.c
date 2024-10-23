@@ -7,7 +7,8 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 		do_error(tokens, shell, ERROR_CMD);
 		return (1);
 	}
-	if (ft_strncmp(tokens->next->token, "=", 1) || ft_strncmp(tokens->next->token, "+=", 2))
+	if (tokens->next && 
+		(!ft_strncmp(tokens->next->token, "=", 1) || !ft_strncmp(tokens->next->token, "+=", 2)))
 	{
 		do_error(tokens, shell, ERROR_N_VAL);
 	}
@@ -45,11 +46,10 @@ char	**order_alphabetically(char **envp)
 
 static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
 {
+	int 	i;
 	int 	j;
 	char	*temp;
 	char	*appended;
-	int	i;
-	int j;
 
 	j = 0;
 	i = 0;
@@ -67,7 +67,7 @@ static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
 			env[i] = NULL;
 			return ;
 		}
-		else if (has_char(tokens->token, '+'), !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+')))
+		else if (has_char(tokens->token, '+') && !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+')))
 		{
 			if (ft_strclen(tokens->token, '\"') > ft_strclen(tokens->token, '+'))
 			{
@@ -119,11 +119,11 @@ static void	print_export(char **envp)
 
 int	ft_export(t_tokens *tokens, t_shell *shell)
 {
+	int		i;
 	char	**envp;
 	char	**temp_envp;
 	char	**new_envp;
 	char	**envp_print;
-	int		i;
 
 	if (check_export(tokens, shell) != 0)
 		return (1);
@@ -143,7 +143,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 				i++;
 			}
 			new_envp[i] = NULL;
-			add_var(new_envp, i, tokens->next);
+			add_var(temp_envp, new_envp, tokens->next);
 			free_array(shell->envp, arr_len(shell->envp));
 			shell->envp = new_envp;
 			tokens = tokens->next;
@@ -152,13 +152,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	else
 	{
 		envp_print = order_alphabetically(envp_print);
-		i = 0;
-		while (envp_print[i])
-		{
-			write(1, "declare -x ", 11);
-			print_export(envp_print[i]);
-			i++;
-		}
+		print_export(envp_print);
 		free_array(envp_print, arr_len(envp_print));
 	}
 	return (1);
