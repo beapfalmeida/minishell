@@ -29,13 +29,16 @@
 # define LIMITER 9
 # define ARG 10
 # define DIR_FILE 11
+# define BAD_SYNTAX 12
+# define SKIP 13
+# define NOT_FILE 14
 
 extern int g_signal;
 
 typedef enum e_code
 {
 	ERROR_CMD,
-	ERROR_OPEN,
+	ERROR_CD,
 	ERROR_2ARGS,
 	ERROR_NDIR,
 	IS_DIR,
@@ -43,6 +46,9 @@ typedef enum e_code
 	ERROR_FAR,
 	ERROR_TILD,
 	ERROR_NSFD,
+	ERROR_SYNTAX,
+	ERROR_OPEN,
+	ERROR_OPENCMD,
 	ERROR_N_VAL
 }	t_error;
 
@@ -63,7 +69,7 @@ typedef struct s_shell
 	char	*last_path;
 	int		original_stdin;
 	int		original_stdout;
-	int		exit_code;
+	char	*exit_code;
 }	t_shell;
 
 typedef struct split
@@ -85,14 +91,14 @@ void		redirect_out(t_tokens **temp);
 void		append_out(t_tokens **temp);
 void		append_in(t_tokens **temp);
 void		command(t_tokens **temp);
-int			is_symbol(char *token);
+int			is_symbol(char *token, int len);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
 // char 		*find_expander2(char	*token, char **envp);
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 
 // Create shell struct
-void		process_tokens(t_tokens **tokens, t_shell *args);
+int			process_tokens(t_tokens **tokens, t_shell *args);
 int			get_input(t_tokens **tokens, t_shell *shell);
 int			get_output(t_tokens **tokens);
 
@@ -113,14 +119,15 @@ int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
-char		*handle_expander(char **envp, char *var);
-void		do_pipe(t_tokens *tokens, t_shell *shell, int i);
+char		*handle_expander(char **envp, char *var, t_shell *shell);
+void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int pid);
+int	find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Free
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);
-t_tokens	*new_node(char *content);
+t_tokens	*new_node(char *content, int type);
 void		add_back_list(t_tokens **lst, t_tokens *new);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
@@ -133,6 +140,7 @@ int			ft_strclen(char *str, char c);
 
 int	is_file(char *file_name);
 int	has_char(char *token, char c);
+int	has_sintax_error(t_tokens *tokens);
 
 // Split
 char		**ft_split_adapted(char *s);
@@ -153,6 +161,7 @@ void		do_error(t_tokens *tokens, t_shell *shell, t_error error);
 //signals
 void		signals();
 void		handle_sigint(int sig);
+void		signore(int sig);
 
 // testing
 void		print_tokens(t_tokens **begin_list);

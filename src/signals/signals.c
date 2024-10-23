@@ -9,14 +9,17 @@ void	handle_sigint(int sig)
     rl_replace_line("", 0);// Replaces line buffer with new string.
     rl_on_new_line();
     rl_redisplay();
-	g_signal = SIGINT;
+	g_signal = sig;
 }
 
 /// @brief The C library signal() function allows user to handle asynchronous event during the program execution
-void	signals(t_shell *shell)
+void	signals()
 {
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
-	if (g_signal == SIGINT)
-		shell->exit_code = 130;
+}
+void	signore(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
 }

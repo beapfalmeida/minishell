@@ -46,6 +46,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 int	exec_cmd(t_tokens *tokens, t_shell *shell)
 {
 	int		pid;
+	int		status;
 	char	*path;
 	char	**cmds;
 
@@ -61,6 +62,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 		}
 		if (pid == 0)
 		{
+			signal(SIGINT, SIG_DFL);
 			cmds = put_cmds(tokens);
 			if (!cmds)
 				return (1);
@@ -77,18 +79,21 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (!path || execve(path, cmds, shell->envp) == -1)
 			{
-				do_error(tokens, shell, ERROR_CMD);
 				free_paths(cmds);
 				if (path)
 					free(path);
-				exit(1);
+				exit(10);
 			}
-			free_array(cmds, arr_len(cmds));
+			free_paths(cmds);
 			free(path);
 		}
 		else
 		{
-			wait(NULL);
+			signal(SIGINT, signore);
+			wait(&status);
+			if (WIFEXITED(status))
+				if (WEXITSTATUS(status) == 10)
+					do_error(tokens, shell, ERROR_CMD);
 		}
 	}
 	return (0);
@@ -111,62 +116,51 @@ static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
 		do_error(tokens, shell, ERROR_NSFD);
 }
 
+void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
+{
+	int	i;
+	int	status;
+
+	i = -1;
+	while (++i <= shell->n_pipes)
+	{
+		waitpid(pid[i], &status, 0);
+		if (WIFEXITED(status))
+			if (WEXITSTATUS(status) == 10)
+				do_error(tokens, shell, ERROR_CMD);
+	}
+}
+
+static void	set_next_pipe(t_tokens **temp)
+{
+	while (*temp && (*temp)->type != PIPE)
+		*temp = (*temp)->next;
+	if (*temp)
+		*temp = (*temp)->next;
+}
+
 void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
 	t_tokens	*temp;
+	int		*pid;
 
 	temp = tokens;
 	if (temp->type == DIR_FILE)
-	{
-		handle_dir_file(temp, shell);
-		return ;
-	}
+		return (handle_dir_file(temp, shell));
 	if (shell->n_pipes)
 	{
 		i = -1;
+		pid = malloc((shell->n_pipes + 1) * sizeof(int));
 		while (++i <= shell->n_pipes)
 		{
-			do_pipe(temp, shell, i);
-			while (temp && temp->type != PIPE)
-				temp = temp->next;
-			if (temp)
-				temp = temp->next;
+			pid[i] = fork();
+			do_pipe(temp, shell, i, pid[i]);
+			set_next_pipe(&temp);
 		}
+		wait_allchildren(tokens, shell, pid);
 		dup2(shell->original_stdin, STDIN_FILENO);
 	}
 	else
 		exec_cmd(tokens, shell);
-}
-
-t_tokens	*skip_redirects(t_tokens *tokens)
-{
-	t_tokens	*new_tokens;
-
-	new_tokens = NULL;
-	while (tokens && tokens->token)
-	{
-		if (tokens->type == REDIRECT_IN || tokens->type == REDIRECT_OUT 
-			|| tokens->type == APPEND_IN || tokens->type == APPEND_OUT)
-		{
-			tokens = tokens->next;
-			while (tokens && (tokens->type == INPUT 
-				|| tokens->type == OUTPUT || tokens->type == LIMITER))
-				tokens = tokens->next;
-		}
-		if (tokens && tokens->token && !(tokens->type == REDIRECT_IN 
-			|| tokens->type == REDIRECT_OUT || tokens->type == APPEND_IN 
-			|| tokens->type == APPEND_OUT))
-		{
-			add_back_list(&new_tokens, new_node(tokens->token));
-			tokens = tokens->next;
-		}
-	}
-	if (new_tokens)
-	{
-		assign_types(&new_tokens);
-		return (new_tokens);
-	}
-	else
-		return (0);
 }

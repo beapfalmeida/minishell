@@ -29,9 +29,7 @@ char	**order_alphabetically(char **envp)
 		while (envp[j])
 		{
 			if (ft_strncmp(envp[lowest_index], envp[j], ft_strlen(envp[j])) > 0)
-			{
 				lowest_index = j;
-			}
 			j++;
 		}
 		if (lowest_index != i)
@@ -45,13 +43,21 @@ char	**order_alphabetically(char **envp)
 	return (envp);
 }
 
-static void	add_var(char **env, int i, t_tokens *tokens)
+static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
 {
 	int 	j;
 	char	*temp;
 	char	*appended;
+	int	i;
+	int j;
 
 	j = 0;
+	i = 0;
+	while (temp_envp[i])
+	{
+		env[i] = ft_strdup(temp_envp[i]);
+		i++;
+	}
 	while (env[j])
 	{
 		if (!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
@@ -82,26 +88,33 @@ static void	add_var(char **env, int i, t_tokens *tokens)
 	env[i + 1] = NULL;
 }
 
-static void	print_export(char *envp)
+static void	print_export(char **envp)
 {
 	int i;
 	int	equal_sign;
+	char	*env;
 
-	i = 0;
-	equal_sign = 0;
-	while (envp[i])
+	while (envp && *envp)
 	{
-		write(1, &envp[i], 1);
-		if (envp[i] == '=')
+		i = 0;
+		equal_sign = 0;
+		env = *envp;
+		write(1, "declare -x ", 11);
+		while (env[i])
 		{
-			write(1, "\"", 1);
-			equal_sign = 1;
+			write(1, &env[i], 1);
+			if (env[i] == '=')
+			{
+				write(1, "\"", 1);
+				equal_sign = 1;
+			}
+			i++;
 		}
-		i++;
+		if (equal_sign == 1)
+			write(1, "\"", 1);
+		write(1, "\n", 1);
+		envp++;
 	}
-	if (equal_sign == 1)
-		write(1, "\"", 1);
-	write(1, "\n", 1);
 }
 
 int	ft_export(t_tokens *tokens, t_shell *shell)
@@ -149,28 +162,4 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 		free_array(envp_print, arr_len(envp_print));
 	}
 	return (1);
-}
-
-char	*handle_expander(char **envp, char *var)
-{
-	char	*trim;
-	char	*new_token;
-
-	new_token = NULL;
-	// var = ft_strtrim(var, "\"");
-	while (*envp)
-	{
-		if (ft_strncmp(*envp, var, ft_strclen(var, ' ')) == 0)
-		{
-			trim = ft_strjoin(var, "=");
-			new_token = ft_strdup(*envp);
-			new_token += ft_strlen(trim);
-			// new_token = ft_strtrim(*envp, trim);
-			new_token = ft_strtrim(new_token, "\"");
-			new_token = ft_strtrim(new_token, "\'");
-			break ;
-		}
-		envp++;
-	}
-	return (new_token);
 }

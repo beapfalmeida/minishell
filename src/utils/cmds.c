@@ -18,19 +18,29 @@ void	free_paths(char **paths)
 /// @param cmd 
 /// @param envp 
 /// @return 
-char	*get_path(char	*cmd, char **envp)
+static char	**get_patharr(char **envp)
 {
 	char	**paths;
-	int		i;
-	char	*joined;
-	char	*temp;
 
 	while (envp && *envp++)
 		if (envp && *envp && ft_strncmp(*envp, "PATH", 4) == 0)
 			break ;
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)
-		exit(EXIT_FAILURE);
+		return (exit(EXIT_FAILURE), NULL);
+	return (paths);
+}
+
+char	*get_path(char	*cmd, char **env)
+{
+	int		i;
+	char	*joined;
+	char	*temp;
+	char	**envp;
+	char	**paths;
+
+	envp = env;
+	paths = get_patharr(envp);
 	i = 0;
 	while (paths[i])
 	{
@@ -39,15 +49,9 @@ char	*get_path(char	*cmd, char **envp)
 		joined = ft_strjoin(joined, cmd);
 		free(temp);
 		if (!joined)
-		{
-			free_paths(paths);
-			return (NULL);
-		}
+			return (free_paths(paths), NULL);
 		if (access(joined, R_OK) == 0)
-		{
-			free_paths(paths);
-			return (joined);
-		}
+			return (free_paths(paths), joined);
 		i++;
 		free(joined);
 	}

@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:50:45 by bpaiva-f          #+#    #+#             */
-/*   Updated: 2024/06/17 16:11:53 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:36:05 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		new[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2 && s2[j])
 	{
 		new[i] = s2[j];
 		i++;

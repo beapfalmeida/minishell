@@ -2,7 +2,7 @@
 
 void	loop_assigning(t_tokens **temp, int type)
 {
-	while ((*temp) && !is_symbol((*temp)->token))
+	while ((*temp) && !is_symbol((*temp)->token, ft_strlen((*temp)->token)))
 	{
 		(*temp)->type = type;
 		(*temp) = (*temp)->next;
@@ -11,7 +11,14 @@ void	loop_assigning(t_tokens **temp, int type)
 void	redirect_in(t_tokens **temp)
 {
 	(*temp)->type = REDIRECT_IN;
-	(*temp)->next->type = INPUT;
+	if ((*temp)->next)
+		(*temp)->next->type = INPUT;
+	else
+	{
+		(*temp)->type = BAD_SYNTAX;
+		(*temp) = (*temp)->next;
+		return ;
+	}
 	if (((*temp)->prev && ((*temp)->prev->type == CMD || (*temp)->prev->type == INPUT)))
 	{
 		(*temp) = (*temp)->next->next;
@@ -27,7 +34,14 @@ void	redirect_in(t_tokens **temp)
 void	redirect_out(t_tokens **temp)
 {
 	(*temp)->type = REDIRECT_OUT;
-	(*temp)->next->type = OUTPUT;
+	if ((*temp)->next)
+		(*temp)->next->type = OUTPUT;
+	else
+	{
+		(*temp)->type = BAD_SYNTAX;
+		(*temp) = (*temp)->next;
+		return ;
+	}
 	(*temp) = (*temp)->next->next;
 	loop_assigning(temp, ARG);
 }
@@ -35,14 +49,28 @@ void	redirect_out(t_tokens **temp)
 void	append_out(t_tokens **temp)
 {
 	(*temp)->type = APPEND_OUT;
-	(*temp)->next->type = OUTPUT;
+	if ((*temp)->next)
+		(*temp)->next->type = OUTPUT;
+	else
+	{
+		(*temp)->type = BAD_SYNTAX;
+		(*temp) = (*temp)->next;
+		return ;
+	}
 	(*temp) = (*temp)->next->next;
 }
 
 void	append_in(t_tokens **temp)
 {
 	(*temp)->type = APPEND_IN;
-	(*temp)->next->type = LIMITER;
+	if ((*temp)->next)
+		(*temp)->next->type = LIMITER;
+	else
+	{
+		(*temp)->type = BAD_SYNTAX;
+		(*temp) = (*temp)->next;
+		return ;
+	}
 	(*temp) = (*temp)->next->next;
 }
 

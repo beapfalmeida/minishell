@@ -43,7 +43,7 @@ void	add_back_list(t_tokens **lst, t_tokens *new)
 	new -> prev = last;
 }
 
-t_tokens	*new_node(char *content)
+t_tokens	*new_node(char *content, int type)
 {
 	t_tokens	*node;
 
@@ -51,6 +51,7 @@ t_tokens	*new_node(char *content)
 	if (!node)
 		return (NULL);
 	node->token = content;
+	node->type = type;
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);

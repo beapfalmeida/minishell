@@ -29,3 +29,16 @@ int	has_char(char *token, char c)
 	}
 	return (0);
 }
+
+int	has_sintax_error(t_tokens *tokens)
+{
+	t_tokens *temp;
+	temp = tokens;
+	while (temp)
+	{
+		if (temp->type == BAD_SYNTAX)
+			return (1);
+		temp = temp->next;
+	}
+	return (0);
+}

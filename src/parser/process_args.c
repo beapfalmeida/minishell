@@ -1,55 +1,9 @@
 #include "minishell.h"
 
-static int	find_limiter(t_tokens **tokens, t_shell *shell)
-{
-	t_tokens	*temp;
-	char		*limiter = NULL;
-	char		*input_buff = NULL;
-	int			pipe_fd[2];
-	size_t		i;
-
-	temp = *tokens;
-	while (temp)
-	{
-		if (temp->type == LIMITER)
-		{
-			dup2(shell->original_stdin, STDIN_FILENO);
-			limiter = malloc((ft_strlen(temp->token) + 2) * sizeof(char));
-			i = 0;
-			while (i < ft_strlen(temp->token))
-			{
-				limiter[i] = temp->token[i];
-				i++;
-			}
-			limiter[i] = '\n';
-			i++;
-			limiter[i] = '\0';
-			pipe(pipe_fd);
-			while (1)
-			{
-				input_buff = readline("> ");
-				if (input_buff)
-					input_buff = ft_strjoin(input_buff, "\n");
-				if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
-					break ;
-				write(pipe_fd[1], input_buff, ft_strlen(input_buff));
-				free(input_buff);
-			}
-			close(pipe_fd[1]);
-			dup2(pipe_fd[0], STDIN_FILENO);
-			close(pipe_fd[0]);
-			free(limiter);
-			free(input_buff);
-		}
-		temp = temp->next;
-	}
-	return (STDIN_FILENO);
-}
-
 int	get_input(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
-	char		*infile;
+	t_tokens	*infile;
 	int			has_infile;
 	int			fd;
 
@@ -61,14 +15,16 @@ int	get_input(t_tokens **tokens, t_shell *shell)
 	{
 		if (temp->type == INPUT)
 		{
-			infile = temp->token;
+			infile = temp;
 			has_infile = 1;
 		}
 		temp = temp->next;
 	}
 	if (find_limiter(tokens, shell) != shell->original_stdin && has_infile)
 	{
-		fd = open(infile, O_RDONLY);
+		fd = open(infile->token, O_RDONLY);
+		if (fd == -1)
+			do_error(infile, shell, ERROR_OPEN);
 		return (fd);
 	}
 	return (STDIN_FILENO);
@@ -103,9 +59,12 @@ int	get_output(t_tokens **tokens)
 		return (STDOUT_FILENO);
 }
 
-void	process_tokens(t_tokens **tokens, t_shell *args)
+int	process_tokens(t_tokens **tokens, t_shell *args)
 {
 	args->fd_in = get_input(tokens, args);
+	if (args->fd_in == -1)
+		return (1);
 	args->fd_out = get_output(tokens);
 	args->n_pipes = count_pipes(tokens);
+	return (0);
 }
