@@ -7,6 +7,10 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 		do_error(tokens, shell, ERROR_CMD);
 		return (1);
 	}
+	if (ft_strncmp(tokens->next->token, "=", 1) || ft_strncmp(tokens->next->token, "+=", 2))
+	{
+		do_error(tokens, shell, ERROR_N_VAL);
+	}
 	return (0);
 }
 

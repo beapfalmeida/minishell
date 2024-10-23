@@ -43,6 +43,7 @@ typedef enum e_code
 	ERROR_FAR,
 	ERROR_TILD,
 	ERROR_NSFD,
+	ERROR_N_VAL
 }	t_error;
 
 typedef struct s_tokens

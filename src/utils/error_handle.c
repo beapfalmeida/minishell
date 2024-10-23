@@ -2,7 +2,7 @@
 
 char	*get_error(t_error i)
 {
-	char	*str[9];
+	char	*str[10];
 
 	str[0] = "bash: %s: Command not found\n";
 	str[1] = "bash: %s: %s: No such file or directory\n";
@@ -13,6 +13,7 @@ char	*get_error(t_error i)
 	str[6] = "bash: .: filename argument required\n";
 	str[7] = str[4];
 	str[8] = "bash: %s: No such file or directory\n";
+	str[9] = "bash: %s: `%s': not a valid identifier\n";
 	return (str[i]);
 }
 
@@ -22,6 +23,8 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		printf(get_error(error), tokens->token, tokens->next->token);
 	else if (error == ERROR_TILD)
 		printf(get_error(IS_DIR), getenv("HOME"));
+	else if (error == ERROR_N_VAL)
+		printf(get_error(error), tokens->token, tokens->next->token);
 	else
 		printf(get_error(error), tokens->token);
 	if (error == ERROR_2ARGS || error == ERROR_NDIR  || error == ERROR_CMD)
@@ -32,4 +35,6 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		shell->exit_code = 127;
 	else if (error == IS_DIR || error == ERROR_TILD)
 		shell->exit_code = 126;
+	else if (error == ERROR_N_VAL)
+		shell->exit_code = 1;
 }
