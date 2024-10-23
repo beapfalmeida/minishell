@@ -2,7 +2,7 @@
 
 /// @brief 
 /// @param paths 
-void	free_paths(char **paths)
+void	free_arr(char **paths)
 {
 	int	i;
 
@@ -40,18 +40,18 @@ char	*get_path(char	*cmd, char **envp)
 		free(temp);
 		if (!joined)
 		{
-			free_paths(paths);
+			free_arr(paths);
 			return (NULL);
 		}
 		if (access(joined, R_OK) == 0)
 		{
-			free_paths(paths);
+			free_arr(paths);
 			return (joined);
 		}
 		i++;
 		free(joined);
 	}
-	free_paths(paths);
+	free_arr(paths);
 	return (NULL);
 }
 
@@ -74,7 +74,7 @@ char	**put_cmds(t_tokens	*token)
 		ret[i] = ft_strdup(temp->token);
 		if (!ret[i])
 		{
-			free_array(ret, i);
+			rev_free(ret, i);
 			return (NULL);
 		}
 		i++;

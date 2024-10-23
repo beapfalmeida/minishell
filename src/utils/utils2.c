@@ -27,7 +27,7 @@ int	count_args(t_tokens *token)
 	return (count);
 }
 
-int	free_array(char	**arr, int	len)
+int	rev_free(char	**arr, int	len)
 {
 	while (arr[len])
 	{

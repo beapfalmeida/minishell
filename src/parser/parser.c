@@ -81,5 +81,5 @@ void	create_tokens(t_tokens **tokens, char *input)
 		add_back_list(tokens, item);
 		i++;
 	}
-	free_array(arr, arr_len(arr));
+	rev_free(arr, arr_len(arr));
 }

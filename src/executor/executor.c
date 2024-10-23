@@ -79,12 +79,12 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (!path || execve(path, cmds, shell->envp) == -1)
 			{
-				free_paths(cmds);
+				free_arr(cmds);
 				if (path)
 					free(path);
 				exit(10);
 			}
-			free_paths(cmds);
+			free_arr(cmds);
 			free(path);
 		}
 		else

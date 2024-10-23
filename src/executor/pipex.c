@@ -17,18 +17,18 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell)
 	res = ft_isbuiltin(tokens, shell);
 	if (res)
 	{
-		free_paths(cmds);
+		free_arr(cmds);
 		exit(0);
 	}
 	path = get_path(tokens->token, shell->envp);
 	if (!path || execve(path, cmds, NULL) == -1)
 	{
-		free_paths(cmds);
+		free_arr(cmds);
 		if (path)
 			free(path);
 		exit(10);
 	}
-	free_paths(cmds);
+	free_arr(cmds);
 	free(path);
 }
 
