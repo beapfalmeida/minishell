@@ -26,6 +26,7 @@ int	find_limiter(t_tokens **tokens, t_shell *shell)
 	char		*limiter = NULL;
 	char		*input_buff = NULL;
 	int			pipe_fd[2];
+	size_t		i;
 
 	temp = *tokens;
 	while (temp)
@@ -33,14 +34,20 @@ int	find_limiter(t_tokens **tokens, t_shell *shell)
 		if (temp->type == LIMITER)
 		{
 			dup2(shell->original_stdin, STDIN_FILENO);
-			limiter = ft_strdup(temp->token);
+			limiter = malloc((ft_strlen(temp->token) + 2) * sizeof(char));
+			i = 0;
+			while (i < ft_strlen(temp->token))
+			{
+				limiter[i] = temp->token[i];
+				i++;
+			}
+			limiter[i] = '\n';
+			limiter[++i] = '\0';
 			pipe(pipe_fd);
 			limiter = ft_strjoin(limiter, "\n");
 			while (1)
-			{
 				if(do_heredoc(pipe_fd, input_buff, limiter) == 1)
 					break ;
-			}
 			set_them_free(pipe_fd, limiter, input_buff);
 		}
 		temp = temp->next;
