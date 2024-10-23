@@ -10,7 +10,7 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
-void	order_alphabetically(char **envp)
+char	**order_alphabetically(char **envp)
 {
 	int		i;
 	int		j;
@@ -38,11 +38,14 @@ void	order_alphabetically(char **envp)
 		}
 		i++;
 	}
+	return (envp);
 }
 
 static void	add_var(char **env, int i, t_tokens *tokens)
 {
-	int j;
+	int 	j;
+	char	*temp;
+	char	*appended;
 
 	j = 0;
 	while (env[j])
@@ -53,6 +56,21 @@ static void	add_var(char **env, int i, t_tokens *tokens)
 				env[j] = ft_strdup(tokens->token);
 			env[i] = NULL;
 			return ;
+		}
+		else if (has_char(tokens->token, '+'), !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+')))
+		{
+			if (ft_strclen(tokens->token, '\"') > ft_strclen(tokens->token, '+'))
+			{
+				temp = tokens->token;
+				while (*temp != '=')
+					temp++;
+				temp++;
+				ft_strtrim(temp, "\"");
+				appended = ft_strjoin(env[j], temp);
+				free(env[j]);
+				env[j] = appended;
+				return ;
+			}
 		}
 		j++;
 	}
@@ -87,11 +105,13 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	char	**envp;
 	char	**temp_envp;
 	char	**new_envp;
+	char	**envp_print;
 	int		i;
 
 	if (check_export(tokens, shell) != 0)
 		return (1);
 	envp = shell->envp;
+	envp_print = ft_arrdup(envp);
 	if (tokens->next && tokens->next->type == ARG)
 	{
 		while (tokens->next && tokens->next->type == ARG)
@@ -107,7 +127,6 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 			}
 			new_envp[i] = NULL;
 			add_var(new_envp, i, tokens->next);
-			order_alphabetically(new_envp);
 			free_array(shell->envp, arr_len(shell->envp));
 			shell->envp = new_envp;
 			tokens = tokens->next;
@@ -115,12 +134,15 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	}
 	else
 	{
-		while (envp && *envp)
+		envp_print = order_alphabetically(envp_print);
+		i = 0;
+		while (envp_print[i])
 		{
 			write(1, "declare -x ", 11);
-			print_export(*envp);
-			envp++;
+			print_export(envp_print[i]);
+			i++;
 		}
+		free_array(envp_print, arr_len(envp_print));
 	}
 	return (1);
 }

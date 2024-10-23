@@ -44,7 +44,7 @@ char	**ft_arrdup(char **arr)
 	int		i;
 
 	i = 0;
-	ret = malloc(arr_len(arr) * sizeof(char *) + 1);
+	ret = malloc((arr_len(arr) + 1) * sizeof(char *));
 	while (arr && *arr)
 	{
 		ret[i] = ft_strdup(*arr);
