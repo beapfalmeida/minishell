@@ -21,7 +21,7 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell)
 		exit(0);
 	}
 	path = get_path(tokens->token, shell->envp);
-	if (!path || execve(path, cmds, NULL) == -1)
+	if (!path || execve(path, cmds, shell->envp) == -1)
 	{
 		free_paths(cmds);
 		if (path)

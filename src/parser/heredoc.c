@@ -1,18 +1,25 @@
 #include "minishell.h"
 
-static void	set_them_free(int *pipe_fd, char *limiter, char *input_buff)
+static void	set_them_free(int *pipe_fd, char *limiter)
 {
 	close(pipe_fd[1]);
 	dup2(pipe_fd[0], STDIN_FILENO);
 	close(pipe_fd[0]);
 	free(limiter);
-	free(input_buff);
 }
-static int	do_heredoc(int *pipe_fd, char *input_buff, char *limiter)
+static int	do_heredoc(int *pipe_fd, char *limiter)
 {
+	char	*temp;
+	char	*input_buff;
+
+	temp = NULL;
 	input_buff = readline("> ");
 	if (input_buff)
-		input_buff = ft_strjoin(input_buff, "\n");
+	{
+		temp = ft_strjoin(input_buff, "\n");
+		free(input_buff);
+	}
+	input_buff = temp;
 	if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
 		return (1);
 	write(pipe_fd[1], input_buff, ft_strlen(input_buff));
@@ -23,9 +30,9 @@ static int	do_heredoc(int *pipe_fd, char *input_buff, char *limiter)
 int	find_limiter(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
-	char		*limiter = NULL;
-	char		*input_buff = NULL;
+	char		*limiter;
 	int			pipe_fd[2];
+	int			i;
 
 	temp = *tokens;
 	while (temp)
@@ -33,15 +40,22 @@ int	find_limiter(t_tokens **tokens, t_shell *shell)
 		if (temp->type == LIMITER)
 		{
 			dup2(shell->original_stdin, STDIN_FILENO);
-			limiter = ft_strdup(temp->token);
-			pipe(pipe_fd);
-			limiter = ft_strjoin(limiter, "\n");
-			while (1)
+			limiter = malloc((ft_strlen(temp->token) + 2));
+			i = 0;
+			while (temp->token[i])
 			{
-				if(do_heredoc(pipe_fd, input_buff, limiter) == 1)
-					break ;
+				limiter[i] = temp->token[i];
+				i++;
 			}
-			set_them_free(pipe_fd, limiter, input_buff);
+			limiter[i] = '\n';
+			i++;
+			limiter[i] = '\0';
+			if (pipe(pipe_fd) <= -1)
+				;
+			while (1)
+				if(do_heredoc(pipe_fd, limiter) == 1)
+					break ;
+			set_them_free(pipe_fd, limiter);
 		}
 		temp = temp->next;
 	}

@@ -31,6 +31,8 @@ char	**order_alphabetically(char **envp)
 		{
 			if (ft_strncmp(envp[lowest_index], envp[j], ft_strlen(envp[j])) > 0)
 				lowest_index = j;
+			else if (ft_strncmp(envp[lowest_index], envp[j], ft_strlen(envp[lowest_index])) > 0)
+				lowest_index = j;
 			j++;
 		}
 		if (lowest_index != i)
@@ -60,10 +62,20 @@ static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
 	}
 	while (env[j])
 	{
-		if (!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
+		if (has_char(tokens->token, '=') &&
+			!strncmp(env[j], tokens->token, ft_strclen(env[j], '=')) &&
+			!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
 		{
 			if (has_char(tokens->token, '='))
 				env[j] = ft_strdup(tokens->token);
+			env[i] = NULL;
+			return ;
+		}
+		else if (!has_char(tokens->token, '=') &&
+			!strncmp(env[j], tokens->token, ft_strlen(env[j])) &&
+			!strncmp(env[j], tokens->token, ft_strlen(tokens->token)))
+		{
+			env[j] = ft_strdup(tokens->token);
 			env[i] = NULL;
 			return ;
 		}
