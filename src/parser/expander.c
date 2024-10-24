@@ -45,6 +45,7 @@ char	*get_var(char *token)
 char	*skip_quote(char *token, const char *quote_type, bool *sq, bool *dq, bool *first_encounter)
 {
 	char	*ret;
+	char	*temp;
 
 	ret = ft_strdup(token);
 	if (quote_type[0] == '\'' && *sq == true && *first_encounter == false)
@@ -52,8 +53,9 @@ char	*skip_quote(char *token, const char *quote_type, bool *sq, bool *dq, bool *
 	else if (quote_type[0] == '\"' && *dq == true && *first_encounter == false)
 		*dq = false;
 	*first_encounter = false;
-	ret++;
-	return (ret);
+	temp = ft_strdup(&ret[1]);
+	free(ret);
+	return (temp);
 }
 
 //TODO: free string_joins && norminette
@@ -88,7 +90,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 				sq = !sq;
 				char *trimed = skip_quote(&token[i], "\'", &sq, &dq, &first_encounter);
 				token[i] = '\0';
-				token = ft_strjoin(token, trimed);
+				token = ft_strfjoin(token, trimed, 3);
 				continue ;
 			}
 			else if (token[i] == '\"' && sq == false)
@@ -96,7 +98,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 				dq = !dq;
 				char *trimed = skip_quote(&token[i], "\"", &sq, &dq, &first_encounter);
 				token[i] = '\0';
-				token = ft_strjoin(token, trimed);
+				token = ft_strfjoin(token, trimed, 3);
 				continue ;
 			}
 			if (token[i] == '$' && sq == false)
@@ -109,8 +111,8 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 					// Free token after strjoin
 					token = ft_strjoin(token, handle_expander(shell->envp, envp_var, shell));
 					i += ft_strlen(handle_expander(shell->envp, envp_var, shell));
-					token = ft_strjoin(token, temp);
-					free(temp);
+					token = ft_strfjoin(token, temp, 3);
+					// free(temp);
 					free(envp_var);
 				}
 				else
