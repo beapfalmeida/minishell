@@ -121,7 +121,7 @@ int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
 void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int pid);
-int	find_limiter(t_tokens **tokens, t_shell *shell);
+int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Free
 
@@ -138,9 +138,9 @@ int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
 
-int	is_file(char *file_name);
-int	has_char(char *token, char c);
-int	has_sintax_error(t_tokens *tokens);
+int			is_file(char *file_name);
+int			has_char(char *token, char c);
+int			has_sintax_error(t_tokens *tokens);
 
 // Split
 char		**ft_split_adapted(char *s);
