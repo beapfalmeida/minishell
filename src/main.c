@@ -44,8 +44,8 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	// if (*tokens->token == '\0')
 	// 	return (NULL);
 	assign_types(&tokens);
-	if (has_sintax_error(tokens))
-		return (do_error(tokens, shell, ERROR_SYNTAX), NULL);
+	if (has_sintax_error(tokens, shell))
+		return (NULL);
 	if (process_tokens(&tokens, shell)) // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 		return (NULL);
 	temp = tokens;

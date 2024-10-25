@@ -103,16 +103,15 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 			}
 			if (token[i] == '$' && sq == false)
 			{
-				if (token[i + 1] && token[i + 1] != ' ' && check_new_token(&token[i+1]) == 3)
+				if (token[i + 1] && token[i + 1] != ' ' && token[i + 1] != '$' 
+					&& token[i+1] != '\"' && token[i+1] != '\'' && check_new_token(&token[i+1]) == 3)
 				{
 					envp_var = get_var(ft_strdup(&token[i + 1]));
 					temp = ft_strdup(&token[i + ft_strlen(envp_var) + 1]);
 					token[i] = '\0';
-					// Free token after strjoin
 					token = ft_strjoin(token, handle_expander(shell->envp, envp_var, shell));
 					i += ft_strlen(handle_expander(shell->envp, envp_var, shell));
 					token = ft_strfjoin(token, temp, 3);
-					// free(temp);
 					free(envp_var);
 				}
 				else

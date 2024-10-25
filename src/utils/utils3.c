@@ -30,14 +30,16 @@ int	has_char(char *token, char c)
 	return (0);
 }
 
-int	has_sintax_error(t_tokens *tokens)
+int	has_sintax_error(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens *temp;
 	temp = tokens;
 	while (temp)
 	{
-		if (temp->type == BAD_SYNTAX)
-			return (1);
+		if (temp->type == ERROR_SYNTAX)
+			return(do_error(tokens, shell, ERROR_SYNTAX), 1);
+		if (temp->type == ERROR_PIPE)
+		return(do_error(tokens, shell, ERROR_SYNTAX), 1);
 		temp = temp->next;
 	}
 	return (0);

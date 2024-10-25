@@ -15,7 +15,7 @@ void	redirect_in(t_tokens **temp)
 		(*temp)->next->type = INPUT;
 	else
 	{
-		(*temp)->type = BAD_SYNTAX;
+		(*temp)->type = ERROR_SYNTAX;
 		(*temp) = (*temp)->next;
 		return ;
 	}
@@ -38,7 +38,7 @@ void	redirect_out(t_tokens **temp)
 		(*temp)->next->type = OUTPUT;
 	else
 	{
-		(*temp)->type = BAD_SYNTAX;
+		(*temp)->type = ERROR_SYNTAX;
 		(*temp) = (*temp)->next;
 		return ;
 	}
@@ -53,7 +53,7 @@ void	append_out(t_tokens **temp)
 		(*temp)->next->type = OUTPUT;
 	else
 	{
-		(*temp)->type = BAD_SYNTAX;
+		(*temp)->type = ERROR_SYNTAX;
 		(*temp) = (*temp)->next;
 		return ;
 	}
@@ -67,7 +67,7 @@ void	append_in(t_tokens **temp)
 		(*temp)->next->type = LIMITER;
 	else
 	{
-		(*temp)->type = BAD_SYNTAX;
+		(*temp)->type = ERROR_SYNTAX;
 		(*temp) = (*temp)->next;
 		return ;
 	}

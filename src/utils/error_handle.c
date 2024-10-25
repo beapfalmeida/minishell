@@ -2,7 +2,7 @@
 
 char	*get_error(t_error i)
 {
-	char	*str[13];
+	char	*str[14];
 
 	str[0] = "%s: Command not found\n";
 	str[1] = "bash: cd: No such file or directory\n";
@@ -17,6 +17,7 @@ char	*get_error(t_error i)
 	str[10] = "bash: %s: No such file or directory\n";
 	str[11] = "%s: %s: No such file or directory\n";
 	str[12] = "bash: %s: `%s': not a valid identifier\n";
+	str[13] = "bash: syntax error near unexpected token `|'\n";
 	return (str[i]);
 }
 
@@ -28,6 +29,8 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		printf(get_error(IS_DIR), getenv("HOME"));
 	else if (error == ERROR_N_VAL)
 		printf(get_error(error), tokens->token, tokens->next->token);
+	else if (error == ERROR_SYNTAX || error == ERROR_PIPE)
+		printf("%s", get_error(error));
 	else
 		printf(get_error(error), tokens->token);
 	if (error == ERROR_2ARGS || error == ERROR_NDIR || error == ERROR_OPENCMD)

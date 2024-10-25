@@ -29,8 +29,7 @@
 # define LIMITER 9
 # define ARG 10
 # define DIR_FILE 11
-# define BAD_SYNTAX 12
-# define SKIP 13
+# define SKIP 50
 
 extern int g_signal;
 
@@ -45,10 +44,11 @@ typedef enum e_code
 	ERROR_FAR,
 	ERROR_TILD,
 	ERROR_NSFD,
-	ERROR_SYNTAX,
 	ERROR_OPEN,
 	ERROR_OPENCMD,
-	ERROR_N_VAL
+	ERROR_N_VAL,
+	ERROR_PIPE,
+	ERROR_SYNTAX,
 }	t_error;
 
 typedef struct s_tokens
@@ -141,7 +141,7 @@ char		*ft_strfjoin(char *s1, char *s2, int _to_free);
 
 int			is_file(char *file_name);
 int			has_char(char *token, char c);
-int			has_sintax_error(t_tokens *tokens);
+int			has_sintax_error(t_tokens *tokens, t_shell *shell);
 
 // Split
 char		**ft_split_adapted(char *s);
