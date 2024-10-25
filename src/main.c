@@ -2,7 +2,7 @@
 
 int g_signal;
 
-void	child_cleanup(t_tokens *tokens, t_shell *shell, int *pid)
+void	child_cleanup(t_tokens *tokens, t_shell *shell)
 {
 	if (shell->last_path)
 		free(shell->last_path);
@@ -18,8 +18,6 @@ void	child_cleanup(t_tokens *tokens, t_shell *shell, int *pid)
 		close(shell->fd_in);
 	if (shell->fd_out)
 		close(shell->fd_out);
-	if (pid)
-		free(pid);
 }
 
 static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
@@ -41,6 +39,7 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens *temp;
+	t_tokens *t;
 	handle_quotes(tokens, shell);
 	// if (*tokens->token == '\0')
 	// 	return (NULL);
@@ -50,8 +49,13 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	if (process_tokens(&tokens, shell)) // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 		return (NULL);
 	temp = tokens;
-	tokens = skip_redirects(temp);
-	free(temp);
+	tokens = skip_redirects(tokens);
+	while (temp)
+	{
+		t = temp->next;
+		free(temp);
+		temp = t;
+	}
 	return (tokens);
 }
 
