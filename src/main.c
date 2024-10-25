@@ -9,9 +9,7 @@ void	child_cleanup(t_tokens *tokens, t_shell *shell, int *pid)
 	if (shell->envp)
 		free_paths(shell->envp);
 	if (tokens)
-	{
 		lstclear(&tokens);
-	}
 	if (shell->original_stdin)
 		close(shell->original_stdin);
 	if (shell->original_stdout)
@@ -29,14 +27,9 @@ static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 	if (shell->last_path)
 		free(shell->last_path);
 	if (shell->envp)
-	{
-		printf("Here\n");
-		free_array(shell->envp, arr_len(shell->envp));
-	}
+		free_paths(shell->envp);
 	if (tokens)
-	{
 		lstclear(&tokens);
-	}
 	if (shell->original_stdin)
 		close(shell->original_stdin);
 	if (shell->original_stdout)
