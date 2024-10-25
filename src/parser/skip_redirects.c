@@ -11,10 +11,14 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 			|| tokens->type == APPEND_IN || tokens->type == APPEND_OUT
 			|| tokens->type == SKIP)
 		{
+			//free(tokens->token);
 			tokens = tokens->next;
 			while (tokens && (tokens->type == INPUT 
 				|| tokens->type == OUTPUT || tokens->type == LIMITER))
-				tokens = tokens->next;
+				{
+					//free(tokens->token);
+					tokens = tokens->next;
+				}
 		}
 		if (tokens && tokens->token && !(tokens->type == REDIRECT_IN 
 			|| tokens->type == REDIRECT_OUT || tokens->type == APPEND_IN 
