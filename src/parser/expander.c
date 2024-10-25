@@ -103,7 +103,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 			}
 			if (token[i] == '$' && sq == false)
 			{
-				if (token[i + 1])
+				if (token[i + 1] && token[i + 1] != ' ' && check_new_token(&token[i+1]) == 3)
 				{
 					envp_var = get_var(ft_strdup(&token[i + 1]));
 					temp = ft_strdup(&token[i + ft_strlen(envp_var) + 1]);
@@ -116,12 +116,12 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 					free(envp_var);
 				}
 				else
-					break ;
+					i++; 
 				if (!*token)
 				{
 					tokens->token = token;
 					tokens->type = SKIP;
-					continue ;
+					break ;
 				}
 				continue ;
 			}
