@@ -31,7 +31,6 @@
 # define DIR_FILE 11
 # define BAD_SYNTAX 12
 # define SKIP 13
-# define NOT_FILE 14
 
 extern int g_signal;
 
@@ -120,10 +119,11 @@ int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
-void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int pid);
-int	find_limiter(t_tokens **tokens, t_shell *shell);
+void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int *pid);
+int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Free
+void		child_cleanup(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);
@@ -137,10 +137,11 @@ void		free_paths(char **paths);
 int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
+char		*ft_strfjoin(char *s1, char *s2, int _to_free);
 
-int	is_file(char *file_name);
-int	has_char(char *token, char c);
-int	has_sintax_error(t_tokens *tokens);
+int			is_file(char *file_name);
+int			has_char(char *token, char c);
+int			has_sintax_error(t_tokens *tokens);
 
 // Split
 char		**ft_split_adapted(char *s);

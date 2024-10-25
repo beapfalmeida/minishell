@@ -42,3 +42,15 @@ int	has_sintax_error(t_tokens *tokens)
 	}
 	return (0);
 }
+
+char	*ft_strfjoin(char *s1, char *s2, int _to_free)
+{
+	char	*new_str;
+
+	new_str = ft_strjoin(s1, s2);
+	if (_to_free == 1 || _to_free == 3)
+		free(s1);
+	if (_to_free == 2 || _to_free == 3)
+		free(s2);
+	return (new_str);
+}

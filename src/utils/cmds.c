@@ -35,7 +35,6 @@ char	*get_path(char	*cmd, char **env)
 {
 	int		i;
 	char	*joined;
-	char	*temp;
 	char	**envp;
 	char	**paths;
 
@@ -45,9 +44,7 @@ char	*get_path(char	*cmd, char **env)
 	while (paths[i])
 	{
 		joined = ft_strjoin(paths[i], "/");
-		temp = joined;
-		joined = ft_strjoin(joined, cmd);
-		free(temp);
+		joined = ft_strfjoin(joined, cmd, 1);
 		if (!joined)
 			return (free_paths(paths), NULL);
 		if (access(joined, R_OK) == 0)

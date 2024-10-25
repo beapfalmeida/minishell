@@ -2,18 +2,40 @@
 
 int g_signal;
 
-static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
+void	child_cleanup(t_tokens *tokens, t_shell *shell, int *pid)
 {
-	if (input_buffer)
-		free(input_buffer);
 	if (shell->last_path)
 		free(shell->last_path);
 	if (shell->envp)
-		free_array(shell->envp, arr_len(shell->envp));
+		free_paths(shell->envp);
 	if (tokens)
 		lstclear(&tokens);
-	close(shell->original_stdin);
-	close(shell->original_stdout);
+	if (shell->original_stdin)
+		close(shell->original_stdin);
+	if (shell->original_stdout)
+		close(shell->original_stdout);
+	if (shell->fd_in)
+		close(shell->fd_in);
+	if (shell->fd_out)
+		close(shell->fd_out);
+	if (pid)
+		free(pid);
+}
+
+static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
+{
+	if (shell->last_path)
+		free(shell->last_path);
+	if (shell->envp)
+		free_paths(shell->envp);
+	if (tokens)
+		lstclear(&tokens);
+	if (shell->original_stdin)
+		close(shell->original_stdin);
+	if (shell->original_stdout)
+		close(shell->original_stdout);
+	if (input_buffer)
+		free(input_buffer);
 }
 
 static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
@@ -28,8 +50,8 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	if (process_tokens(&tokens, shell)) // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
 		return (NULL);
 	temp = tokens;
-	tokens = skip_redirects(tokens);
-	lstclear(&temp);
+	tokens = skip_redirects(temp);
+	free(temp);
 	return (tokens);
 }
 
@@ -43,6 +65,8 @@ static void	init_shell(t_shell *shell, char **envp)
 	while (envp[i])
 	{
 		envp_array[i] = ft_strdup(envp[i]);
+		if (!envp_array[i])
+			free_array(&envp_array[i], i);
 		i++;
 	}
 	envp_array[i] = NULL;
@@ -79,17 +103,17 @@ int	main(int argc, char **argv, char **envp)
 		if (!*input_buffer)
 			continue ;
 		if (input_buffer && *input_buffer)
-			add_history(input_buffer); // Adds the input buffer to the history of cmds. Accessible by typing history in bash.
+			add_history(input_buffer);
 		create_tokens(&tokens, input_buffer);
 		if (!tokens)
 			continue ;
 		tokens = keep_parsing(tokens, &shell);
-		if (!tokens)
-			continue ;
-		execute(tokens, &shell);
+		if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
+			execute(tokens, &shell);
 		dup2(shell.original_stdin, STDIN_FILENO);
 		lstclear(&tokens);
 		free(input_buffer);
+		//child_cleanup(tokens, &shell, 0);
 	}
 	free_all(tokens, &shell, input_buffer);
 }

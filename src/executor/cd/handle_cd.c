@@ -25,31 +25,35 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 {
 	char	*path;
 
+
 	if (check_cd(tokens, shell) == 1)
 		return (1);
 	if (!tokens->next)
 	{
 		path = getenv("HOME");
-		shell->last_path = path;
+		free(shell->last_path);
+		shell->last_path = ft_strdup(path);
 	}
 	else if (*tokens->next->token == '~')
 	{
 		path = getenv("HOME");
-		shell->last_path = path;
+		free(shell->last_path);
+		shell->last_path = ft_strdup(path);
 	}
 	else if (*tokens->next->token == '-')
-	{
 		path = shell->last_path;
-	}
+
 	else
 	{
 		path = tokens->next->token;
-		shell->last_path = path;
+		free(shell->last_path);
+		shell->last_path = ft_strdup(path);
 	}
 	if (chdir(path))
 	{
-		do_error(tokens, shell, ERROR_CD);
-		return (1);
+		if (access(tokens->next->token, F_OK))
+			return (do_error(tokens, shell, ERROR_CD), 1);
+		return (do_error(tokens, shell, P_DENY), 1);
 	}
 	return (1);
 }
