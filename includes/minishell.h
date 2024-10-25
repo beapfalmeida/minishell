@@ -123,7 +123,7 @@ void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int *pid);
 int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Free
-void		child_cleanup(t_tokens *tokens, t_shell *shell, int *pid);
+void		child_cleanup(t_tokens *tokens, t_shell *shell);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);

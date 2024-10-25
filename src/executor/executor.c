@@ -79,7 +79,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (!path || execve(path, cmds, shell->envp) == -1)
 			{
-				child_cleanup(tokens, shell, 0);
+				child_cleanup(tokens, shell);
 				free_paths(cmds);
 				if (path)
 					free(path);
@@ -123,7 +123,7 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 	i = -1;
 	while (++i <= shell->n_pipes)
 	{
-		waitpid(pid[i], &status, 0);
+		waitpid(pid[i], &status, 0); //TODO:flag
 		if (WIFEXITED(status))
 			if (WEXITSTATUS(status) == 10)
 				do_error(tokens, shell, ERROR_CMD);
@@ -142,7 +142,7 @@ void	execute(t_tokens *tokens, t_shell *shell)
 {
 	int			i;
 	t_tokens	*temp;
-	int			*pid;
+	int			pid[shell->n_pipes];
 
 	temp = tokens;
 	if (temp->type == DIR_FILE)
@@ -150,7 +150,7 @@ void	execute(t_tokens *tokens, t_shell *shell)
 	if (shell->n_pipes)
 	{
 		i = -1;
-		pid = malloc((shell->n_pipes + 1) * sizeof(int));
+		//pid = malloc((shell->n_pipes + 1) * sizeof(int));
 		while (++i <= shell->n_pipes)
 		{
 			pid[i] = fork();

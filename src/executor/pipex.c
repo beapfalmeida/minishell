@@ -7,7 +7,7 @@ static void	parent_process(int *new_fd)
 	close(new_fd[1]);
 }
 
-static void	prepare_exec(t_tokens *tokens, t_shell *shell, int *pid)
+static void	prepare_exec(t_tokens *tokens, t_shell *shell)
 {
 	int		res;
 	char	**cmds;
@@ -17,14 +17,14 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, int *pid)
 	res = ft_isbuiltin(tokens, shell); // Pq esta verificacao aqui?
 	if (res)
 	{
-		child_cleanup(tokens, shell, pid);
+		child_cleanup(tokens, shell);
 		free_paths(cmds);
 		exit(0);
 	}
 	path = get_path(tokens->token, shell->envp);
 	if (!path || execve(path, cmds, shell->envp) == -1)
 	{
-		child_cleanup(tokens, shell, pid);
+		child_cleanup(tokens, shell);
 		free_paths(cmds);
 		if (path)
 			free(path);
@@ -49,7 +49,7 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, int i, int *pid)
 			dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		close(fd[0]);
-		prepare_exec(tokens, shell, pid);
+		prepare_exec(tokens, shell);
 	}
 	else
 		signal(SIGINT, signore);

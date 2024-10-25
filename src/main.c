@@ -2,7 +2,7 @@
 
 int g_signal;
 
-void	child_cleanup(t_tokens *tokens, t_shell *shell, int *pid)
+void	child_cleanup(t_tokens *tokens, t_shell *shell)
 {
 	if (shell->last_path)
 		free(shell->last_path);
@@ -18,8 +18,6 @@ void	child_cleanup(t_tokens *tokens, t_shell *shell, int *pid)
 		close(shell->fd_in);
 	if (shell->fd_out)
 		close(shell->fd_out);
-	if (pid)
-		free(pid);
 }
 
 static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
