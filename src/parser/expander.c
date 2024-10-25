@@ -121,7 +121,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 				{
 					tokens->token = token;
 					tokens->type = SKIP;
-					return (ret);
+					continue ;
 				}
 				continue ;
 			}

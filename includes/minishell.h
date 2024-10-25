@@ -31,7 +31,6 @@
 # define DIR_FILE 11
 # define BAD_SYNTAX 12
 # define SKIP 13
-# define NOT_FILE 14
 
 extern int g_signal;
 
@@ -120,10 +119,11 @@ int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
-void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int pid);
+void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int *pid);
 int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Free
+void		child_cleanup(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);

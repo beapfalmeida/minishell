@@ -67,7 +67,8 @@ void	lstclear(t_tokens **lst)
 	{
 		temp = *lst;
 		*lst = (*lst)->next;
-		temp->token = 0;
+		if (temp->token)
+			free(temp->token);
 		temp->type = 0;
 		free(temp);
 	}

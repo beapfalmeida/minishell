@@ -45,32 +45,12 @@ int	has_sintax_error(t_tokens *tokens)
 
 char	*ft_strfjoin(char *s1, char *s2, int _to_free)
 {
-	char	*new;
-	size_t	tlen;
-	int		i;
-	int		j;
+	char	*new_str;
 
-	i = 0;
-	j = 0;
-	tlen = ft_strlen(s1) + ft_strlen(s2);
-	new = malloc((tlen + 1) * sizeof(char));
-	if (!new)
-		return (0);
-	while (s1[i])
-	{
-		new[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j])
-	{
-		new[i] = s2[j];
-		i++;
-		j++;
-	}
-	new[i] = '\0';
+	new_str = ft_strjoin(s1, s2);
 	if (_to_free == 1 || _to_free == 3)
 		free(s1);
 	if (_to_free == 2 || _to_free == 3)
 		free(s2);
-	return (new);
+	return (new_str);
 }

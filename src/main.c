@@ -2,17 +2,47 @@
 
 int g_signal;
 
-static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
+void	child_cleanup(t_tokens *tokens, t_shell *shell, int *pid)
 {
-	if (input_buffer)
-		free(input_buffer);
 	if (shell->last_path)
 		free(shell->last_path);
-	free_array(shell->envp, arr_len(shell->envp));
+	if (shell->envp)
+		free_paths(shell->envp);
 	if (tokens)
+	{
 		lstclear(&tokens);
-	close(shell->original_stdin);
-	close(shell->original_stdout);
+	}
+	if (shell->original_stdin)
+		close(shell->original_stdin);
+	if (shell->original_stdout)
+		close(shell->original_stdout);
+	if (shell->fd_in)
+		close(shell->fd_in);
+	if (shell->fd_out)
+		close(shell->fd_out);
+	if (pid)
+		free(pid);
+}
+
+static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
+{
+	if (shell->last_path)
+		free(shell->last_path);
+	if (shell->envp)
+	{
+		printf("Here\n");
+		free_array(shell->envp, arr_len(shell->envp));
+	}
+	if (tokens)
+	{
+		lstclear(&tokens);
+	}
+	if (shell->original_stdin)
+		close(shell->original_stdin);
+	if (shell->original_stdout)
+		close(shell->original_stdout);
+	if (input_buffer)
+		free(input_buffer);
 }
 
 static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
@@ -28,7 +58,7 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 		return (NULL);
 	temp = tokens;
 	tokens = skip_redirects(temp);
-	lstclear(&temp);
+	free(temp);
 	return (tokens);
 }
 
@@ -90,6 +120,7 @@ int	main(int argc, char **argv, char **envp)
 		dup2(shell.original_stdin, STDIN_FILENO);
 		lstclear(&tokens);
 		free(input_buffer);
+		//child_cleanup(tokens, &shell, 0);
 	}
 	free_all(tokens, &shell, input_buffer);
 }

@@ -20,10 +20,7 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 			|| tokens->type == REDIRECT_OUT || tokens->type == APPEND_IN 
 			|| tokens->type == APPEND_OUT || tokens->type == SKIP))
 		{
-			if (tokens->prev && tokens->prev->type == SKIP)
-				add_back_list(&new_tokens, new_node(tokens->token, NOT_FILE));
-			else
-				add_back_list(&new_tokens, new_node(tokens->token, 0));
+			add_back_list(&new_tokens, new_node(tokens->token, 0));
 			tokens = tokens->next;
 		}
 	}

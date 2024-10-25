@@ -13,7 +13,7 @@ char	*get_error(t_error i)
 	str[6] = "bash: .: filename argument required\n";
 	str[7] = str[4];
 	str[8] = "bash: %s: No such file or directory\n";
-	str[9] = "bash: syntax error near unexpected token 'newline'\n";
+	str[9] = "bash: syntax error near unexpected token `newline'\n";
 	str[10] = "bash: %s: No such file or directory\n";
 	str[11] = "%s: %s: No such file or directory\n";
 	str[12] = "bash: %s: `%s': not a valid identifier\n";

@@ -6,7 +6,7 @@
 /// @return 
 int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 {
-	if (ft_strncmp(token->token, "pwd", 4) == 0)
+	if (ft_strncmp(token->token, "pwd", 3) == 0)
 	{
 		if (ft_pwd(token, shell) != 0)
 			return (1);
@@ -79,13 +79,12 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (!path || execve(path, cmds, shell->envp) == -1)
 			{
+				child_cleanup(tokens, shell, 0);
 				free_paths(cmds);
 				if (path)
 					free(path);
 				exit(10);
 			}
-			free_paths(cmds);
-			free(path);
 		}
 		else
 		{
@@ -141,9 +140,9 @@ static void	set_next_pipe(t_tokens **temp)
 
 void	execute(t_tokens *tokens, t_shell *shell)
 {
-	int		i;
+	int			i;
 	t_tokens	*temp;
-	int		*pid;
+	int			*pid;
 
 	temp = tokens;
 	if (temp->type == DIR_FILE)
@@ -155,7 +154,7 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		while (++i <= shell->n_pipes)
 		{
 			pid[i] = fork();
-			do_pipe(temp, shell, i, pid[i]);
+			do_pipe(temp, shell, i, pid);
 			set_next_pipe(&temp);
 		}
 		wait_allchildren(tokens, shell, pid);

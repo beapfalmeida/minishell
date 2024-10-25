@@ -5,7 +5,7 @@ static int check_dir_cmd(t_tokens **tokens)
 	char *token;
 
 	token = (*tokens)->token;
-	if ((*token == '.' || *token == '~' || has_char(token, '/')) && (*tokens)->type != NOT_FILE)
+	if ((*token == '.' || *token == '~' || has_char(token, '/')))
 	{
 		(*tokens)->type = DIR_FILE;
 		(*tokens) = (*tokens)->next;
@@ -81,5 +81,5 @@ void	create_tokens(t_tokens **tokens, char *input)
 		add_back_list(tokens, item);
 		i++;
 	}
-	free_array(arr, arr_len(arr));
+	free(arr);
 }
