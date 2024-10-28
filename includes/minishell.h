@@ -69,6 +69,7 @@ typedef struct s_shell
 	int		original_stdin;
 	int		original_stdout;
 	char	*exit_code;
+	bool	interrupt_exec;
 }	t_shell;
 
 typedef struct s_split
