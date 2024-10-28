@@ -71,7 +71,7 @@ typedef struct s_shell
 	char	*exit_code;
 }	t_shell;
 
-typedef struct split
+typedef struct s_split
 {
 	int	i;
 	int	j;
@@ -79,6 +79,13 @@ typedef struct split
 	char	*s;
 	char	**arr;
 }	t_split;
+
+typedef struct s_pipe
+{
+	int			i;
+	int			*pid;
+	int			fd[2];
+}	t_pipe;
 
 // Init
 void		init_tokens(t_tokens *token);
@@ -119,7 +126,7 @@ int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 // void		find_expander(t_tokens	*tokens, char **envp);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
-void		do_pipe(t_tokens *tokens, t_shell *shell, int i, int *pid);
+void		do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p);
 int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Free

@@ -115,6 +115,7 @@ int	main(int argc, char **argv, char **envp)
 		if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
 			execute(tokens, &shell);
 		dup2(shell.original_stdin, STDIN_FILENO);
+		dup2(shell.original_stdin, STDOUT_FILENO);
 		lstclear(&tokens);
 		free(input_buffer);
 		//child_cleanup(tokens, &shell, 0);

@@ -134,30 +134,33 @@ static void	set_next_pipe(t_tokens **temp)
 {
 	while (*temp && (*temp)->type != PIPE)
 		*temp = (*temp)->next;
-	if (*temp)
+	if (*temp && (*temp)->next)
 		*temp = (*temp)->next;
 }
 
 void	execute(t_tokens *tokens, t_shell *shell)
 {
-	int			i;
+
 	t_tokens	*temp;
+	t_pipe		p;
 	int			pid[shell->n_pipes];
 
 	temp = tokens;
+	p.pid = pid;
 	if (temp->type == DIR_FILE)
 		return (handle_dir_file(temp, shell));
 	if (shell->n_pipes)
 	{
-		i = -1;
-		//pid = malloc((shell->n_pipes + 1) * sizeof(int));
-		while (++i <= shell->n_pipes)
+		p.i = -1;
+		while (++p.i <= shell->n_pipes)
 		{
-			pid[i] = fork();
-			do_pipe(temp, shell, i, pid);
+			if (pipe(p.fd) == -1)
+				;
+			p.pid[p.i] = fork();
+			do_pipe(temp, shell, &p);
 			set_next_pipe(&temp);
 		}
-		wait_allchildren(tokens, shell, pid);
+		wait_allchildren(tokens, shell, p.pid);
 		dup2(shell->original_stdin, STDIN_FILENO);
 	}
 	else

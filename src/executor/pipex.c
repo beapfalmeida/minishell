@@ -32,26 +32,22 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell)
 	}
 }
 
-void	do_pipe(t_tokens *tokens, t_shell *shell, int i, int *pid)
+void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
-	int	fd[2];
-
-	if (pipe(fd) == -1)
-		;
-	if (pid[i] == 0)
+	if (p->pid[p->i] == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		if (i == 0 && shell->fd_in != STDIN_FILENO)
+		signal(SIGINT, SIG_DFL); //TODO: dar mute aos outros sinais tambem
+		if (p->i == 0 && shell->fd_in != STDIN_FILENO)
 			dup2(shell->fd_in, STDIN_FILENO);
-		if (i == shell->n_pipes && shell->fd_out != STDOUT_FILENO)
+		if (p->i == shell->n_pipes && shell->fd_out != STDOUT_FILENO)
 			dup2(shell->fd_out, STDOUT_FILENO);
-		else if (i != shell->n_pipes)
-			dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
-		close(fd[0]);
+		else if (p->i != shell->n_pipes)
+			dup2(p->fd[1], STDOUT_FILENO);
+		close(p->fd[1]);
+		close(p->fd[0]);
 		prepare_exec(tokens, shell);
 	}
 	else
 		signal(SIGINT, signore);
-	parent_process(fd);
+	parent_process(p->fd);
 }

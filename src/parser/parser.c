@@ -41,10 +41,7 @@ void	assign_types(t_tokens **tokens)
 			temp = temp->next;
 		else if (!ft_strncmp(temp->token, "|", ft_strlen(temp->token)))
 		{
-			if (temp->prev->type == PIPE)
-				temp->type = ERROR_PIPE;
-			else
-				temp->type = PIPE;
+			temp->type = PIPE;
 			temp = temp->next;
 		}
 		else if (!ft_strncmp(temp->token, ">", ft_strlen(temp->token)))
