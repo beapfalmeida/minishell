@@ -17,7 +17,6 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 			trim = ft_strjoin(var, "=");
 			new_token = ft_strdup(*envp);
 			new_token += ft_strlen(trim);
-			// new_token = ft_strtrim(*envp, trim);
 			new_token = ft_strtrim(new_token, "\"");
 			new_token = ft_strtrim(new_token, "\'");
 			break ;

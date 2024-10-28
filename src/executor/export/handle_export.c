@@ -46,7 +46,7 @@ char	**order_alphabetically(char **envp)
 	return (envp);
 }
 
-static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
+static void	add_var(char **env, t_tokens *tokens)
 {
 	int 	i;
 	int 	j;
@@ -54,12 +54,7 @@ static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
 	char	*appended;
 
 	j = 0;
-	i = 0;
-	while (temp_envp[i])
-	{
-		env[i] = ft_strdup(temp_envp[i]);
-		i++;
-	}
+	i = arr_len(env);
 	while (env[j])
 	{
 		if (has_char(tokens->token, '=') &&
@@ -88,8 +83,16 @@ static void	add_var(char **temp_envp, char **env, t_tokens *tokens)
 					temp++;
 				temp++;
 				ft_strtrim(temp, "\"");
-				appended = ft_strjoin(env[j], temp);
-				free(env[j]);
+				if (has_char(env[j], '='))
+				{
+					ft_strtrim(env[j], "\"");
+					appended = ft_strjoin(env[j], temp);
+				}
+				else
+				{
+					appended = ft_strjoin(env[j], "=");
+					appended = ft_strfjoin(appended, temp, 1);
+				}
 				env[j] = appended;
 				return ;
 			}
@@ -133,7 +136,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 {
 	int		i;
 	char	**envp;
-	char	**temp_envp;
+	// char	**temp_envp;
 	char	**new_envp;
 	char	**envp_print;
 
@@ -147,15 +150,15 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 		{
 			envp = shell->envp;
 			new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
-			temp_envp = envp;
+			// temp_envp = envp;
 			i = 0;
-			while (temp_envp[i])
+			while (envp[i])
 			{
-				new_envp[i] = ft_strdup(temp_envp[i]);
+				new_envp[i] = ft_strdup(envp[i]);
 				i++;
 			}
 			new_envp[i] = NULL;
-			add_var(temp_envp, new_envp, tokens->next);
+			add_var(new_envp, tokens->next);
 			free_array(shell->envp, arr_len(shell->envp));
 			shell->envp = new_envp;
 			tokens = tokens->next;
