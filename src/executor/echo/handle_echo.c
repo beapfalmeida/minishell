@@ -46,7 +46,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 		return (1);
 	flag = check_flag(temp);
 	if (flag)
-		tokens = tokens->next;
+		temp = temp->next;
 	if (flag && !(temp && temp->type == ARG))
 		return (1);
 	if (temp)
