@@ -68,7 +68,7 @@ typedef struct s_shell
 	char	*last_path;
 	int		original_stdin;
 	int		original_stdout;
-	char	*exit_code;
+	int		exit_code;
 	bool	interrupt_exec;
 }	t_shell;
 

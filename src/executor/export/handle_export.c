@@ -114,20 +114,20 @@ static void	print_export(char **envp)
 		i = 0;
 		equal_sign = 0;
 		env = *envp;
-		write(1, "declare -x ", 11);
+		ft_printf_fd(STDOUT_FILENO, "declare -x ");
 		while (env[i])
 		{
-			write(1, &env[i], 1);
+			ft_printf_fd(STDOUT_FILENO, &env[i], 1);
 			if (env[i] == '=')
 			{
-				write(1, "\"", 1);
+				ft_printf_fd(STDOUT_FILENO, "\"", 1);
 				equal_sign = 1;
 			}
 			i++;
 		}
 		if (equal_sign == 1)
-			write(1, "\"", 1);
-		write(1, "\n", 1);
+			ft_printf_fd(STDOUT_FILENO, "\"", 1);
+		ft_printf_fd(STDOUT_FILENO, "\n", 1);
 		envp++;
 	}
 }

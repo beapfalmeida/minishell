@@ -33,14 +33,12 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));
 	else
 		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token);
-	if (error == ERROR_2ARGS || error == ERROR_NDIR || error == ERROR_OPENCMD)
-		shell->exit_code = "1";
+	if (error == ERROR_2ARGS || error == ERROR_NDIR || error == ERROR_OPENCMD || error == ERROR_N_VAL)
+		shell->exit_code = 1;
 	else if (error == ERROR_FAR || error == ERROR_SYNTAX)
-		shell->exit_code = "2";
+		shell->exit_code = 2;
 	else if (error == ERROR_OPEN || error == ERROR_CMD)
-		shell->exit_code = "127";
+		shell->exit_code = 127;
 	else if (error == IS_DIR || error == ERROR_TILD)
-		shell->exit_code = "126";
-	else if (error == ERROR_N_VAL)
-		shell->exit_code = "1";
+		shell->exit_code = 126;
 }

@@ -75,7 +75,7 @@ static void	init_shell(t_shell *shell, char **envp)
 	}
 	envp_array[i] = NULL;
 	shell->envp = envp_array;
-	shell->exit_code = "0";
+	shell->exit_code = 0;
 	shell->last_path = ft_strdup(getenv("PWD"));
 	shell->original_stdin = dup(STDIN_FILENO);
 	shell->original_stdout = dup(STDOUT_FILENO);
@@ -97,12 +97,12 @@ int	main(int argc, char **argv, char **envp)
 		input_buffer = readline("minishell: ");
 		if (g_signal == SIGINT)
 		{
-			shell.exit_code = "130";
+			shell.exit_code = 130;
 			g_signal = 0;
 		}
 		if (!input_buffer || (ft_strlen(input_buffer) && !ft_strncmp(input_buffer, "exit", 4)))
 		{
-			printf("exit\n");
+			ft_printf_fd(STDOUT_FILENO, "exit\n");
 			break ;
 		}
 		if (!*input_buffer)
@@ -121,11 +121,11 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
 			execute(tokens, &shell);
-		dup2(shell.original_stdin, STDIN_FILENO);
-		dup2(shell.original_stdin, STDOUT_FILENO);
+		// dup2(shell.original_stdin, STDIN_FILENO);
+		// dup2(shell.original_stdin, STDOUT_FILENO);
 		lstclear(&tokens);
 		free(input_buffer);
 	}
 	free_all(tokens, &shell, input_buffer);
-	exit(ft_atoi(shell.exit_code));
+	exit(shell.exit_code);
 }

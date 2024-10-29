@@ -7,7 +7,7 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 
 	new_token = NULL;
 	if (!strncmp(var, "?", 1))
-		return (shell->exit_code);
+		return (ft_itoa(shell->exit_code));
 	if (!var || !*var)
 		return (NULL);
 	while (*envp)

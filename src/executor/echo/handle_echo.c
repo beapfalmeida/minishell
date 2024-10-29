@@ -48,19 +48,19 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 	if (flag)
 		temp = temp->next;
 	if (flag && !(temp && temp->type == ARG))
-		return (1);
+		return (shell->exit_code = 0, 1);
 	if (temp)
 	while (temp->token && temp->type == ARG)
 	{
-		write(STDOUT_FILENO, temp->token, ft_strlen(temp->token));
+		ft_printf_fd(STDOUT_FILENO, temp->token);
 		if (temp->next && temp->next->type == ARG)
-			write(STDOUT_FILENO, " ", 1);
+			ft_printf_fd(STDOUT_FILENO, " ");
 		temp = temp->next;
 		if (temp == NULL)
 			break ;
 	}
 	if (!flag)
-		write(STDOUT_FILENO, "\n", 1);
-	shell->exit_code = "0";
-	return (1);
+		ft_printf_fd(STDOUT_FILENO, "\n");
+	return (shell->exit_code = 0, 1);
 }
+ 
