@@ -148,7 +148,6 @@ static void	set_next_pipe(t_tokens **temp)
 
 void	execute(t_tokens *tokens, t_shell *shell)
 {
-
 	t_tokens	*temp;
 	t_pipe		p;
 	int			pid[shell->n_pipes];

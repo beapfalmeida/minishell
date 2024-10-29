@@ -33,8 +33,13 @@ char	*get_var(char *token)
 	i = 0;
 	while (token[i])
 	{
-		if (token[i] == '$' || token[i] == '\"' || token[i] == '\'')
+		if (token[i] == '$' || token[i] == '\"' || token[i] == '\'' || token[i] == ' ')
 			break ;
+		if (token[i] == '?')
+		{
+			i++;
+			break;
+		}
 		i++;
 	}
 	token[i] = '\0';
@@ -126,6 +131,8 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 			else
 				i++;
 		}
+		if (!*token)
+			tokens->type = SKIP;
 		tokens->token = token;
 		tokens = tokens->next;
 	}
