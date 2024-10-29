@@ -24,15 +24,15 @@ char	*get_error(t_error i)
 void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 {
 	if (error == ERROR_NDIR || error == ERROR_OPENCMD)
-		printf(get_error(error), tokens->token, tokens->next->token);
+		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token, tokens->next->token);
 	else if (error == ERROR_TILD)
-		printf(get_error(IS_DIR), getenv("HOME"));
+		ft_printf_fd(STDERR_FILENO, get_error(IS_DIR), getenv("HOME"));
 	else if (error == ERROR_N_VAL)
-		printf(get_error(error), tokens->token, tokens->next->token);
+		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token, tokens->next->token);
 	else if (error == ERROR_SYNTAX || error == ERROR_PIPE)
-		printf("%s", get_error(error));
+		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));
 	else
-		printf(get_error(error), tokens->token);
+		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token);
 	if (error == ERROR_2ARGS || error == ERROR_NDIR || error == ERROR_OPENCMD)
 		shell->exit_code = "1";
 	else if (error == ERROR_FAR || error == ERROR_SYNTAX)

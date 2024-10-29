@@ -4,7 +4,7 @@
 /// @param sig Signal code (type SIGINT)
 void	handle_sigint(int sig)
 {
-    (void)sig;
+    // (void)sig;
     write(2, "\n", 1);
     rl_replace_line("", 0);// Replaces line buffer with new string.
     rl_on_new_line();
@@ -18,8 +18,10 @@ void	signals()
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
 }
+
 void	signore(int sig)
 {
-	(void)sig;
+	// (void)sig;
 	write(1, "\n", 1);
+	g_signal = sig;
 }

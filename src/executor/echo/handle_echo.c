@@ -61,5 +61,6 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 	}
 	if (!flag)
 		write(STDOUT_FILENO, "\n", 1);
+	shell->exit_code = "0";
 	return (1);
 }

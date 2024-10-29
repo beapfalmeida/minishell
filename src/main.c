@@ -86,7 +86,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_tokens	*tokens = NULL;
 	t_shell		shell;
-	char	*input_buffer;
+	char		*input_buffer;
 
 	(void)argc;
 	(void)argv;
@@ -113,19 +113,19 @@ int	main(int argc, char **argv, char **envp)
 		if (!tokens)
 			continue ;
 		tokens = keep_parsing(tokens, &shell);
-		// if (shell.interrupt_exec == true)
-		// {
-		// 	shell.interrupt_exec = false;
-		// 	free_all(tokens, &shell, input_buffer);
-		// 	continue ;
-		// }
+		if (shell.interrupt_exec == true)
+		{
+			shell.interrupt_exec = false;
+			free_all(tokens, &shell, input_buffer);
+			continue ;
+		}
 		if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
 			execute(tokens, &shell);
 		dup2(shell.original_stdin, STDIN_FILENO);
 		dup2(shell.original_stdin, STDOUT_FILENO);
 		lstclear(&tokens);
 		free(input_buffer);
-		//child_cleanup(tokens, &shell, 0);
 	}
 	free_all(tokens, &shell, input_buffer);
+	exit(ft_atoi(shell.exit_code));
 }
