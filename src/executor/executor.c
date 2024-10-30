@@ -116,7 +116,7 @@ static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
 	else if (is_file(tokens->token) == 1)
 		do_error(tokens, shell, P_DENY);
 	else if (!is_file(tokens->token))
-		do_error(tokens, shell, ERROR_NSFD);
+		do_error(tokens, shell, ERROR_OPEN);
 }
 
 void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)

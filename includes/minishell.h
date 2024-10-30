@@ -27,8 +27,8 @@
 # define APPEND_IN 7
 # define APPEND_OUT 8
 # define LIMITER 9
-# define ARG 10
-# define DIR_FILE 11
+# define ARG 14
+# define DIR_FILE 13
 # define SKIP 50
 
 extern int g_signal;
@@ -43,12 +43,11 @@ typedef enum e_code
 	P_DENY,
 	ERROR_FAR,
 	ERROR_TILD,
-	ERROR_NSFD,
 	ERROR_OPEN,
 	ERROR_OPENCMD,
+	ERROR_SYNTAX,
 	ERROR_N_VAL,
 	ERROR_PIPE,
-	ERROR_SYNTAX,
 }	t_error;
 
 typedef struct s_tokens
