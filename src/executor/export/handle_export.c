@@ -142,41 +142,41 @@ static void	print_export(char **envp)
 		envp++;
 	}
 }
+static void	update_env(t_tokens *tokens, t_shell *shell)
+{
+	char	**envp;
+	char	**new_envp;
+	int		i;
+
+	while (tokens->next && tokens->next->type == ARG)
+	{
+		envp = shell->envp;
+		new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
+		i = 0;
+		while (envp[i])
+		{
+			new_envp[i] = ft_strdup(envp[i]);
+			i++;
+		}
+		new_envp[i] = NULL;
+		add_var(new_envp, tokens->next);
+		free_array(shell->envp, arr_len(shell->envp));
+		shell->envp = new_envp;
+		tokens = tokens->next;
+	}
+}
 
 int	ft_export(t_tokens *tokens, t_shell *shell)
 {
-	int		i;
-	char	**envp;
-	// char	**temp_envp;
-	char	**new_envp;
 	char	**envp_print;
 
 	if (check_export(tokens, shell) != 0)
 		return (1);
-	envp = shell->envp;
-	envp_print = ft_arrdup(envp);
 	if (tokens->next && tokens->next->type == ARG)
-	{
-		while (tokens->next && tokens->next->type == ARG)
-		{
-			envp = shell->envp;
-			new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
-			// temp_envp = envp;
-			i = 0;
-			while (envp[i])
-			{
-				new_envp[i] = ft_strdup(envp[i]);
-				i++;
-			}
-			new_envp[i] = NULL;
-			add_var(new_envp, tokens->next);
-			free_array(shell->envp, arr_len(shell->envp));
-			shell->envp = new_envp;
-			tokens = tokens->next;
-		}
-	}
+		update_env(tokens, shell);
 	else
 	{
+		envp_print = ft_arrdup(shell->envp);
 		envp_print = order_alphabetically(envp_print);
 		print_export(envp_print);
 		free_array(envp_print, arr_len(envp_print));
