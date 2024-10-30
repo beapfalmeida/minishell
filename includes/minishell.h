@@ -87,6 +87,13 @@ typedef struct s_pipe
 	int			fd[2];
 }	t_pipe;
 
+typedef struct s_quotes
+{
+	bool	dq;
+	bool	sq;
+	bool	first_encounter;
+	int		i;
+}	t_quotes;
 // Init
 void		init_tokens(t_tokens *token);
 

@@ -5,19 +5,15 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 	int	i;
 
 	if (ft_strncmp(tokens->token, "export", 7) != 0)
-	{
-		do_error(tokens, shell, ERROR_CMD);
-		return (1);
-	}
+		return (do_error(tokens, shell, ERROR_CMD), 1);
 	if (tokens->next && 
 		(!ft_strncmp(tokens->next->token, "=", 1) || !ft_strncmp(tokens->next->token, "+=", 2)))
-	{
-		do_error(tokens, shell, ERROR_N_VAL);
-	}
+		return (do_error(tokens, shell, ERROR_N_VAL), 1);
 	else if (tokens->next)
 	{
 		i = 0;
-		while (tokens->next->token[i])
+		while (tokens->next->token[i] 
+			&& tokens->next->token[i] != '=' && tokens->next->token[i] != '+')
 		{
 			if (!ft_isalpha(tokens->next->token[i]))
 			{

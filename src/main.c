@@ -41,6 +41,7 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	t_tokens *temp;
 	t_tokens *t;
 	handle_quotes(tokens, shell);
+	
 	// if (*tokens->token == '\0')
 	// 	return (NULL);
 	assign_types(&tokens);
