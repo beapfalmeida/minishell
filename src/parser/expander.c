@@ -7,7 +7,7 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 
 	new_token = NULL;
 	if (!strncmp(var, "?", 1))
-		return (shell->exit_code);
+		return (ft_itoa(shell->exit_code));
 	if (!var || !*var)
 		return (NULL);
 	while (*envp)
@@ -17,7 +17,6 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 			trim = ft_strjoin(var, "=");
 			new_token = ft_strdup(*envp);
 			new_token += ft_strlen(trim);
-			// new_token = ft_strtrim(*envp, trim);
 			new_token = ft_strtrim(new_token, "\"");
 			new_token = ft_strtrim(new_token, "\'");
 			break ;
@@ -34,8 +33,13 @@ char	*get_var(char *token)
 	i = 0;
 	while (token[i])
 	{
-		if (token[i] == '$' || token[i] == '\"' || token[i] == '\'')
+		if (token[i] == '$' || token[i] == '\"' || token[i] == '\'' || token[i] == ' ')
 			break ;
+		if (token[i] == '?')
+		{
+			i++;
+			break;
+		}
 		i++;
 	}
 	token[i] = '\0';
@@ -127,6 +131,8 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 			else
 				i++;
 		}
+		if (!*token)
+			tokens->type = SKIP;
 		tokens->token = token;
 		tokens = tokens->next;
 	}

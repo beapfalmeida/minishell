@@ -91,8 +91,12 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			signal(SIGINT, signore);
 			wait(&status);
 			if (WIFEXITED(status))
+			{
 				if (WEXITSTATUS(status) == 10)
 					do_error(tokens, shell, ERROR_CMD);
+				else
+					shell->exit_code = 0;				
+			}
 		}
 	}
 	return (0);
@@ -125,8 +129,12 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 	{
 		waitpid(pid[i], &status, 0); //TODO:flag
 		if (WIFEXITED(status))
+		{
 			if (WEXITSTATUS(status) == 10)
 				do_error(tokens, shell, ERROR_CMD);
+			else
+				shell->exit_code = 0;			
+		}
 	}
 }
 
@@ -140,7 +148,6 @@ static void	set_next_pipe(t_tokens **temp)
 
 void	execute(t_tokens *tokens, t_shell *shell)
 {
-
 	t_tokens	*temp;
 	t_pipe		p;
 	int			pid[shell->n_pipes];

@@ -22,7 +22,7 @@ static int	do_heredoc(int *pipe_fd, char *limiter)
 	input_buff = temp;
 	if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
 		return (1);
-	write(pipe_fd[1], input_buff, ft_strlen(input_buff));
+	ft_printf_fd(pipe_fd[1], input_buff);
 	free(input_buff);
 	return (0);
 }

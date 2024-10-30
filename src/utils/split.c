@@ -96,6 +96,8 @@ char	**ft_split_adapted(char *s)
 	t_split sp;
 
 	n = countwords(s, 0, 0);
+	if (!n)
+		return (NULL);
 	sp.i = 0;
 	sp.j = 0;
 	sp.k = 0;

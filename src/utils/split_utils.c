@@ -6,13 +6,27 @@ int	count_inquote(char *s, int i)
 	{
 		i++;
 		while (s[i] && s[i] != '\'')
+		{
 			i++;
+			if (!s[i])
+			{
+				printf("Sorry! Minishell doesn't handle unclosed quotes!\n");
+				return (0);
+			}
+		}
 	}
 	else if (s[i] == '\"')
 	{
 		i++;
-		while (s[i] && s[i] != '\"')
+		while (s[i] != '\"')
+		{
 			i++;
+			if (!s[i])
+			{
+				printf("Sorry! Minishell doesn't handle unclosed quotes!\n");
+				return (0);
+			}
+		}
 	}
 	return (i + 1);
 }
@@ -54,7 +68,11 @@ int	countwords(char *s, int j, int count)
 			while (check_new_token(&s[i]) == 3)
 			{
 				if (s[i] == '\'' || s[i] == '\"')
+				{
 					i = count_inquote(s, i);
+					if (!i)
+						return (0);
+				}
 				else
 					i++;
 			}

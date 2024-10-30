@@ -7,7 +7,7 @@ static void	parent_process(int *new_fd)
 	close(new_fd[1]);
 }
 
-static void	prepare_exec(t_tokens *tokens, t_shell *shell)
+static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
 	int		res;
 	char	**cmds;
@@ -21,6 +21,8 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell)
 		free_paths(cmds);
 		exit(0);
 	}
+	close(p->fd[1]);
+	close(p->fd[0]);
 	path = get_path(tokens->token, shell->envp);
 	if (!path || execve(path, cmds, shell->envp) == -1)
 	{
@@ -43,9 +45,7 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 			dup2(shell->fd_out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		close(p->fd[1]);
-		close(p->fd[0]);
-		prepare_exec(tokens, shell);
+		prepare_exec(tokens, shell, p);
 	}
 	else
 		signal(SIGINT, signore);

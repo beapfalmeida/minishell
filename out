@@ -1,1 +1,10 @@
-a
+in
+includes
+Makefile
+minishell
+minishell_tester
+obj
+out
+readline.supp
+README.md
+src

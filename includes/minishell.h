@@ -6,7 +6,7 @@
 # include <unistd.h>
 # include <stdlib.h> 
 # include "./libft/libft.h"
-# include "./libft/ft_printf/ft_printf.h"
+# include "./libft/printf_fd/ft_printf_fd.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
@@ -68,7 +68,8 @@ typedef struct s_shell
 	char	*last_path;
 	int		original_stdin;
 	int		original_stdout;
-	char	*exit_code;
+	int		exit_code;
+	bool	interrupt_exec;
 }	t_shell;
 
 typedef struct s_split
