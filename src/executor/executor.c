@@ -43,7 +43,7 @@ int	ft_isbuiltin(t_tokens *token, t_shell *shell)
 
 /// @brief Function that executes a cmd.
 /// @return 
-int	exec_cmd(t_tokens *tokens, t_shell *shell)
+int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 {
 	int		pid;
 	int		status;
@@ -76,14 +76,19 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 				dup2(shell->fd_out, STDOUT_FILENO);
 				close(shell->fd_out);
 			}
-			path = get_path(tokens->token, shell->envp);
-			if (!path || execve(path, cmds, shell->envp) == -1)
+			if (executable)
+				handle_executable(tokens, shell);
+			else
 			{
-				child_cleanup(tokens, shell);
-				free_paths(cmds);
-				if (path)
-					free(path);
-				exit(10);
+				path = get_path(tokens->token, shell->envp);
+				if (!path || execve(path, cmds, shell->envp) == -1)
+				{
+					child_cleanup(tokens, shell);
+					free_paths(cmds);
+					if (path)
+						free(path);
+					exit(10);
+				}
 			}
 		}
 		else
@@ -102,48 +107,48 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
+void	handle_executable(t_tokens *tokens, t_shell *shell)
+{
+	char *path;
+	char    cwd[MAX_PATH_SIZE];
+	char	*token;
+	char	*dup;
+	char	**args;
+
+	token = tokens->token;
+	getcwd(cwd, sizeof(cwd));
+	dup = ft_strdup(&token[1]);
+	path = ft_strjoin(cwd, dup);
+	free(dup);
+	args = malloc(sizeof(char *)* 2);
+	args[0] = path;
+	args[1] = NULL;
+	if (!path || execve(path, args, shell->envp) == -1)
+	{
+		free(path);
+		free(args);
+	}
+}
+
 static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
 {
 	char *token;
+	int	file;
 
 	token = tokens->token;
+	file = is_file(tokens->token);
 	if (!strncmp(token, ".", ft_strlen(token)))
 		do_error(tokens, shell, ERROR_FAR);
 	else if (!strncmp(token, "~", ft_strlen(token)))
 		do_error(tokens, shell, ERROR_TILD);
-	else if (is_file(tokens->token) == 2)
+	else if (file == 1)
+		exec_cmd(tokens, shell, 1);
+	else if (file == 2)
 		do_error(tokens, shell, IS_DIR);
-	else if (is_file(tokens->token) == 1)
+	else if (file == 4)
 		do_error(tokens, shell, P_DENY);
 	else if (!is_file(tokens->token))
 		do_error(tokens, shell, ERROR_OPEN);
-}
-
-void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
-{
-	int	i;
-	int	status;
-
-	i = -1;
-	while (++i <= shell->n_pipes)
-	{
-		waitpid(pid[i], &status, 0); //TODO:flag
-		if (WIFEXITED(status))
-		{
-			if (WEXITSTATUS(status) == 10)
-				do_error(tokens, shell, ERROR_CMD);
-			else
-				shell->exit_code = 0;			
-		}
-	}
-}
-
-static void	set_next_pipe(t_tokens **temp)
-{
-	while (*temp && (*temp)->type != PIPE)
-		*temp = (*temp)->next;
-	if (*temp && (*temp)->next)
-		*temp = (*temp)->next;
 }
 
 void	execute(t_tokens *tokens, t_shell *shell)
@@ -171,5 +176,5 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		dup2(shell->original_stdin, STDIN_FILENO);
 	}
 	else
-		exec_cmd(tokens, shell);
+		exec_cmd(tokens, shell, 0);
 }

@@ -1,8 +1,42 @@
 #include "minishell.h"
 
+void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
+{
+	int	i;
+	int	status;
+	t_tokens *temp;
+
+	i = -1;
+	temp = tokens;
+	while (++i <= shell->n_pipes)
+	{
+		waitpid(pid[i], &status, 0);
+		if (WIFEXITED(status))
+		{
+			if (WEXITSTATUS(status) == 10)
+				do_error(temp, shell, ERROR_CMD);
+			else
+				shell->exit_code = 0;
+		}
+		set_next_pipe(&temp);
+	}
+}
+
+void	set_next_pipe(t_tokens **temp)
+{
+	while (*temp && (*temp)->type != PIPE)
+		*temp = (*temp)->next;
+	if (*temp && (*temp)->next)
+		*temp = (*temp)->next;
+}
+
 static void	parent_process(int *new_fd)
 {
- 	dup2(new_fd[0], STDIN_FILENO);
+ 	// char *buffer = NULL;
+	// if (read(STDIN_FILENO, buffer, 1) == 0)
+		dup2(new_fd[0], STDIN_FILENO);
+	// else
+	// 	dup2(shell->original_stdin, STDIN_FILENO);
 	close(new_fd[0]);
 	close(new_fd[1]);
 }

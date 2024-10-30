@@ -100,8 +100,10 @@ void		command(t_tokens **temp);
 int			is_symbol(char *token, int len);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
-// char 		*find_expander2(char	*token, char **envp);
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
+t_tokens	*skip_redirects(t_tokens *tokens);
+char		*handle_expander(char **envp, char *var, t_shell *shell);
+int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Create shell struct
 int			process_tokens(t_tokens **tokens, t_shell *args);
@@ -110,12 +112,12 @@ int			get_output(t_tokens **tokens);
 
 // Executor
 
-int			exec_cmd(t_tokens *tokens, t_shell *shell);
+int			exec_cmd(t_tokens *tokens, t_shell *shell, int ex);
 char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
 int			ft_isbuiltin(t_tokens *token, t_shell *shell);
 void		execute(t_tokens *token, t_shell *shell);
-t_tokens	*skip_redirects(t_tokens *tokens);
+void		handle_executable(t_tokens *tokens, t_shell *shell);
 
 // Builtins
 int			ft_pwd(t_tokens *token, t_shell *shell);
@@ -124,10 +126,11 @@ int			ft_echo(t_tokens *token, t_shell *shell);
 int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
-// void		find_expander(t_tokens	*tokens, char **envp);
-char		*handle_expander(char **envp, char *var, t_shell *shell);
+
+// Pipex
 void		do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p);
-int			find_limiter(t_tokens **tokens, t_shell *shell);
+void		set_next_pipe(t_tokens **temp);
+void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
 void		child_cleanup(t_tokens *tokens, t_shell *shell);
@@ -153,7 +156,6 @@ int			has_sintax_error(t_tokens *tokens, t_shell *shell);
 // Split
 char		**ft_split_adapted(char *s);
 void		split_words(t_split *sp);
-// void		put_word(t_split *sp, int c);
 void		split_quotes(t_split *sp, char c);
 int			ft_word_len(char *s, int i);
 int			countwords(char *s, int i, int count);
