@@ -79,7 +79,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell)
 			path = get_path(tokens->token, shell->envp);
 			if (!path || execve(path, cmds, shell->envp) == -1)
 			{
-				child_cleanup(tokens, shell);
+				free_all(tokens, shell, 0);
 				free_paths(cmds);
 				if (path)
 					free(path);

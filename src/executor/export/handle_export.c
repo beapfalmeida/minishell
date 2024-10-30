@@ -13,16 +13,18 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 		(!ft_strncmp(tokens->next->token, "=", 1) || !ft_strncmp(tokens->next->token, "+=", 2)))
 	{
 		do_error(tokens, shell, ERROR_N_VAL);
+		return (1);
 	}
 	else if (tokens->next)
 	{
 		i = 0;
-		while (tokens->next->token[i])
+		while (tokens->next->token[i] &&
+			(tokens->next->token[i] != '=' && tokens->next->token[i] != '+'))
 		{
 			if (!ft_isalpha(tokens->next->token[i]))
 			{
 				do_error(tokens, shell, ERROR_N_VAL);
-				break ;
+				return (1);
 			}
 			i++;
 		}

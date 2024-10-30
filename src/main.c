@@ -2,40 +2,6 @@
 
 int g_signal;
 
-void	child_cleanup(t_tokens *tokens, t_shell *shell)
-{
-	if (shell->last_path)
-		free(shell->last_path);
-	if (shell->envp)
-		free_paths(shell->envp);
-	if (tokens)
-		lstclear(&tokens);
-	if (shell->original_stdin)
-		close(shell->original_stdin);
-	if (shell->original_stdout)
-		close(shell->original_stdout);
-	if (shell->fd_in)
-		close(shell->fd_in);
-	if (shell->fd_out)
-		close(shell->fd_out);
-}
-
-static void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
-{
-	if (shell->last_path)
-		free(shell->last_path);
-	if (shell->envp)
-		free_paths(shell->envp);
-	if (tokens)
-		lstclear(&tokens);
-	if (shell->original_stdin)
-		close(shell->original_stdin);
-	if (shell->original_stdout)
-		close(shell->original_stdout);
-	if (input_buffer)
-		free(input_buffer);
-}
-
 static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens *temp;
@@ -82,51 +48,78 @@ static void	init_shell(t_shell *shell, char **envp)
 	shell->interrupt_exec = false;
 }
 
-int	main(int argc, char **argv, char **envp)
+static int check_exit_exec(t_tokens **tokens, t_shell *shell, char *input_buffer)
 {
-	t_tokens	*tokens = NULL;
-	t_shell		shell;
-	char		*input_buffer;
+	if (shell->interrupt_exec == true)
+		{
+			shell->interrupt_exec = false;
+			free_all(*tokens, shell, input_buffer);
+			return (2);
+		}
+	if (ft_strlen((*tokens)->token) && !ft_strncmp((*tokens)->token, "exit", 4))
+	{
+		if (*tokens && (*tokens)->next)
+			shell->exit_code = calculate_exit_code(*tokens, (*tokens)->next->token);
+		if ((*tokens)->next->next && shell->exit_code != 2)
+		{
+			ft_printf_fd(2, "bash: exit: too many arguments\n");
+			shell->exit_code = 1;
+			lstclear(tokens);
+			free(input_buffer);
+			return (2);
+		}
+		else
+			return (1);
+	}
+	return (0);
+}
 
-	(void)argc;
-	(void)argv;
-	init_shell(&shell, envp);
+void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
+{
+	int	check_exit;
 	while (1)
 	{
 		signals();
 		input_buffer = readline("minishell: ");
 		if (g_signal == SIGINT)
 		{
-			shell.exit_code = 130;
+			shell->exit_code = 130;
 			g_signal = 0;
 		}
-		if (!input_buffer || (ft_strlen(input_buffer) && !ft_strncmp(input_buffer, "exit", 4)))
-		{
-			shell.exit_code = 123;
-			ft_printf_fd(STDOUT_FILENO, "exit\n");
+		if (!input_buffer)
 			break ;
-		}
-		if (!*input_buffer)
+		if (input_buffer && !*input_buffer)
 			continue ;
 		if (input_buffer && *input_buffer)
 			add_history(input_buffer);
 		create_tokens(&tokens, input_buffer);
 		if (!tokens)
 			continue ;
-		tokens = keep_parsing(tokens, &shell);
-		if (shell.interrupt_exec == true)
-		{
-			shell.interrupt_exec = false;
-			free_all(tokens, &shell, input_buffer);
+		tokens = keep_parsing(tokens, shell);
+		check_exit = check_exit_exec(&tokens, shell, input_buffer);
+		if (check_exit == 2)
 			continue ;
-		}
-		if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
-			execute(tokens, &shell);
-		// dup2(shell.original_stdin, STDIN_FILENO);  Tirei por causa do tester
-		// dup2(shell.original_stdin, STDOUT_FILENO);
+		else if (check_exit == 1)
+			break ;
+		// if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
+		execute(tokens, shell);
 		lstclear(&tokens);
 		free(input_buffer);
 	}
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_tokens	*tokens;
+	t_shell		shell;
+	char		*input_buffer;
+
+	(void)argc;
+	(void)argv;
+	tokens = NULL;
+	input_buffer = NULL;
+	init_shell(&shell, envp);
+	minishell(tokens, &shell, input_buffer);
 	free_all(tokens, &shell, input_buffer);
 	exit(shell.exit_code);
 }

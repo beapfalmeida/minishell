@@ -56,3 +56,29 @@ char	*ft_strfjoin(char *s1, char *s2, int _to_free)
 		free(s2);
 	return (new_str);
 }
+
+int	calculate_exit_code(t_tokens *tokens, char *number)
+{
+	int	ret;
+	int	i;
+
+	(void)tokens;
+	i = 0;
+	ft_printf_fd(STDOUT_FILENO, "exit\n");
+	if (number[i] == '+' || number[i] == '-')
+		i++;
+	while (number[i])
+	{
+		if (!ft_isdigit(number[i]))
+		{
+			ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
+			return (2);
+		}
+		i++;
+	}
+	if (0 <= ft_atoi(number) && ft_atoi(number) <= 255)
+		ret = ft_atoi(number);
+	else
+		ret = ft_atoi(number) % 256;
+	return (ret);
+}

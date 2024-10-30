@@ -18,7 +18,7 @@ EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export ha
 INIT = init
 PARSER = assign_types parser process_args skip_redirects expander heredoc
 PRINTS = print
-UTILS = utils utils2 utils3 split split_utils cmds error_handle
+UTILS = utils utils2 utils3 split split_utils cmds error_handle free
 SIGNALS = signals
 
 # Directory for obj files
