@@ -171,7 +171,7 @@ int			has_sintax_error(t_tokens *tokens, t_shell *shell);
 
 void		add_back_fds(t_fds **lst, t_fds *new);
 t_fds		*new_fds(int fd, int i);
-t_fds	*find_last_fds(t_fds *lst);
+t_fds		*find_last_fds(t_fds *lst);
 
 // Split
 char		**ft_split_adapted(char *s);
