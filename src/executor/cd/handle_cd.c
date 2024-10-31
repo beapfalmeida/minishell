@@ -52,7 +52,7 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 	if (chdir(path))
 	{
 		if (access(tokens->next->token, F_OK))
-			return (do_error(tokens, shell, ERROR_NSFD), 1);
+			return (do_error(tokens, shell, ERROR_OPENCMD), 1);
 		return (do_error(tokens, shell, P_DENY), 1);
 	}
 	return (1);
