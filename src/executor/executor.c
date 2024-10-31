@@ -83,7 +83,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 				path = get_path(tokens->token, shell->envp);
 				if (!path || execve(path, cmds, shell->envp) == -1)
 				{
-					child_cleanup(tokens, shell);
+					free_all(tokens, shell, 0);
 					free_paths(cmds);
 					if (path)
 						free(path);
@@ -159,6 +159,8 @@ void	execute(t_tokens *tokens, t_shell *shell)
 
 	temp = tokens;
 	p.pid = pid;
+	shell->original_stdin = dup(STDIN_FILENO);
+	shell->original_stdout = dup(STDOUT_FILENO);
 	if (temp->type == DIR_FILE)
 		return (handle_dir_file(temp, shell));
 	if (shell->n_pipes)
@@ -174,6 +176,9 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		}
 		wait_allchildren(tokens, shell, p.pid);
 		dup2(shell->original_stdin, STDIN_FILENO);
+		dup2(shell->original_stdout, STDOUT_FILENO);
+		close(shell->original_stdin);
+		close(shell->original_stdout);
 	}
 	else
 		exec_cmd(tokens, shell, 0);

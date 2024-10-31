@@ -149,7 +149,7 @@ void		set_next_pipe(t_tokens **temp);
 void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
-void		child_cleanup(t_tokens *tokens, t_shell *shell);
+void		free_all(t_tokens *tokens, t_shell *shell, char *input_buffer);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);
@@ -164,7 +164,7 @@ int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
 char		*ft_strfjoin(char *s1, char *s2, int _to_free);
-
+int			calculate_exit_code(t_tokens *tokens, char *number);
 int			is_file(char *file_name);
 int			has_char(char *token, char c);
 int			has_sintax_error(t_tokens *tokens, t_shell *shell);

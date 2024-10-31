@@ -18,7 +18,7 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 			if (!ft_isalpha(tokens->next->token[i]))
 			{
 				do_error(tokens, shell, ERROR_N_VAL);
-				break ;
+				return (1);
 			}
 			i++;
 		}
