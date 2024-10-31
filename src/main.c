@@ -97,18 +97,18 @@ void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
 		if (!tokens)
 			continue ;
 		tokens = keep_parsing(tokens, shell);
+		if (!tokens)
+			continue ;
 		check_exit = check_exit_exec(&tokens, shell, input_buffer);
 		if (check_exit == 2)
 			continue ;
 		else if (check_exit == 1)
 			break ;
-		// if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
 		execute(tokens, shell);
 		lstclear(&tokens);
 		free(input_buffer);
 		// dup2(STDIN_FILENO, shell->original_stdin);
 		// dup2(STDOUT_FILENO, shell->original_stdout);
-		// printf("fd_out = %d\n", STDOUT_FILENO);
 	}
 }
 

@@ -44,6 +44,8 @@ void	assign_types(t_tokens **tokens)
 			temp->type = PIPE;
 			temp = temp->next;
 		}
+		else if (temp->type == INPUT && !temp->next)
+			break ;
 		else if (!ft_strncmp(temp->token, ">", ft_strlen(temp->token)))
 			redirect_out(&temp);
 		else if (!ft_strncmp(temp->token, "<", ft_strlen(temp->token)))
@@ -56,7 +58,7 @@ void	assign_types(t_tokens **tokens)
 			command(&temp);
 		else if (!temp->prev)
 			check_dir_cmd(&temp);
-		else
+		else if (temp->type != INPUT)
 			loop_assigning(&temp, ARG);
 	}
 }

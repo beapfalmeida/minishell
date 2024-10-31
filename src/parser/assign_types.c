@@ -19,16 +19,24 @@ void	redirect_in(t_tokens **temp)
 		(*temp) = (*temp)->next;
 		return ;
 	}
-	if (((*temp)->prev && ((*temp)->prev->type == CMD || (*temp)->prev->type == INPUT)))
+	if ((*temp)->next->next && ((*temp)->prev && ((*temp)->prev->type == CMD || (*temp)->prev->type == INPUT)))
 	{
 		(*temp) = (*temp)->next->next;
 		loop_assigning(temp, INPUT);
 	}
-	else
+	else if ((*temp)->next->next && (*(*temp)->next->next->token != '>'
+		&& *(*temp)->next->next->token != '<'))
 	{
 		(*temp) = (*temp)->next->next;
 		command(temp);
 	}
+	else if ((*temp)->next->next && (*(*temp)->next->next->token == '>'
+		|| *(*temp)->next->next->token == '<'))
+	{
+		(*temp) = (*temp)->next->next;
+	}
+	else
+		(*temp) = (*temp)->next;
 }
 
 void	redirect_out(t_tokens **temp)

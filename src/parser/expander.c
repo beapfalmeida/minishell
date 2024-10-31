@@ -81,6 +81,7 @@ char	*found_quote(char *token, t_quotes *q, int type)
 	trimed = skip_quote(&token[q->i], "\"", q);
 	token[q->i] = '\0';
 	token = ft_strfjoin(token, trimed, 3);
+	q->i--;
 	return (token);
 }
 
