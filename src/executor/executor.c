@@ -71,10 +71,10 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 				dup2(shell->fd_in, STDIN_FILENO);
 				close(shell->fd_in);
 			}
-			if (shell->fd_out != STDOUT_FILENO)
+			if (shell->fds->fd != STDOUT_FILENO)
 			{
-				dup2(shell->fd_out, STDOUT_FILENO);
-				close(shell->fd_out);
+				dup2(shell->fds->fd, STDOUT_FILENO);
+				close(shell->fds->fd);
 			}
 			if (executable)
 				handle_executable(tokens, shell);

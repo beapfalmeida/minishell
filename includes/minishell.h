@@ -50,6 +50,13 @@ typedef enum e_code
 	ERROR_PIPE,
 }	t_error;
 
+typedef	struct	s_fds
+{
+	int	fd;
+	int	pn;
+	struct s_fds *next;
+}	t_fds;
+
 typedef struct s_tokens
 {
 	char			*token;
@@ -69,6 +76,7 @@ typedef struct s_shell
 	int		original_stdout;
 	int		exit_code;
 	bool	interrupt_exec;
+	t_fds	*fds;
 }	t_shell;
 
 typedef struct s_split
@@ -94,6 +102,7 @@ typedef struct s_quotes
 	bool	first_encounter;
 	int		i;
 }	t_quotes;
+
 // Init
 void		init_tokens(t_tokens *token);
 
@@ -159,6 +168,10 @@ char		*ft_strfjoin(char *s1, char *s2, int _to_free);
 int			is_file(char *file_name);
 int			has_char(char *token, char c);
 int			has_sintax_error(t_tokens *tokens, t_shell *shell);
+
+void		add_back_fds(t_fds **lst, t_fds *new);
+t_fds		*new_fds(int fd, int i);
+t_fds	*find_last_fds(t_fds *lst);
 
 // Split
 char		**ft_split_adapted(char *s);

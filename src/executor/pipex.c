@@ -68,15 +68,31 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	}
 }
 
+static t_fds	*find_redirects(t_fds *fds, int i)
+{
+	t_fds *temp;
+
+	temp = fds;
+	while (temp)
+	{
+		if (i == temp->pn)
+			return (temp);
+		temp = temp->next;
+	}
+	return (fds);
+}
+
 void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
+	t_fds	*fds;
 	if (p->pid[p->i] == 0)
 	{
 		signal(SIGINT, SIG_DFL); //TODO: dar mute aos outros sinais tambem
 		if (p->i == 0 && shell->fd_in != STDIN_FILENO)
 			dup2(shell->fd_in, STDIN_FILENO);
-		if (p->i == shell->n_pipes && shell->fd_out != STDOUT_FILENO)
-			dup2(shell->fd_out, STDOUT_FILENO);
+		fds = find_redirects(shell->fds, p->i);
+		if (fds->pn == p->i && fds->fd != STDOUT_FILENO)
+			dup2(fds->fd, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
 		prepare_exec(tokens, shell, p);

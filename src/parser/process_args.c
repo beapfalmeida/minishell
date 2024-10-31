@@ -41,10 +41,9 @@ int	get_output(t_tokens **tokens)
 	while (temp)
 	{
 		if (temp->type == OUTPUT)
-		{
 			outfile = temp->token;
+		if (temp->type == PIPE || !temp->next)
 			break ;
-		}
 		temp = temp->next;
 	}
 	if (outfile != NULL)
@@ -61,10 +60,24 @@ int	get_output(t_tokens **tokens)
 
 int	process_tokens(t_tokens **tokens, t_shell *args)
 {
+	int	i;
+	t_tokens	*temp;
+	t_fds		*node;
+	t_fds		*fds = NULL;
+
+	i = 0;
+	temp = *tokens;
 	args->fd_in = get_input(tokens, args);
+	args->n_pipes = count_pipes(tokens);
 	if (args->fd_in == -1)
 		return (1);
-	args->fd_out = get_output(tokens);
-	args->n_pipes = count_pipes(tokens);
+	while (i <= args->n_pipes)
+	{
+		node = new_fds(get_output(&temp), i);
+		add_back_fds(&fds, node);
+		set_next_pipe(&temp);
+		i++;
+	}
+	args->fds = fds;
 	return (0);
 }

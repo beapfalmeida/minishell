@@ -4,7 +4,7 @@ char	*get_error(t_error i)
 {
 	char	*str[14];
 
-	str[0] = "%s: Command not found\n";
+	str[0] = "%s: command not found\n";
 	str[1] = "bash: cd: No such file or directory\n";
 	str[2] = "bash: %s: too many arguments\n";
 	str[3] = "bash: %s: %s: Not a directory\n";

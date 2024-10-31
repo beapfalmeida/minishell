@@ -24,7 +24,7 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 		envp++;
 	}
 	return (new_token);
-}  
+}
 
 char	*get_var(char *token)
 {
@@ -84,7 +84,7 @@ char	*found_quote(char *token, t_quotes *q, int type)
 	return (token);
 }
 
-void	expand(char *token, t_shell *shell, t_quotes *q)
+char	*expand(char *token, t_shell *shell, t_quotes *q)
 {
 	char	*temp;
 	char	*envp_var;
@@ -96,6 +96,7 @@ void	expand(char *token, t_shell *shell, t_quotes *q)
 	q->i += ft_strlen(handle_expander(shell->envp, envp_var, shell));
 	token = ft_strfjoin(token, temp, 3);
 	free(envp_var);
+	return (token);
 }
 
 char	*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q)
@@ -112,7 +113,7 @@ char	*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q)
 			if (token[q->i + 1] && token[q->i + 1] != ' ' && token[q->i + 1] != '$'
 				&& token[q->i + 1] != '\"' && token[q->i + 1] != '\''
 				&& check_new_token(&token[q->i + 1]) == 3)
-				expand(token, shell, q);
+				token = expand(token, shell, q);
 			else
 				q->i++; 
 			if (!*token)
