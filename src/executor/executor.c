@@ -133,7 +133,7 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 			if (WEXITSTATUS(status) == 10)
 				do_error(tokens, shell, ERROR_CMD);
 			else
-				shell->exit_code = 0;			
+				shell->exit_code = WEXITSTATUS(status);			
 		}
 	}
 }
@@ -154,6 +154,8 @@ void	execute(t_tokens *tokens, t_shell *shell)
 
 	temp = tokens;
 	p.pid = pid;
+	shell->original_stdin = dup(STDIN_FILENO);
+	shell->original_stdout = dup(STDOUT_FILENO);
 	if (temp->type == DIR_FILE)
 		return (handle_dir_file(temp, shell));
 	if (shell->n_pipes)
@@ -169,6 +171,9 @@ void	execute(t_tokens *tokens, t_shell *shell)
 		}
 		wait_allchildren(tokens, shell, p.pid);
 		dup2(shell->original_stdin, STDIN_FILENO);
+		dup2(shell->original_stdout, STDOUT_FILENO);
+		close(shell->original_stdin);
+		close(shell->original_stdout);
 	}
 	else
 		exec_cmd(tokens, shell);
