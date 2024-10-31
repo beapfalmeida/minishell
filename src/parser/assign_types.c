@@ -28,13 +28,11 @@ void	redirect_in(t_tokens **temp)
 		&& *(*temp)->next->next->token != '<'))
 	{
 		(*temp) = (*temp)->next->next;
-		command(temp);
+		loop_assigning(temp, ARG);
 	}
 	else if ((*temp)->next->next && (*(*temp)->next->next->token == '>'
 		|| *(*temp)->next->next->token == '<'))
-	{
 		(*temp) = (*temp)->next->next;
-	}
 	else
 		(*temp) = (*temp)->next;
 }

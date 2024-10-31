@@ -20,7 +20,7 @@ int	get_input(t_tokens **tokens, t_shell *shell)
 		}
 		temp = temp->next;
 	}
-	if (find_limiter(tokens, shell) != shell->original_stdin && has_infile)
+	if (find_limiter(tokens, shell) != STDIN_FILENO && has_infile)
 	{
 		fd = open(infile->token, O_RDONLY);
 		if (fd == -1)

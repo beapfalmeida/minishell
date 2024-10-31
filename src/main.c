@@ -44,8 +44,8 @@ static void	init_shell(t_shell *shell, char **envp)
 	shell->envp = envp_array;
 	shell->exit_code = 0;
 	shell->last_path = ft_strdup(getenv("PWD"));
-	// shell->original_stdin = dup(STDIN_FILENO);
-	// shell->original_stdout = dup(STDOUT_FILENO);
+	shell->original_stdin = dup(STDIN_FILENO);
+	shell->original_stdout = dup(STDOUT_FILENO);
 	shell->interrupt_exec = false;
 }
 
@@ -123,6 +123,7 @@ int	main(int argc, char **argv, char **envp)
 	tokens = NULL;
 	input_buffer = NULL;
 	init_shell(&shell, envp);
+
 	minishell(tokens, &shell, input_buffer);
 	free_all(tokens, &shell, input_buffer);
 	exit(shell.exit_code);
