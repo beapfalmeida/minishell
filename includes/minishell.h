@@ -12,11 +12,14 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-#include <sys/stat.h>
+# include <sys/stat.h>
 # include <stdbool.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
+// Signals
+# define SIG_EXEC_BUILTIN 16
+# define SIG_EXEC_FAILURE 10
 //token types
 # define OUTPUT 1
 # define CMD 2
@@ -30,6 +33,14 @@
 # define ARG 14
 # define DIR_FILE 13
 # define SKIP 50
+
+// Built-ins
+# define PWD 1
+# define CD 2
+# define ECHO 3
+# define ENV 4
+# define EXPORT 5
+# define UNSET 6
 
 extern int g_signal;
 
@@ -65,6 +76,13 @@ typedef struct s_tokens
 	struct s_tokens	*prev;
 }			t_tokens;
 
+typedef struct s_pipe
+{
+	int			i;
+	int			*pid;
+	int			fd[2];
+}	t_pipe;
+
 typedef struct s_shell
 {
 	char	**envp;
@@ -77,6 +95,7 @@ typedef struct s_shell
 	int		exit_code;
 	bool	interrupt_exec;
 	t_fds	*fds;
+	t_pipe	*p;
 }	t_shell;
 
 typedef struct s_split
@@ -88,12 +107,7 @@ typedef struct s_split
 	char	**arr;
 }	t_split;
 
-typedef struct s_pipe
-{
-	int			i;
-	int			*pid;
-	int			fd[2];
-}	t_pipe;
+
 
 typedef struct s_quotes
 {
@@ -105,6 +119,7 @@ typedef struct s_quotes
 
 // Init
 void		init_tokens(t_tokens *token);
+void		init_shell(t_shell *shell, char **envp);
 
 // Parser
 void		create_tokens(t_tokens **tokens, char *input);
@@ -131,7 +146,8 @@ int			get_output(t_tokens **tokens);
 int			exec_cmd(t_tokens *tokens, t_shell *shell, int ex);
 char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
-int			ft_isbuiltin(t_tokens *token, t_shell *shell);
+int			ft_isbuiltin(t_tokens *token);
+int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin);
 void		execute(t_tokens *token, t_shell *shell);
 void		handle_executable(t_tokens *tokens, t_shell *shell);
 

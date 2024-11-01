@@ -13,7 +13,7 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 		waitpid(pid[i], &status, 0);
 		if (WIFEXITED(status))
 		{
-			if (WEXITSTATUS(status) == 10)
+			if (WEXITSTATUS(status) == SIG_EXEC_FAILURE)
 				do_error(temp, shell, ERROR_CMD);
 			else
 				shell->exit_code = WEXITSTATUS(status);
@@ -30,15 +30,24 @@ void	set_next_pipe(t_tokens **temp)
 		*temp = (*temp)->next;
 }
 
-static void	parent_process(int *new_fd)
+static void	parent_process(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
- 	// char *buffer = NULL;
-	// if (read(STDIN_FILENO, buffer, 1) == 0)
-		dup2(new_fd[0], STDIN_FILENO);
-	// else
-	// 	dup2(shell->original_stdin, STDIN_FILENO);
-	close(new_fd[0]);
-	close(new_fd[1]);
+	// int	status;
+	(void)shell;
+	(void)tokens;
+	dup2(p->fd[0], STDIN_FILENO);
+	// waitpid(p->pid[p->i], &status, 0);
+	// if (WIFEXITED(status))
+	// {
+		// if (WEXITSTATUS(status) == SIG_EXEC_BUILTIN)
+		// {
+			// dup2(p->fd[1], STDIN_FILENO);
+			// dup2(shell->original_stdout, STDIN_FILENO);
+			// ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));
+		// }
+	// }
+	close(p->fd[0]);
+	close(p->fd[1]);
 }
 
 static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
@@ -48,12 +57,13 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	char	*path;
 
 	cmds = put_cmds(tokens);
-	res = ft_isbuiltin(tokens, shell); // Pq esta verificacao aqui?
+	res = ft_isbuiltin(tokens);
 	if (res)
 	{
+		ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));
 		free_all(tokens, shell, 0);
 		free_paths(cmds);
-		exit(0);
+		exit(SIG_EXEC_BUILTIN);
 	}
 	close(p->fd[1]);
 	close(p->fd[0]);
@@ -64,7 +74,7 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 		free_paths(cmds);
 		if (path)
 			free(path);
-		exit(10);
+		exit(SIG_EXEC_FAILURE);
 	}
 }
 
@@ -95,9 +105,10 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 			dup2(fds->fd, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
+		// ft_printf_fd(STDOUT_FILENO, "token=%s\n", tokens->token);
 		prepare_exec(tokens, shell, p);
 	}
 	else
 		signal(SIGINT, signore);
-	parent_process(p->fd);
+	parent_process(tokens, shell, p);
 }

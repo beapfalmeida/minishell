@@ -4,41 +4,46 @@
 /// @param token 
 /// @param shell 
 /// @return 
-int	ft_isbuiltin(t_tokens *token, t_shell *shell)
+int	ft_isbuiltin(t_tokens *token)
 {
 	if (ft_strncmp(token->token, "pwd", 3) == 0)
-	{
-		if (ft_pwd(token, shell) != 0)
-			return (1);
-	}
+		return (PWD);
 	else if (ft_strncmp(token->token, "cd", 2) == 0)
-	{
-		if ((ft_cd(token, shell) != 0))
-			return (1);
-	}
+		return (CD);
 	else if (ft_strncmp(token->token, "echo", 4) == 0)
-	{
-		if ((ft_echo(token, shell) != 0))
-			return (1);
-	}
+		return (ECHO);
 	else if (ft_strncmp(token->token, "env", 3) == 0)
-	{
-		if ((ft_env(shell, token) != 0))
-			return (1);
-	}
+		return (ENV);
 	else if (ft_strncmp(token->token, "export", 6) == 0)
-	{
-		if ((ft_export(token, shell) != 0))
-			return (1);
-	}
+		return (EXPORT);
 	else if (ft_strncmp(token->token, "unset", 6) == 0)
-	{
-		if ((ft_unset(token, shell) != 0))
-			return (1);
-	}
+		return (UNSET);
 	else
 		return (0);
-	return (0);
+}
+
+int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin)
+{
+	if (type_builtin == 0)
+		return (0);
+	if (shell->p->fd[1])
+	{
+		close(shell->p->fd[1]);
+		dup2(shell->original_stdout, STDOUT_FILENO);
+	}
+	if (type_builtin == PWD)
+		return (ft_pwd(token, shell));
+	else if (type_builtin == CD)
+		return (ft_cd(token, shell));
+	else if (type_builtin == ECHO)
+		return (ft_echo(token, shell));
+	else if (type_builtin == ENV)
+		return (ft_env(shell, token));
+	else if (type_builtin == EXPORT)
+		return (ft_export(token, shell));
+	else if (type_builtin == UNSET)
+		return (ft_unset(token, shell));
+	return (1);
 }
 
 /// @brief Function that executes a cmd.
@@ -50,8 +55,8 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 	char	*path;
 	char	**cmds;
 
-	if (ft_isbuiltin(tokens, shell))
-		return (0); // Is a builtin
+	if (ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens)))
+		return (1);
 	else
 	{
 		pid = fork();
@@ -87,7 +92,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 					free_paths(cmds);
 					if (path)
 						free(path);
-					exit(10);
+					exit(SIG_EXEC_FAILURE);
 				}
 			}
 		}
@@ -157,6 +162,7 @@ void	execute(t_tokens *tokens, t_shell *shell)
 	t_pipe		p;
 	int			pid[shell->n_pipes];
 
+	shell->p = &p;
 	temp = tokens;
 	p.pid = pid;
 	shell->original_stdin = dup(STDIN_FILENO);
@@ -175,11 +181,11 @@ void	execute(t_tokens *tokens, t_shell *shell)
 			set_next_pipe(&temp);
 		}
 		wait_allchildren(tokens, shell, p.pid);
-		dup2(shell->original_stdin, STDIN_FILENO);
-		dup2(shell->original_stdout, STDOUT_FILENO);
-		close(shell->original_stdin);
-		close(shell->original_stdout);
 	}
 	else
 		exec_cmd(tokens, shell, 0);
+	dup2(shell->original_stdin, STDIN_FILENO);
+	dup2(shell->original_stdout, STDOUT_FILENO);
+	close(shell->original_stdin);
+	close(shell->original_stdout);
 }
