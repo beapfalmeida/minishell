@@ -27,28 +27,7 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	return (tokens);
 }
 
-static void	init_shell(t_shell *shell, char **envp)
-{
-	char	**envp_array;
-	int		i;
 
-	envp_array = malloc((arr_len(envp) + 1) * sizeof(char *));
-	i = 0;
-	while (envp[i])
-	{
-		envp_array[i] = ft_strdup(envp[i]);
-		if (!envp_array[i])
-			free_array(&envp_array[i], i);
-		i++;
-	}
-	envp_array[i] = NULL;
-	shell->envp = envp_array;
-	shell->exit_code = 0;
-	shell->last_path = ft_strdup(getenv("PWD"));
-	// shell->original_stdin = dup(STDIN_FILENO);
-	// shell->original_stdout = dup(STDOUT_FILENO);
-	shell->interrupt_exec = false;
-}
 
 static int check_exit_exec(t_tokens **tokens, t_shell *shell, char *input_buffer)
 {
@@ -98,18 +77,18 @@ void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
 		if (!tokens)
 			continue ;
 		tokens = keep_parsing(tokens, shell);
+		if (!tokens)
+			continue ;
 		check_exit = check_exit_exec(&tokens, shell, input_buffer);
 		if (check_exit == 2)
 			continue ;
 		else if (check_exit == 1)
 			break ;
-		// if (tokens)	// Voltei a colocar assim pois se for if (!tokens): continue,  ele nao faz o dup2 de volta para o stdin_original e le do fd do heredoc na proxima readline
 		execute(tokens, shell);
 		lstclear(&tokens);
 		free(input_buffer);
 		// dup2(STDIN_FILENO, shell->original_stdin);
 		// dup2(STDOUT_FILENO, shell->original_stdout);
-		// printf("fd_out = %d\n", STDOUT_FILENO);
 	}
 }
 
@@ -124,6 +103,7 @@ int	main(int argc, char **argv, char **envp)
 	tokens = NULL;
 	input_buffer = NULL;
 	init_shell(&shell, envp);
+
 	minishell(tokens, &shell, input_buffer);
 	free_all(tokens, &shell, input_buffer);
 	exit(shell.exit_code);

@@ -1,32 +1,45 @@
 #include "minishell.h"
 
+static int	open_file(t_tokens *tokens, t_shell *shell)
+{
+	int	fd;
+
+	fd = open(tokens->token, O_RDONLY);
+	if (fd == -1)
+	{
+		do_error(tokens, shell, ERROR_OPEN);
+		shell->exit_code = 1;
+	}
+	return (fd);
+}
+
 int	get_input(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 	t_tokens	*infile;
 	int			has_infile;
-	int			fd;
 
+	shell->original_stdin = dup(STDIN_FILENO);
 	temp = *tokens;
 	has_infile = 0;
-	fd = 0;
 	infile = NULL;
 	while (temp)
 	{
 		if (temp->type == INPUT)
 		{
 			infile = temp;
+			if (open_file(infile, shell) == -1)
+				return (close(shell->original_stdin), -1);
 			has_infile = 1;
 		}
 		temp = temp->next;
 	}
 	if (find_limiter(tokens, shell) != shell->original_stdin && has_infile)
 	{
-		fd = open(infile->token, O_RDONLY);
-		if (fd == -1)
-			do_error(infile, shell, ERROR_OPEN);
-		return (fd);
+		close(shell->original_stdin);
+		return (open_file(infile, shell));
 	}
+	close(shell->original_stdin);
 	return (STDIN_FILENO);
 }
 

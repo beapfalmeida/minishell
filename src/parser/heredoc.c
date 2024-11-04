@@ -3,8 +3,8 @@
 static void	set_them_free(int *pipe_fd, char *limiter)
 {
 	close(pipe_fd[1]);
-	dup2(pipe_fd[0], STDIN_FILENO);
-	close(pipe_fd[0]);
+	// dup2(pipe_fd[0], STDIN_FILENO);
+	// close(pipe_fd[0]);
 	free(limiter);
 }
 static int	do_heredoc(int *pipe_fd, char *limiter)
@@ -34,12 +34,14 @@ int	find_limiter(t_tokens **tokens, t_shell *shell)
 	int			pipe_fd[2];
 	int			i;
 
+	(void) shell;
 	temp = *tokens;
+	pipe_fd[0] = 1;
 	while (temp)
 	{
 		if (temp->type == LIMITER)
 		{
-			dup2(shell->original_stdin, STDIN_FILENO);
+			// shell->original_stdin = dup(STDIN_FILENO);
 			limiter = malloc((ft_strlen(temp->token) + 2));
 			i = 0;
 			while (temp->token[i])
@@ -59,5 +61,5 @@ int	find_limiter(t_tokens **tokens, t_shell *shell)
 		}
 		temp = temp->next;
 	}
-	return (STDIN_FILENO);
+	return (pipe_fd[0]);
 }
