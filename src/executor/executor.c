@@ -26,11 +26,6 @@ int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin)
 {
 	if (type_builtin == 0)
 		return (0);
-	if (shell->p->fd[1])
-	{
-		close(shell->p->fd[1]);
-		dup2(shell->original_stdout, STDOUT_FILENO);
-	}
 	if (type_builtin == PWD)
 		return (ft_pwd(token, shell));
 	else if (type_builtin == CD)
@@ -71,15 +66,15 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 			cmds = put_cmds(tokens);
 			if (!cmds)
 				return (1);
-			if (shell->fd_in != STDIN_FILENO)
+			if (shell->fds_in->fd != STDIN_FILENO)
 			{
-				dup2(shell->fd_in, STDIN_FILENO);
-				close(shell->fd_in);
+				dup2(shell->fds_in->fd, STDIN_FILENO);
+				close(shell->fds_in->fd);
 			}
-			if (shell->fds->fd != STDOUT_FILENO)
+			if (shell->fds_out->fd != STDOUT_FILENO)
 			{
-				dup2(shell->fds->fd, STDOUT_FILENO);
-				close(shell->fds->fd);
+				dup2(shell->fds_out->fd, STDOUT_FILENO);
+				close(shell->fds_out->fd);
 			}
 			if (executable)
 				handle_executable(tokens, shell);

@@ -36,9 +36,9 @@ int	find_limiter(t_tokens **tokens, t_shell *shell)
 
 	(void) shell;
 	temp = *tokens;
-	pipe_fd[0] = 1;
-	while (temp)
-	{
+	pipe_fd[0] = 0;
+	// while (temp)
+	// {
 		if (temp->type == LIMITER)
 		{
 			// shell->original_stdin = dup(STDIN_FILENO);
@@ -58,8 +58,8 @@ int	find_limiter(t_tokens **tokens, t_shell *shell)
 				if(do_heredoc(pipe_fd, limiter) == 1)
 					break ;
 			set_them_free(pipe_fd, limiter);
-		}
-		temp = temp->next;
 	}
+		// }
+		// temp = temp->next;
 	return (pipe_fd[0]);
 }
