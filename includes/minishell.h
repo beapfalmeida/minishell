@@ -116,9 +116,16 @@ void		command(t_tokens **temp);
 int			is_symbol(char *token, int len);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
+
+// Expander
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 t_tokens	*skip_redirects(t_tokens *tokens);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
+char		*found_quote(char *token, t_quotes *q, int type);
+char		*expand(char *token, t_shell *shell, t_quotes *q);
+char		*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q);
+
+// Heredoc
 int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Create shell struct
@@ -146,7 +153,7 @@ int			ft_unset(t_tokens *tokens, t_shell *shell);
 // Pipex
 void		do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p);
 void		set_next_pipe(t_tokens **temp);
-void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
+void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
 void		free_all(t_tokens *tokens, t_shell *shell, char *input_buffer);
