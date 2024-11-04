@@ -124,6 +124,9 @@ char		*handle_expander(char **envp, char *var, t_shell *shell);
 char		*found_quote(char *token, t_quotes *q, int type);
 char		*expand(char *token, t_shell *shell, t_quotes *q);
 char		*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q);
+char		*get_var(char *token);
+char		*skip_quote(char *token, const char *quote_type, t_quotes *q);
+void		init_quotes(t_quotes *q);
 
 // Heredoc
 int			find_limiter(t_tokens **tokens, t_shell *shell);

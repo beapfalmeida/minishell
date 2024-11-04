@@ -16,7 +16,7 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 			if (WEXITSTATUS(status) == 10)
 				do_error(temp, shell, ERROR_CMD);
 			else
-				shell->exit_code = 0;
+				shell->exit_code = WEXITSTATUS(status);
 		}
 		set_next_pipe(&temp);
 	}

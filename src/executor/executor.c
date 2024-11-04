@@ -100,7 +100,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 				if (WEXITSTATUS(status) == 10)
 					do_error(tokens, shell, ERROR_CMD);
 				else
-					shell->exit_code = 0;				
+					shell->exit_code = WEXITSTATUS(status);
 			}
 		}
 	}

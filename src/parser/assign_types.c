@@ -19,15 +19,18 @@ void	redirect_in(t_tokens **temp)
 		(*temp) = (*temp)->next;
 		return ;
 	}
-	if (((*temp)->prev && ((*temp)->prev->type == CMD || (*temp)->prev->type == INPUT)))
+	if (((*temp)->prev && ((*temp)->prev->type == CMD || (*temp)->prev->type == ARG)))
 	{
 		(*temp) = (*temp)->next->next;
 		loop_assigning(temp, INPUT);
 	}
+	else if (is_symbol((*temp)->next->next->token, 1))
+		(*temp) = (*temp)->next->next;
 	else
 	{
 		(*temp) = (*temp)->next->next;
-		command(temp);
+		if (*temp)
+			command(temp);
 	}
 }
 
