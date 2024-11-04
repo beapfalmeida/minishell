@@ -108,14 +108,14 @@ char	*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q)
 			token = found_quote(token, q, '\'');
 		else if (token[q->i] == '\"' && q->sq == false)
 			token = found_quote(token, q, '\"');
-		if (token[q->i] == '$' && q->sq == false)
+		else if (token[q->i] == '$' && q->sq == false)
 		{
 			if (token[q->i + 1] && token[q->i + 1] != ' ' && token[q->i + 1] != '$'
 				&& token[q->i + 1] != '\"' && token[q->i + 1] != '\''
 				&& check_new_token(&token[q->i + 1]) == 3)
 				token = expand(token, shell, q);
 			else
-				q->i++; 
+				q->i++;
 			if (!*token)
 			{
 				tokens->type = SKIP;
