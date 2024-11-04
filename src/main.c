@@ -13,7 +13,7 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	assign_types(&tokens);
 	if (has_sintax_error(tokens, shell))
 		return (NULL);
-	if (process_tokens(&tokens, shell)) // Mudei esta funcao para antes do skip redirects para que os fds fossem colocados antes de skipar os redirects
+	if (process_tokens(&tokens, shell))
 		return (NULL);
 	temp = tokens;
 	tokens = skip_redirects(tokens);

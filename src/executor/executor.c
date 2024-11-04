@@ -26,11 +26,6 @@ int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin)
 {
 	if (type_builtin == 0)
 		return (0);
-	if (shell->p->fd[1])
-	{
-		close(shell->p->fd[1]);
-		dup2(shell->original_stdout, STDOUT_FILENO);
-	}
 	if (type_builtin == PWD)
 		return (ft_pwd(token, shell));
 	else if (type_builtin == CD)

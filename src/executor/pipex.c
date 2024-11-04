@@ -39,12 +39,12 @@ static void	parent_process(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	// waitpid(p->pid[p->i], &status, 0);
 	// if (WIFEXITED(status))
 	// {
-		// if (WEXITSTATUS(status) == SIG_EXEC_BUILTIN)
-		// {
-			// dup2(p->fd[1], STDIN_FILENO);
-			// dup2(shell->original_stdout, STDIN_FILENO);
-			// ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));
-		// }
+	// 	if (WEXITSTATUS(status) == SIG_EXEC_BUILTIN)
+	// 	{
+	// 		dup2(p->fd[1], STDIN_FILENO);
+	// 		dup2(shell->original_stdout, STDIN_FILENO);
+	// 		ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));
+	// 	}
 	// }
 	close(p->fd[0]);
 	close(p->fd[1]);
@@ -63,7 +63,7 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 		ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));
 		free_all(tokens, shell, 0);
 		free_paths(cmds);
-		exit(SIG_EXEC_BUILTIN);
+		exit(0);
 	}
 	close(p->fd[1]);
 	close(p->fd[0]);
