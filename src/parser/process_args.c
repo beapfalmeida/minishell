@@ -56,32 +56,37 @@ int	get_output(t_tokens **tokens)
 	while (temp)
 	{
 		if (temp->type == OUTPUT)
+		{
+			outfile = temp->token;
+			if (temp->prev->type == REDIRECT_OUT)
+				fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			else
+				fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		}
 			outfile = temp->token;
 		if (temp->type == PIPE || !temp->next)
 			break ;
 		temp = temp->next;
 	}
-	if (outfile != NULL)
-	{
-		if (temp->prev->type == REDIRECT_OUT)
-			fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else
-			fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd)
 		return (fd);
-	}
 	else
 		return (STDOUT_FILENO);
 }
 void	create_fds(t_shell *args, t_tokens *tokens)
 {
 	int	i;
+	int	fd_in;
+	int	fd_out;
 	t_fds		*node;
 	t_fds		*fds = NULL;
 
 	i = 0;
 	while (i <= args->n_pipes)
 	{
-		node = new_fds(get_input(&tokens, args), get_output(&tokens), i);
+		fd_in = get_input(&tokens, args);
+		fd_out = get_output(&tokens);
+		node = new_fds(fd_in, fd_out, i);
 		add_back_fds(&fds, node);
 		set_next_pipe(&tokens);
 		i++;

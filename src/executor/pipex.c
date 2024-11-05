@@ -15,6 +15,8 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 		{
 			if (WEXITSTATUS(status) == SIG_EXEC_FAILURE)
 				do_error(temp, shell, ERROR_CMD);
+			else if (WEXITSTATUS(status) == 15)
+				do_error(tokens, shell, ERROR_OPEN);
 			else
 				shell->exit_code = WEXITSTATUS(status);
 		}
@@ -84,17 +86,27 @@ static t_fds	*find_redirects(t_fds *fds, int i)
 void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
 	t_fds	*fds;
+	int		fd_null;
+
+	fd_null = 0;
 	if (p->pid[p->i] == 0)
 	{
 		signal(SIGINT, SIG_DFL); //TODO: dar mute aos outros sinais tambem
 		fds = find_redirects(shell->fds, p->i);
-		if (p->i == fds->pn && fds->in != STDIN_FILENO)
+		if (fds->in < 0)
+		{
+			fd_null = open("/dev/null", O_RDONLY);
+			dup2(fd_null, STDIN_FILENO);
+			close(fd_null);
+		}
+		else if (p->i == fds->pn && fds->in != STDIN_FILENO)
 			dup2(fds->in, STDIN_FILENO);
 		if (fds->pn == p->i && fds->out != STDOUT_FILENO)
 			dup2(fds->out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		// ft_printf_fd(STDOUT_FILENO, "token=%s\n", tokens->token);
+		// else
+		// 	dup2(fds->out, STDOUT_FILENO);
 		prepare_exec(tokens, shell, p);
 	}
 	else

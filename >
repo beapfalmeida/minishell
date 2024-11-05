@@ -1,0 +1,16 @@
+>
+|
+includes
+interrupt_exec
+Makefile
+minishell
+minishell_tester
+obj
+original_stdout
+outfile01
+outfiles
+pipe_fd[1],
+readline.supp
+README.md
+src
+type

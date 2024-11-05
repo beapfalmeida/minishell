@@ -24,6 +24,8 @@ int	ft_isbuiltin(t_tokens *token)
 
 int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin)
 {
+	if (shell->fds->in < 0 && shell->n_pipes != 1)
+		return (1);
 	if (type_builtin == 0)
 		return (0);
 	if (type_builtin == PWD)
@@ -50,6 +52,16 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 	char	*path;
 	char	**cmds;
 
+	if (shell->fds->in != STDIN_FILENO)
+	{
+		dup2(shell->fds->in, STDIN_FILENO);
+		close(shell->fds->in);
+	}
+	if (shell->fds->out != STDOUT_FILENO)
+	{
+		dup2(shell->fds->out, STDOUT_FILENO);
+		close(shell->fds->out);
+	}
 	if (ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens)))
 		return (1);
 	else
@@ -66,16 +78,8 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 			cmds = put_cmds(tokens);
 			if (!cmds)
 				return (1);
-			if (shell->fds->in != STDIN_FILENO)
-			{
-				dup2(shell->fds->in, STDIN_FILENO);
-				close(shell->fds->in);
-			}
-			if (shell->fds->out != STDOUT_FILENO)
-			{
-				dup2(shell->fds->out, STDOUT_FILENO);
-				close(shell->fds->out);
-			}
+			if (shell->fds->in < 0 || shell->fds->out < 0)
+				exit(1);
 			if (executable)
 				handle_executable(tokens, shell);
 			else
