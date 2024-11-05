@@ -66,15 +66,15 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 			cmds = put_cmds(tokens);
 			if (!cmds)
 				return (1);
-			if (shell->fd_in != STDIN_FILENO)
+			if (shell->fds->in != STDIN_FILENO)
 			{
-				dup2(shell->fd_in, STDIN_FILENO);
-				close(shell->fd_in);
+				dup2(shell->fds->in, STDIN_FILENO);
+				close(shell->fds->in);
 			}
-			if (shell->fds->fd != STDOUT_FILENO)
+			if (shell->fds->out != STDOUT_FILENO)
 			{
-				dup2(shell->fds->fd, STDOUT_FILENO);
-				close(shell->fds->fd);
+				dup2(shell->fds->out, STDOUT_FILENO);
+				close(shell->fds->out);
 			}
 			if (executable)
 				handle_executable(tokens, shell);

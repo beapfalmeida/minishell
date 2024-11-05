@@ -32,6 +32,8 @@ int	get_input(t_tokens **tokens, t_shell *shell)
 				return (close(shell->original_stdin), -1);
 			has_infile = 1;
 		}
+		if (temp->type == PIPE || !temp->next)
+			break ;
 		temp = temp->next;
 	}
 	if (find_limiter(tokens, shell) != shell->original_stdin && has_infile)
@@ -39,7 +41,7 @@ int	get_input(t_tokens **tokens, t_shell *shell)
 		close(shell->original_stdin);
 		return (open_file(infile, shell));
 	}
-	close(shell->original_stdin);
+	//close(shell->original_stdin);
 	return (STDIN_FILENO);
 }
 
@@ -70,27 +72,29 @@ int	get_output(t_tokens **tokens)
 	else
 		return (STDOUT_FILENO);
 }
-
-int	process_tokens(t_tokens **tokens, t_shell *args)
+void	create_fds(t_shell *args, t_tokens *tokens)
 {
 	int	i;
-	t_tokens	*temp;
 	t_fds		*node;
 	t_fds		*fds = NULL;
 
 	i = 0;
-	temp = *tokens;
-	args->fd_in = get_input(tokens, args);
-	args->n_pipes = count_pipes(tokens);
-	if (args->fd_in == -1)
-		return (1);
 	while (i <= args->n_pipes)
 	{
-		node = new_fds(get_output(&temp), i);
+		node = new_fds(get_input(&tokens, args), get_output(&tokens), i);
 		add_back_fds(&fds, node);
-		set_next_pipe(&temp);
+		set_next_pipe(&tokens);
 		i++;
 	}
 	args->fds = fds;
+}
+
+int	process_tokens(t_tokens **tokens, t_shell *args)
+{
+	t_tokens	*temp;
+
+	temp = *tokens;
+	args->n_pipes = count_pipes(tokens);
+	create_fds(args, temp);
 	return (0);
 }

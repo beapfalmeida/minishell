@@ -1,0 +1,5 @@
+NAME = minishell
+all: $(OBJ_DIR) $(LIBFT_A) $(NAME)
+$(NAME): $(OBJ) $(LIBFT_A)
+	$(CC) $(CFLAGS) $(RLFLAG) $(OBJ) $(LIBFT_A) -o $(NAME)
+	rm -f $(NAME)

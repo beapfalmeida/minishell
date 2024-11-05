@@ -63,7 +63,8 @@ typedef enum e_code
 
 typedef	struct	s_fds
 {
-	int	fd;
+	int	in;
+	int	out;
 	int	pn;
 	struct s_fds *next;
 }	t_fds;
@@ -86,8 +87,6 @@ typedef struct s_pipe
 typedef struct s_shell
 {
 	char	**envp;
-	int		fd_in;
-	int		fd_out;
 	int		n_pipes;
 	char	*last_path;
 	int		original_stdin;
@@ -131,9 +130,19 @@ void		command(t_tokens **temp);
 int			is_symbol(char *token, int len);
 void		loop_assigning(t_tokens **temp, int type);
 void		assign_types(t_tokens **tokens);
+
+// Expander
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 t_tokens	*skip_redirects(t_tokens *tokens);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
+char		*found_quote(char *token, t_quotes *q, int type);
+char		*expand(char *token, t_shell *shell, t_quotes *q);
+char		*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q);
+char		*get_var(char *token);
+char		*skip_quote(char *token, const char *quote_type, t_quotes *q);
+void		init_quotes(t_quotes *q);
+
+// Heredoc
 int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Create shell struct
@@ -162,7 +171,7 @@ int			ft_unset(t_tokens *tokens, t_shell *shell);
 // Pipex
 void		do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p);
 void		set_next_pipe(t_tokens **temp);
-void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
+void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
 void		free_all(t_tokens *tokens, t_shell *shell, char *input_buffer);
@@ -186,7 +195,7 @@ int			has_char(char *token, char c);
 int			has_sintax_error(t_tokens *tokens, t_shell *shell);
 
 void		add_back_fds(t_fds **lst, t_fds *new);
-t_fds		*new_fds(int fd, int i);
+t_fds		*new_fds(int in, int out, int i);
 t_fds		*find_last_fds(t_fds *lst);
 
 // Split
