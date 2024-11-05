@@ -63,7 +63,8 @@ typedef enum e_code
 
 typedef	struct	s_fds
 {
-	int	fd;
+	int	in;
+	int	out;
 	int	pn;
 	struct s_fds *next;
 }	t_fds;
@@ -92,8 +93,7 @@ typedef struct s_shell
 	int		original_stdout;
 	int		exit_code;
 	bool	interrupt_exec;
-	t_fds	*fds_out;
-	t_fds	*fds_in;
+	t_fds	*fds;
 	t_pipe	*p;
 }	t_shell;
 
@@ -195,7 +195,7 @@ int			has_char(char *token, char c);
 int			has_sintax_error(t_tokens *tokens, t_shell *shell);
 
 void		add_back_fds(t_fds **lst, t_fds *new);
-t_fds		*new_fds(int fd, int i);
+t_fds		*new_fds(int in, int out, int i);
 t_fds		*find_last_fds(t_fds *lst);
 
 // Split
