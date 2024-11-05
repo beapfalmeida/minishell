@@ -86,15 +86,14 @@ typedef struct s_pipe
 typedef struct s_shell
 {
 	char	**envp;
-	int		fd_in;
-	int		fd_out;
 	int		n_pipes;
 	char	*last_path;
 	int		original_stdin;
 	int		original_stdout;
 	int		exit_code;
 	bool	interrupt_exec;
-	t_fds	*fds;
+	t_fds	*fds_out;
+	t_fds	*fds_in;
 	t_pipe	*p;
 }	t_shell;
 

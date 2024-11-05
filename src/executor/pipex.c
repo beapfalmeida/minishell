@@ -98,9 +98,9 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	if (p->pid[p->i] == 0)
 	{
 		signal(SIGINT, SIG_DFL); //TODO: dar mute aos outros sinais tambem
-		if (p->i == 0 && shell->fd_in != STDIN_FILENO)
-			dup2(shell->fd_in, STDIN_FILENO);
-		fds = find_redirects(shell->fds, p->i);
+		if (p->i == shell->fds_in->pn && shell->fds_in->fd != STDIN_FILENO)
+			dup2(shell->fds_in->fd, STDIN_FILENO);
+		fds = find_redirects(shell->fds_out, p->i);
 		if (fds->pn == p->i && fds->fd != STDOUT_FILENO)
 			dup2(fds->fd, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
