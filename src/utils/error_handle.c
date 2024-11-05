@@ -39,6 +39,6 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		shell->exit_code = 2;
 	else if (error == ERROR_OPEN || error == ERROR_CMD)
 		shell->exit_code = 127;
-	else if (error == IS_DIR || error == ERROR_TILD)
+	else if (error == IS_DIR || error == ERROR_TILD || error == P_DENY)
 		shell->exit_code = 126;
 }
