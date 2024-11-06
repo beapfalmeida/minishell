@@ -14,6 +14,7 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <stdbool.h>
+# include <errno.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
@@ -59,6 +60,8 @@ typedef enum e_code
 	ERROR_SYNTAX,
 	ERROR_N_VAL,
 	ERROR_PIPE,
+	ERROR_PDN,
+	OPEN_DF,
 }	t_error;
 
 typedef	struct	s_fds
@@ -147,8 +150,9 @@ int			find_limiter(t_tokens **tokens, t_shell *shell);
 
 // Create shell struct
 int			process_tokens(t_tokens **tokens, t_shell *args);
-int			get_input(t_tokens **tokens, t_shell *shell);
-int			get_output(t_tokens **tokens);
+int			get_input(t_tokens *temp, t_shell *shell, t_tokens *infile, int *fd);
+int			get_output(t_tokens *temp, t_shell *shell, int *fd);
+int			*get_fds(t_tokens **tokens, t_shell *shell);
 
 // Executor
 

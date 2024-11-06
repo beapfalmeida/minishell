@@ -7,85 +7,109 @@ static int	open_file(t_tokens *tokens, t_shell *shell)
 	fd = open(tokens->token, O_RDONLY);
 	if (fd == -1)
 	{
-		do_error(tokens, shell, ERROR_OPEN);
-		shell->exit_code = 1;
+		if (errno == EACCES)
+			do_error(tokens, shell, ERROR_PDN);
+		else if (errno == ENOENT)
+			do_error(tokens, shell, ERROR_OPEN);
 	}
 	return (fd);
 }
 
-int	get_input(t_tokens **tokens, t_shell *shell)
+int	get_output(t_tokens *temp, t_shell *shell, int *fd)
 {
+	char		*outfile;
+
+	outfile = NULL;
+	if (temp->type == OUTPUT)
+	{
+		outfile = temp->token;
+		if (temp->prev->type == REDIRECT_OUT)
+			fd[1] = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else
+			fd[1] = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd[1] == -1)
+		{
+			if (errno == EACCES)
+				do_error(temp, shell, ERROR_PDN);
+			else if (errno == ENOENT)
+				do_error(temp, shell, ERROR_OPEN);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+int	get_input(t_tokens *temp, t_shell *shell, t_tokens *infile, int *fd)
+{
+	if (temp->type == INPUT)
+	{
+		infile = temp;
+		fd[0] = open_file(infile, shell);
+		if (fd[0] == -1)
+		{
+			//fd[0] = -1;
+			close(shell->original_stdin);
+			return (1);
+		}
+	}
+	return (0);
+}
+int	*init_fds()
+{
+	int	*fd;
+
+	fd = malloc(sizeof(int) * 2);
+	fd[0] = STDIN_FILENO;
+	fd[1] = STDOUT_FILENO;
+	return (fd);
+}
+
+int	*get_fds(t_tokens **tokens, t_shell *shell)
+{	
+	int			*fd;
 	t_tokens	*temp;
 	t_tokens	*infile;
-	int			has_infile;
 
-	shell->original_stdin = dup(STDIN_FILENO);
 	temp = *tokens;
-	has_infile = 0;
+	fd = init_fds();
 	infile = NULL;
 	while (temp)
 	{
-		if (temp->type == INPUT)
-		{
-			infile = temp;
-			if (open_file(infile, shell) == -1)
-				return (close(shell->original_stdin), -1);
-			has_infile = 1;
-		}
+		if (get_output(temp, shell, fd) == 1)
+			break ;
+		if (get_input(temp, shell, infile, fd) == 1)
+			break ;
 		if (temp->type == PIPE || !temp->next)
 			break ;
 		temp = temp->next;
 	}
-	if (find_limiter(tokens, shell) != shell->original_stdin && has_infile)
+	if (fd[0] != -1 
+		&& find_limiter(tokens, shell) != shell->original_stdin && infile)
 	{
 		close(shell->original_stdin);
-		return (open_file(infile, shell));
+		fd[0] = open_file(infile, shell);
 	}
-	//close(shell->original_stdin);
-	return (STDIN_FILENO);
+	return (fd);
 }
 
-int	get_output(t_tokens **tokens)
-{
-	t_tokens	*temp;
-	char		*outfile;
-	int			fd;
-
-	outfile = NULL;
-	temp = *tokens;
-	while (temp)
-	{
-		if (temp->type == OUTPUT)
-		{
-			outfile = temp->token;
-			if (temp->prev->type == REDIRECT_OUT)
-				fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			else
-				fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		}
-			outfile = temp->token;
-		if (temp->type == PIPE || !temp->next)
-			break ;
-		temp = temp->next;
-	}
-	if (fd)
-		return (fd);
-	else
-		return (STDOUT_FILENO);
-}
 void	create_fds(t_shell *args, t_tokens *tokens)
 {
 	int	i;
 	int	fd_in;
 	int	fd_out;
+	int	*fd;
 	t_fds		*node;
 	t_fds		*fds = NULL;
 
 	i = 0;
+	fd_in = 0;
+	fd_out = 0;
 	while (i <= args->n_pipes)
 	{
-		fd_in = get_input(&tokens, args);
-		fd_out = get_output(&tokens);
+		fd = get_fds(&tokens, args);
+		fd_out = fd[1];
+		fd_in = fd[0];
+		free(fd);
 		node = new_fds(fd_in, fd_out, i);
 		add_back_fds(&fds, node);
 		set_next_pipe(&tokens);

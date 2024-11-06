@@ -99,6 +99,8 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 			dup2(fd_null, STDIN_FILENO);
 			close(fd_null);
 		}
+		if (fds->out == -1)
+			exit(1);
 		else if (p->i == fds->pn && fds->in != STDIN_FILENO)
 			dup2(fds->in, STDIN_FILENO);
 		if (fds->pn == p->i && fds->out != STDOUT_FILENO)

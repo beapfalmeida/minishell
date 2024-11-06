@@ -2,7 +2,7 @@
 
 char	*get_error(t_error i)
 {
-	char	*str[14];
+	char	*str[15];
 
 	str[0] = "%s: command not found\n";
 	str[1] = "bash: cd: No such file or directory\n";
@@ -17,6 +17,8 @@ char	*get_error(t_error i)
 	str[10] = "bash: syntax error near unexpected token `newline'\n";
 	str[11] = "bash: %s: `%s': not a valid identifier\n";
 	str[12] = "bash: syntax error near unexpected token `|'\n";
+	str[13] = "bash: %s: Permission denied\n";
+	str[14] = "bash: %s: No such file or directory\n";
 	return (str[i]);
 }
 
@@ -32,12 +34,12 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));
 	else
 		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token);
-	if (error == ERROR_2ARGS || error == ERROR_NDIR
-		|| error == ERROR_OPENCMD || error == ERROR_N_VAL)
+	if (error == ERROR_2ARGS || error == ERROR_NDIR || error == ERROR_PDN
+		|| error == ERROR_OPENCMD || error == ERROR_OPEN || error == ERROR_N_VAL)
 		shell->exit_code = 1;
 	else if (error == ERROR_FAR || error == ERROR_SYNTAX)
 		shell->exit_code = 2;
-	else if (error == ERROR_OPEN || error == ERROR_CMD)
+	else if (error == ERROR_CMD || error == OPEN_DF)
 		shell->exit_code = 127;
 	else if (error == IS_DIR || error == ERROR_TILD || error == P_DENY)
 		shell->exit_code = 126;

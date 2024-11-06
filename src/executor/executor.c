@@ -52,6 +52,8 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 	char	*path;
 	char	**cmds;
 
+	if (shell->fds->in < 0 || shell->fds->out < 0)
+		return (1);
 	if (shell->fds->in != STDIN_FILENO)
 	{
 		dup2(shell->fds->in, STDIN_FILENO);
@@ -78,8 +80,6 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 			cmds = put_cmds(tokens);
 			if (!cmds)
 				return (1);
-			if (shell->fds->in < 0 || shell->fds->out < 0)
-				exit(1);
 			if (executable)
 				handle_executable(tokens, shell);
 			else
@@ -152,7 +152,7 @@ static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
 	else if (file == 4)
 		do_error(tokens, shell, P_DENY);
 	else if (!is_file(tokens->token))
-		do_error(tokens, shell, ERROR_OPEN);
+		do_error(tokens, shell, OPEN_DF);
 }
 
 void	execute(t_tokens *tokens, t_shell *shell)
