@@ -69,25 +69,22 @@ int	*get_fds(t_tokens **tokens, t_shell *shell)
 	int			*fd;
 	t_tokens	*temp;
 	t_tokens	*infile;
+	int			stop;
 
 	temp = *tokens;
 	fd = init_fds();
 	infile = NULL;
+	stop = 0;
 	while (temp)
 	{
-		if (get_output(temp, shell, fd) == 1)
-			break ;
-		if (get_input(temp, shell, infile, fd) == 1)
-			break ;
+		find_limiter(temp, shell, fd);
+		if (get_output(temp, shell, fd) && !stop)
+			stop = 1;
+		if (get_input(temp, shell, infile, fd) && !stop)
+			stop = 1;
 		if (temp->type == PIPE || !temp->next)
 			break ;
 		temp = temp->next;
-	}
-	if (fd[0] != -1 
-		&& find_limiter(tokens, shell) != shell->original_stdin && infile)
-	{
-		close(shell->original_stdin);
-		fd[0] = open_file(infile, shell);
 	}
 	return (fd);
 }

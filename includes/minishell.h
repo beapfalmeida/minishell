@@ -146,7 +146,7 @@ char		*skip_quote(char *token, const char *quote_type, t_quotes *q);
 void		init_quotes(t_quotes *q);
 
 // Heredoc
-int			find_limiter(t_tokens **tokens, t_shell *shell);
+int			find_limiter(t_tokens *tokens, t_shell *shell, int *fd);
 
 // Create shell struct
 int			process_tokens(t_tokens **tokens, t_shell *args);
