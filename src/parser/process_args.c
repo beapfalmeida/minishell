@@ -1,98 +1,75 @@
 #include "minishell.h"
 
-static int	open_file(t_tokens *tokens, t_shell *shell)
+int	open_file(t_tokens *tokens, t_shell *shell)
 {
 	int	fd;
 
 	fd = open(tokens->token, O_RDONLY);
 	if (fd == -1)
 	{
-		do_error(tokens, shell, ERROR_OPEN);
-		shell->exit_code = 1;
+		if (errno == EACCES)
+			do_error(tokens, shell, ERROR_PDN);
+		else if (errno == ENOENT)
+			do_error(tokens, shell, ERROR_OPEN);
 	}
 	return (fd);
 }
 
-int	get_input(t_tokens **tokens, t_shell *shell)
-{
+int	*get_fds(t_tokens **tokens, t_shell *shell)
+{	
+	int			*fd;
 	t_tokens	*temp;
 	t_tokens	*infile;
-	int			has_infile;
+	int			stop;
 
-	shell->original_stdin = dup(STDIN_FILENO);
 	temp = *tokens;
-	has_infile = 0;
+	fd = init_fds();
 	infile = NULL;
+	stop = 0;
 	while (temp)
 	{
-		if (temp->type == INPUT)
+		find_limiter(temp, shell, fd);
+		if (!stop)
 		{
-			infile = temp;
-			if (open_file(infile, shell) == -1)
-				return (close(shell->original_stdin), -1);
-			has_infile = 1;
+			if (get_output(temp, shell, fd))
+				stop = 1;
+		}
+		if (!stop)
+		{
+			if (get_input(temp, shell, infile, fd))
+				stop = 1;
 		}
 		if (temp->type == PIPE || !temp->next)
 			break ;
 		temp = temp->next;
 	}
-	if (find_limiter(tokens, shell) != shell->original_stdin && has_infile)
-	{
-		close(shell->original_stdin);
-		return (open_file(infile, shell));
-	}
-	close(shell->original_stdin);
-	return (STDIN_FILENO);
+	return (fd);
 }
 
-int	get_output(t_tokens **tokens)
-{
-	t_tokens	*temp;
-	char		*outfile;
-	int			fd;
-
-	outfile = NULL;
-	temp = *tokens;
-	while (temp)
-	{
-		if (temp->type == OUTPUT)
-			outfile = temp->token;
-		if (temp->type == PIPE || !temp->next)
-			break ;
-		temp = temp->next;
-	}
-	if (outfile != NULL)
-	{
-		if (temp->prev->type == REDIRECT_OUT)
-			fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else
-			fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		return (fd);
-	}
-	else
-		return (STDOUT_FILENO);
-}
-void	create_fds(char type, t_shell *args, t_tokens *tokens)
+void	create_fds(t_shell *args, t_tokens *tokens)
 {
 	int	i;
+	int	fd_in;
+	int	fd_out;
+	int	*fd;
 	t_fds		*node;
 	t_fds		*fds = NULL;
 
 	i = 0;
+	fd_in = 0;
+	fd_out = 0;
 	while (i <= args->n_pipes)
 	{
-		if (type == 'i')
-			node = new_fds(get_input(&tokens, args), i);
-		else if (type == 'o')
-			node = new_fds(get_output(&tokens), i);
+		fd = get_fds(&tokens, args);
+		fd_out = fd[1];
+		fd_in = fd[0];
+		free(fd);
+		node = new_fds(fd_in, fd_out, i);
 		add_back_fds(&fds, node);
 		set_next_pipe(&tokens);
 		i++;
 	}
-	if (type == 'i')
-		args->fds_in = fds;
-	else if (type == 'o')
-		args->fds_out = fds;
+	args->fds = fds;
 }
 
 int	process_tokens(t_tokens **tokens, t_shell *args)
@@ -101,11 +78,6 @@ int	process_tokens(t_tokens **tokens, t_shell *args)
 
 	temp = *tokens;
 	args->n_pipes = count_pipes(tokens);
-	create_fds('i', args, temp);
-	temp = *tokens;
-	//args->fds_in->fd = get_input(tokens, args);
-	// if (args->fds_in->fd == -1)
-	// 	return (1);
-	create_fds('o', args, temp);
+	create_fds(args, temp);
 	return (0);
 }

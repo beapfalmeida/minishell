@@ -15,6 +15,8 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 		{
 			if (WEXITSTATUS(status) == SIG_EXEC_FAILURE)
 				do_error(temp, shell, ERROR_CMD);
+			else if (WEXITSTATUS(status) == 15)
+				do_error(tokens, shell, ERROR_OPEN);
 			else
 				shell->exit_code = WEXITSTATUS(status);
 		}
@@ -32,20 +34,9 @@ void	set_next_pipe(t_tokens **temp)
 
 static void	parent_process(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
-	// int	status;
 	(void)shell;
 	(void)tokens;
 	dup2(p->fd[0], STDIN_FILENO);
-	// waitpid(p->pid[p->i], &status, 0);
-	// if (WIFEXITED(status))
-	// {
-	// 	if (WEXITSTATUS(status) == SIG_EXEC_BUILTIN)
-	// 	{
-	// 		dup2(p->fd[1], STDIN_FILENO);
-	// 		dup2(shell->original_stdout, STDIN_FILENO);
-	// 		ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));
-	// 	}
-	// }
 	close(p->fd[0]);
 	close(p->fd[1]);
 }
@@ -95,17 +86,29 @@ static t_fds	*find_redirects(t_fds *fds, int i)
 void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
 	t_fds	*fds;
+	int		fd_null;
+
+	fd_null = 0;
 	if (p->pid[p->i] == 0)
 	{
 		signal(SIGINT, SIG_DFL); //TODO: dar mute aos outros sinais tambem
-		if (p->i == shell->fds_in->pn && shell->fds_in->fd != STDIN_FILENO)
-			dup2(shell->fds_in->fd, STDIN_FILENO);
-		fds = find_redirects(shell->fds_out, p->i);
-		if (fds->pn == p->i && fds->fd != STDOUT_FILENO)
-			dup2(fds->fd, STDOUT_FILENO);
+		fds = find_redirects(shell->fds, p->i);
+		if (fds->in < 0)
+		{
+			fd_null = open("/dev/null", O_RDONLY);
+			dup2(fd_null, STDIN_FILENO);
+			close(fd_null);
+		}
+		if (fds->out == -1)
+			exit(1);
+		else if (p->i == fds->pn && fds->in != STDIN_FILENO)
+			dup2(fds->in, STDIN_FILENO);
+		if (fds->pn == p->i && fds->out != STDOUT_FILENO)
+			dup2(fds->out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		// ft_printf_fd(STDOUT_FILENO, "token=%s\n", tokens->token);
+		// else
+		// 	dup2(fds->out, STDOUT_FILENO);
 		prepare_exec(tokens, shell, p);
 	}
 	else

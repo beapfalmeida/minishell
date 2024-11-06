@@ -26,7 +26,7 @@ void	add_back_fds(t_fds **lst, t_fds *new)
 	last -> next = new;
 }
 
-t_fds	*new_fds(int fd, int i)
+t_fds	*new_fds(int in, int out, int i)
 {
 	t_fds	*node;
 
@@ -34,7 +34,8 @@ t_fds	*new_fds(int fd, int i)
 	if (!node)
 		return (NULL);
 	node->next = NULL;
-	node->fd = fd;
+	node->in = in;
+	node->out = out;
 	node->pn = i;
 	return (node);
 }

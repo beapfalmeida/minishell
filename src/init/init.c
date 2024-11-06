@@ -30,3 +30,13 @@ void	init_tokens(t_tokens *tokens)
 	tokens->prev = NULL;
 	tokens->next = NULL;
 }
+
+int	*init_fds()
+{
+	int	*fd;
+
+	fd = malloc(sizeof(int) * 2);
+	fd[0] = STDIN_FILENO;
+	fd[1] = STDOUT_FILENO;
+	return (fd);
+}

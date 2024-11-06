@@ -41,7 +41,7 @@ int	ft_env(t_shell *shell, t_tokens *tokens)
 	{
 		trim = ft_strtrim(*envp, "\"");
 		if (has_value(trim))
-			printf("%s\n", trim);
+			ft_printf_fd(STDOUT_FILENO, "%s\n", trim);
 		free(trim);
 		envp++;
 	}

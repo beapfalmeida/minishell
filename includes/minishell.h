@@ -14,6 +14,7 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <stdbool.h>
+# include <errno.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
@@ -59,11 +60,14 @@ typedef enum e_code
 	ERROR_SYNTAX,
 	ERROR_N_VAL,
 	ERROR_PIPE,
+	ERROR_PDN,
+	OPEN_DF,
 }	t_error;
 
 typedef	struct	s_fds
 {
-	int	fd;
+	int	in;
+	int	out;
 	int	pn;
 	struct s_fds *next;
 }	t_fds;
@@ -92,8 +96,7 @@ typedef struct s_shell
 	int		original_stdout;
 	int		exit_code;
 	bool	interrupt_exec;
-	t_fds	*fds_out;
-	t_fds	*fds_in;
+	t_fds	*fds;
 	t_pipe	*p;
 }	t_shell;
 
@@ -143,12 +146,16 @@ char		*skip_quote(char *token, const char *quote_type, t_quotes *q);
 void		init_quotes(t_quotes *q);
 
 // Heredoc
-int			find_limiter(t_tokens **tokens, t_shell *shell);
+int			find_limiter(t_tokens *tokens, t_shell *shell, int *fd);
 
 // Create shell struct
 int			process_tokens(t_tokens **tokens, t_shell *args);
-int			get_input(t_tokens **tokens, t_shell *shell);
-int			get_output(t_tokens **tokens);
+int			get_input(t_tokens *temp, t_shell *shell, t_tokens *infile, int *fd);
+int			get_output(t_tokens *temp, t_shell *shell, int *fd);
+int			*get_fds(t_tokens **tokens, t_shell *shell);
+int			*init_fds();
+int			open_file(t_tokens *tokens, t_shell *shell);
+
 
 // Executor
 
@@ -195,7 +202,7 @@ int			has_char(char *token, char c);
 int			has_sintax_error(t_tokens *tokens, t_shell *shell);
 
 void		add_back_fds(t_fds **lst, t_fds *new);
-t_fds		*new_fds(int fd, int i);
+t_fds		*new_fds(int in, int out, int i);
 t_fds		*find_last_fds(t_fds *lst);
 
 // Split
