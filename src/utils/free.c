@@ -12,9 +12,9 @@ void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 		close(shell->original_stdin);
 	if (shell->original_stdout)
 		close(shell->original_stdout);
-	if (shell->fds->in)
+	if (input_buffer && shell->fds->in)
 		close(shell->fds->in);
-	if (shell->fds->out)
+	if (input_buffer && shell->fds->out)
 		close(shell->fds->out);
 	if (input_buffer)
 		free(input_buffer);

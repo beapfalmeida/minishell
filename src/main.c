@@ -27,8 +27,6 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	return (tokens);
 }
 
-
-
 static int check_exit_exec(t_tokens **tokens, t_shell *shell, char *input_buffer)
 {
 	if (shell->interrupt_exec == true)
@@ -103,7 +101,6 @@ int	main(int argc, char **argv, char **envp)
 	tokens = NULL;
 	input_buffer = NULL;
 	init_shell(&shell, envp);
-
 	minishell(tokens, &shell, input_buffer);
 	free_all(tokens, &shell, input_buffer);
 	exit(shell.exit_code);
