@@ -19,12 +19,15 @@ char	*expand(char *token, t_shell *shell, t_quotes *q)
 {
 	char	*temp;
 	char	*envp_var;
+	char	*expanded;
 
 	envp_var = get_var(ft_strdup(&token[q->i + 1]));
 	temp = ft_strdup(&token[q->i + ft_strlen(envp_var) + 1]);
 	token[q->i] = '\0';
-	token = ft_strjoin(token, handle_expander(shell->envp, envp_var, shell));
-	q->i += ft_strlen(handle_expander(shell->envp, envp_var, shell));
+	expanded = handle_expander(shell->envp, envp_var, shell);
+	token = ft_strfjoin(token, expanded, 1);
+	q->i += ft_strlen(expanded);
+	free(expanded);
 	token = ft_strfjoin(token, temp, 3);
 	free(envp_var);
 	return (token);

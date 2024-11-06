@@ -9,19 +9,13 @@ static void	set_them_free(int *pipe_fd, char *limiter)
 }
 static int	do_heredoc(int *pipe_fd, char *limiter)
 {
-	char	*temp;
 	char	*input_buff;
 
-	temp = NULL;
 	input_buff = readline("> ");
 	if (input_buff)
-	{
-		temp = ft_strjoin(input_buff, "\n");
-		free(input_buff);
-	}
-	input_buff = temp;
+		input_buff = ft_strfjoin(input_buff, "\n", 1);
 	if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
-		return (1);
+		return (free(input_buff), 1);
 	ft_printf_fd(pipe_fd[1], input_buff);
 	free(input_buff);
 	return (0);
