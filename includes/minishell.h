@@ -153,6 +153,9 @@ int			process_tokens(t_tokens **tokens, t_shell *args);
 int			get_input(t_tokens *temp, t_shell *shell, t_tokens *infile, int *fd);
 int			get_output(t_tokens *temp, t_shell *shell, int *fd);
 int			*get_fds(t_tokens **tokens, t_shell *shell);
+int			*init_fds();
+int			open_file(t_tokens *tokens, t_shell *shell);
+
 
 // Executor
 
