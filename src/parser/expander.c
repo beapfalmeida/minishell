@@ -52,7 +52,7 @@ char	*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q)
 				q->i++;
 			if (!*token)
 			{
-				tokens->type = SKIP;
+				tokens->type = NOT_SKIP;
 				break ;
 			}
 		}
@@ -75,7 +75,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 		init_quotes(&q);
 		token = tokens->token;
 		token = process_token(token, tokens, shell, &q);
-		if (!*token)
+		if (!*token && tokens->type != NOT_SKIP)
 			tokens->type = SKIP;
 		tokens->token = token;
 		tokens = tokens->next;

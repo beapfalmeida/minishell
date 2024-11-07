@@ -108,6 +108,8 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 			}
 		}
 	}
+	if (shell->fds->in)
+		close(shell->fds->in);
 	return (0);
 }
 

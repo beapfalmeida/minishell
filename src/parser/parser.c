@@ -37,7 +37,7 @@ void	assign_types(t_tokens **tokens)
 	temp = *tokens;
 	while (temp)
 	{
-		if (temp->type == SKIP)
+		if (temp->type == SKIP || temp->type == NOT_SKIP)
 			temp = temp->next;
 		else if (!ft_strncmp(temp->token, "|", ft_strlen(temp->token)))
 		{

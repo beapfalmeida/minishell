@@ -15,6 +15,7 @@
 # include <sys/stat.h>
 # include <stdbool.h>
 # include <errno.h>
+# include <limits.h>
 
 # define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
 
@@ -34,6 +35,7 @@
 # define ARG 14
 # define DIR_FILE 13
 # define SKIP 50
+# define NOT_SKIP 42
 
 // Built-ins
 # define PWD 1
@@ -196,7 +198,7 @@ int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
 char		*ft_strfjoin(char *s1, char *s2, int _to_free);
-int			calculate_exit_code(t_tokens *tokens, char *number);
+long		calculate_exit_code(t_tokens *tokens, char *number);
 int			is_file(char *file_name);
 int			has_char(char *token, char c);
 int			has_sintax_error(t_tokens *tokens, t_shell *shell);

@@ -8,8 +8,8 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 	while (tokens && tokens->token)
 	{
 		if (tokens->type == REDIRECT_IN || tokens->type == REDIRECT_OUT 
-			|| tokens->type == APPEND_IN || tokens->type == APPEND_OUT
-			|| tokens->type == SKIP)
+			|| tokens->type == APPEND_IN || tokens->type == APPEND_OUT 
+			|| tokens->type == NOT_SKIP)
 		{
 			//free(tokens->token);
 			tokens = tokens->next;
@@ -22,7 +22,7 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 		}
 		if (tokens && tokens->token && !(tokens->type == REDIRECT_IN 
 			|| tokens->type == REDIRECT_OUT || tokens->type == APPEND_IN 
-			|| tokens->type == APPEND_OUT || tokens->type == SKIP))
+			|| tokens->type == APPEND_OUT || tokens->type == NOT_SKIP))
 		{
 			add_back_list(&new_tokens, new_node(tokens->token, 0));
 			tokens = tokens->next;

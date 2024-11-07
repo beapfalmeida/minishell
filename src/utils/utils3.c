@@ -62,15 +62,19 @@ char	*ft_strfjoin(char *s1, char *s2, int _to_free)
 	return (new_str);
 }
 
-int	calculate_exit_code(t_tokens *tokens, char *number)
+long	calculate_exit_code(t_tokens *tokens, char *number)
 {
-	int	ret;
-	int	i;
+	long long	ret;
+	int			i;
+	int			overflow;
 
+	overflow = 0;
 	(void)tokens;
 	i = 0;
 	ft_printf_fd(STDOUT_FILENO, "exit\n");
-	if (number[i] == '+' || number[i] == '-')
+	if (number[0] == '+')
+		i++;
+	while (number[0] == '-' && number[i] == '-')
 		i++;
 	while (number[i])
 	{
@@ -81,9 +85,13 @@ int	calculate_exit_code(t_tokens *tokens, char *number)
 		}
 		i++;
 	}
-	if (0 <= ft_atoi(number) && ft_atoi(number) <= 255)
-		ret = ft_atoi(number);
-	else
-		ret = ft_atoi(number) % 256;
-	return (ret);
+	ret = ft_atoll(number, &overflow);
+	if (overflow == 1 && ret != LONG_MIN)
+	{
+		ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
+		return (2);
+	}
+	if (!(0 <= ret && ret <= 255))
+		ret %= 256;
+	return ((long)ret);
 }

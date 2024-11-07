@@ -6,16 +6,21 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 
 	if (ft_strncmp(tokens->token, "export", 7) != 0)
 		return (do_error(tokens, shell, ERROR_CMD), 1);
-	if (tokens->next && 
-		(!ft_strncmp(tokens->next->token, "=", 1) || !ft_strncmp(tokens->next->token, "+=", 2)))
+	if (tokens->next
+		&& (!ft_strncmp(tokens->next->token, "=", 1) || !ft_strncmp(tokens->next->token, "+=", 2)))
 		return (do_error(tokens, shell, ERROR_N_VAL), 1);
-	else if (tokens->next)
+	else if (tokens->next && tokens->next->type == ARG)
 	{
-		i = 0;
+		i = 1;
+		if (!ft_isalpha(tokens->next->token[0]) && tokens->next->token[0] != '_')
+		{
+			do_error(tokens, shell, ERROR_N_VAL);
+			return (1);
+		}
 		while (tokens->next->token[i] 
 			&& tokens->next->token[i] != '=' && tokens->next->token[i] != '+')
 		{
-			if (!ft_isalpha(tokens->next->token[i]))
+			if (!ft_isalnum(tokens->next->token[i]))
 			{
 				do_error(tokens, shell, ERROR_N_VAL);
 				return (1);

@@ -6,10 +6,9 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens *temp;
 	t_tokens *t;
-	handle_quotes(tokens, shell);
-	
-	// if (*tokens->token == '\0')
-	// 	return (NULL);
+
+	if (!handle_quotes(tokens, shell))
+		return (NULL);
 	assign_types(&tokens);
 	//print_tokens(&tokens);
 	if (has_sintax_error(tokens, shell))
@@ -35,7 +34,7 @@ static int check_exit_exec(t_tokens **tokens, t_shell *shell, char *input_buffer
 			free_all(*tokens, shell, input_buffer);
 			return (2);
 		}
-	if (ft_strlen((*tokens)->token) && !ft_strncmp((*tokens)->token, "exit", 4))
+	if (ft_strlen((*tokens)->token) && !ft_strncmp((*tokens)->token, "exit", 5))
 	{
 		if (*tokens && (*tokens)->next)
 			shell->exit_code = calculate_exit_code(*tokens, (*tokens)->next->token);
