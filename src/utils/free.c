@@ -4,11 +4,12 @@ static void free_fds(t_shell *shell, char *input_buffer)
 {
 	t_fds *temp;
 
+	(void)input_buffer;
 	while (shell->fds)
 	{
-		if (input_buffer && shell->fds->in)
+		if (shell->fds->in)
 			close(shell->fds->in);
-		if (input_buffer && shell->fds->out)
+		if (shell->fds->out)
 			close(shell->fds->out);
 		temp = shell->fds;
 		shell->fds = shell->fds->next;
@@ -24,9 +25,13 @@ void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 		free_paths(shell->envp);
 	if (tokens)
 		lstclear(&tokens);
-	if (shell->original_stdin)
+	if (STDIN_FILENO != shell->original_stdin)
+		dup2(shell->original_stdin, STDIN_FILENO);
+	if (STDOUT_FILENO != shell->original_stdout)
+		dup2(shell->original_stdout, STDOUT_FILENO);
+	if (shell->original_stdin != -1)
 		close(shell->original_stdin);
-	if (shell->original_stdout)
+	if (shell->original_stdout != -1)
 		close(shell->original_stdout);
 	free_fds(shell, input_buffer);
 	if (input_buffer)

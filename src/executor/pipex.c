@@ -47,6 +47,7 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	char	**cmds;
 	char	*path;
 
+	(void)p;
 	cmds = put_cmds(tokens);
 	res = ft_isbuiltin(tokens);
 	if (res)
@@ -98,6 +99,7 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 			fd_null = open("/dev/null", O_RDONLY);
 			dup2(fd_null, STDIN_FILENO);
 			close(fd_null);
+			exit(EXIT_FAILURE);
 		}
 		if (fds->out == -1)
 			exit(1);
@@ -107,8 +109,6 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 			dup2(fds->out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		// else
-		// 	dup2(fds->out, STDOUT_FILENO);
 		prepare_exec(tokens, shell, p);
 	}
 	else
