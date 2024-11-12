@@ -33,7 +33,7 @@ void	init_tokens(t_tokens *tokens)
 	tokens->next = NULL;
 }
 
-int	*init_fds()
+int	*init_fds(void)
 {
 	int	*fd;
 

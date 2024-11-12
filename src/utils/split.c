@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-void	split_quotes(t_split *sp, char c)
+static int	check_conditions(t_split *sp)
 {
-	sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-	while (sp->s[sp->i] && sp->s[sp->i] != c)
-		sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-	sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+	if (check_new_token(&sp->s[sp->i]) == 3 && sp->s[sp->i] != '\"'
+		&& sp->s[sp->i] != '\'')
+		return (1);
+	return (0);
 }
 
 static void	put_word(t_split *sp, int c)
@@ -28,9 +28,10 @@ static void	put_word(t_split *sp, int c)
 				split_quotes(sp, '\"');
 			if (sp->s[sp->i] && sp->s[sp->i] == '\'')
 				split_quotes(sp, '\'');
-			while (check_new_token(&sp->s[sp->i]) == 3 && sp->s[sp->i] != '\"' && sp->s[sp->i] != '\'')
+			while (check_conditions(sp))
 				sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-			if (sp->s[sp->i] && (check_new_token(&sp->s[sp->i]) == 2 || sp->s[sp->i] == ' '))
+			if (sp->s[sp->i]
+				&& (check_new_token(&sp->s[sp->i]) == 2 || sp->s[sp->i] == ' '))
 				break ;
 		}
 	}
@@ -45,8 +46,7 @@ static void	put_word_extra(t_split *sp, int c)
 			sp->arr[sp->j] = malloc(sizeof(char) + 2);
 			if (malloc_gone_wrong(sp->arr, sp->j))
 				return ;
-			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+			write_char(sp);
 		}
 		else
 			put_word(sp, REDIRECT_IN);
@@ -58,8 +58,7 @@ static void	put_word_extra(t_split *sp, int c)
 			sp->arr[sp->j] = malloc(sizeof(char) + 2);
 			if (malloc_gone_wrong(sp->arr, sp->j))
 				return ;
-			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
-			sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
+			write_char(sp);
 		}
 		else
 			put_word(sp, REDIRECT_OUT);
@@ -93,7 +92,7 @@ void	split_words(t_split *sp)
 char	**ft_split_adapted(char *s)
 {
 	int		n;
-	t_split sp;
+	t_split	sp;
 
 	n = countwords(s, 0, 0);
 	if (!n)

@@ -3,14 +3,14 @@
 int	is_file(char *file_name)
 {
 	struct stat	file_info;
-	int res;
+	int			res;
 
-	res = stat(file_name, &file_info); // get the statistics of a file or directory
-	if (res == -1) // if theres no such file or dir
+	res = stat(file_name, &file_info);
+	if (res == -1)
 		return (0);
 	if (S_ISREG(file_info.st_mode))
 	{
-		if (file_info.st_mode & S_IXUSR) //executable
+		if (file_info.st_mode & S_IXUSR)
 			return (1);
 		else
 			return (4);
@@ -37,14 +37,15 @@ int	has_char(char *token, char c)
 
 int	has_sintax_error(t_tokens *tokens, t_shell *shell)
 {
-	t_tokens *temp;
+	t_tokens	*temp;
+
 	temp = tokens;
 	while (temp)
 	{
 		if (temp->type == ERROR_SYNTAX)
-			return(do_error(tokens, shell, ERROR_SYNTAX), 1);
+			return (do_error(tokens, shell, ERROR_SYNTAX), 1);
 		if (temp->type == ERROR_PIPE)
-		return(do_error(tokens, shell, ERROR_SYNTAX), 1);
+			return (do_error(tokens, shell, ERROR_SYNTAX), 1);
 		temp = temp->next;
 	}
 	return (0);
@@ -78,19 +79,13 @@ long	calculate_exit_code(t_tokens *tokens, char *number)
 		i++;
 	while (number[i])
 	{
-		if (!ft_isdigit(number[i]))
-		{
-			ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
+		if (error_exit1(number, i))
 			return (2);
-		}
 		i++;
 	}
 	ret = ft_atoll(number, &overflow);
-	if (overflow == 1 && ret != LONG_MIN)
-	{
-		ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
+	if (error_exit2(overflow, ret, number))
 		return (2);
-	}
 	if (!(0 <= ret && ret <= 255))
 		ret %= 256;
 	return ((long)ret);

@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-static void free_fds(t_shell *shell, char *input_buffer)
+static void	free_fds(t_shell *shell, char *input_buffer)
 {
-	t_fds *temp;
+	t_fds	*temp;
 
 	(void)input_buffer;
 	while (shell->fds)
@@ -36,8 +36,4 @@ void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 	free_fds(shell, input_buffer);
 	if (input_buffer)
 		free(input_buffer);
-	// if (shell->p && shell->p->fd[1])
-	// 	close(shell->p->fd[1]);
-	// if (shell->p && shell->p->fd[0])
-	// 	close(shell->p->fd[0]);
 }

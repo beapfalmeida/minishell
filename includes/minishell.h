@@ -217,10 +217,15 @@ int			count_inquote(char *s, int i);
 int			find_quote(char *str);
 int 		malloc_gone_wrong(char **arr, int j);
 int			check_new_token(char *s);
+void		write_char(t_split *sp);
+void		split_quotes(t_split *sp, char c);
 
 // Error handling
 char		*get_error(t_error i);
 void		do_error(t_tokens *tokens, t_shell *shell, t_error error);
+int			error_quote(char *s, int i);
+int			error_exit1(char *number, int i);
+int			error_exit2(int overflow, long long ret, char *number);
 
 //signals
 void		signals();

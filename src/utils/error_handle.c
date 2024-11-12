@@ -25,17 +25,20 @@ char	*get_error(t_error i)
 void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 {
 	if (error == ERROR_NDIR || error == ERROR_OPENCMD)
-		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token, tokens->next->token);
+		ft_printf_fd(STDERR_FILENO,
+			get_error(error), tokens->token, tokens->next->token);
 	else if (error == ERROR_TILD)
 		ft_printf_fd(STDERR_FILENO, get_error(IS_DIR), getenv("HOME"));
 	else if (error == ERROR_N_VAL)
-		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token, tokens->next->token);
+		ft_printf_fd(STDERR_FILENO,
+			get_error(error), tokens->token, tokens->next->token);
 	else if (error == ERROR_SYNTAX || error == ERROR_PIPE)
 		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));
 	else
 		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token);
 	if (error == ERROR_2ARGS || error == ERROR_NDIR || error == ERROR_PDN
-		|| error == ERROR_OPENCMD || error == ERROR_OPEN || error == ERROR_N_VAL)
+		|| error == ERROR_OPENCMD || error == ERROR_OPEN
+		|| error == ERROR_N_VAL)
 		shell->exit_code = 1;
 	else if (error == ERROR_FAR || error == ERROR_SYNTAX)
 		shell->exit_code = 2;
@@ -45,3 +48,32 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		shell->exit_code = 126;
 }
 
+int	error_quote(char *s, int i)
+{
+	if (!s[i])
+	{
+		printf("Sorry! Minishell doesn't handle unclosed quotes!\n");
+		return (1);
+	}
+	return (0);
+}
+
+int	error_exit1(char *number, int i)
+{
+	if (!ft_isdigit(number[i]))
+	{
+		ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
+		return (1);
+	}
+	return (0);
+}
+
+int	error_exit2(int overflow, long long ret, char *number)
+{
+	if (overflow == 1 && ret != LONG_MIN)
+	{
+		ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
+		return (1);
+	}
+	return (0);
+}

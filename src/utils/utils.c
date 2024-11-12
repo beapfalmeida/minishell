@@ -2,8 +2,8 @@
 
 int	count_pipes(t_tokens **tokens)
 {
-	t_tokens *temp;
-	int count;
+	t_tokens	*temp;
+	int			count;
 
 	temp = *tokens;
 	count = 0;

@@ -1,4 +1,4 @@
-# include "minishell.h"
+#include "minishell.h"
 
 int	arr_len(char **arr)
 {
@@ -27,7 +27,7 @@ int	count_args(t_tokens *token)
 	return (count);
 }
 
-int	free_array(char	**arr, int	len)
+int	free_array(char	**arr, int len)
 {
 	while (arr[len])
 	{
