@@ -3,10 +3,9 @@
 static void	set_them_free(int *pipe_fd, char *limiter)
 {
 	close(pipe_fd[1]);
-	// dup2(pipe_fd[0], STDIN_FILENO);
-	// close(pipe_fd[0]);
 	free(limiter);
 }
+
 static int	do_heredoc(int *pipe_fd, char *limiter)
 {
 	char	*input_buff;
@@ -33,19 +32,15 @@ int	find_limiter(t_tokens *tokens, t_shell *shell, int *fd)
 	if (temp->type == LIMITER)
 	{
 		limiter = malloc((ft_strlen(temp->token) + 2));
-		i = 0;
-		while (temp->token[i])
-		{
-			limiter[i] = temp->token[i];
-			i++;
-		}
+		i = ft_strlen(temp->token);
+		ft_strlcpy(limiter, temp->token, i + 1);
 		limiter[i] = '\n';
 		i++;
 		limiter[i] = '\0';
 		if (pipe(pipe_fd) <= -1)
 			;
 		while (1)
-			if(do_heredoc(pipe_fd, limiter) == 1)
+			if (do_heredoc(pipe_fd, limiter) == 1)
 				break ;
 		fd[0] = pipe_fd[0];
 		set_them_free(pipe_fd, limiter);
