@@ -117,7 +117,7 @@ typedef struct s_quotes
 {
 	bool	dq;
 	bool	sq;
-	bool	first_encounter;
+	bool	fe;
 	int		i;
 }	t_quotes;
 
@@ -155,12 +155,10 @@ int			process_tokens(t_tokens **tokens, t_shell *args);
 int			get_input(t_tokens *temp, t_shell *shell, t_tokens *infile, int *fd);
 int			get_output(t_tokens *temp, t_shell *shell, int *fd);
 int			*get_fds(t_tokens **tokens, t_shell *shell);
-int			*init_fds();
+int			*init_fds(int *stop, t_tokens **infile);
 int			open_file(t_tokens *tokens, t_shell *shell);
 
-
 // Executor
-
 int			exec_cmd(t_tokens *tokens, t_shell *shell, int ex);
 char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
@@ -216,7 +214,7 @@ int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
 int			find_quote(char *str);
 int 		malloc_gone_wrong(char **arr, int j);
-int			check_new_token(char *s);
+int			check_nt(char *s);
 void		write_char(t_split *sp);
 void		split_quotes(t_split *sp, char c);
 

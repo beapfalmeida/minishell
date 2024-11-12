@@ -25,7 +25,7 @@ int	count_inquote(char *s, int i)
 	return (i + 1);
 }
 
-int	check_new_token(char *s)
+int	check_nt(char *s)
 {
 	if (!ft_strncmp(s, "<<", 2) || !ft_strncmp(s, ">>", 2))
 		return (1);
@@ -39,7 +39,7 @@ int	check_new_token(char *s)
 
 int	while_not_symbol(char *s, int i)
 {
-	while (check_new_token(&s[i]) == 3)
+	while (check_nt(&s[i]) == 3)
 	{
 		if (s[i] == '\'' || s[i] == '\"')
 		{
@@ -62,17 +62,17 @@ int	countwords(char *s, int j, int count)
 	{
 		while (s[i] && s[i] == ' ')
 			i++;
-		if (check_new_token(&s[i]) == 2)
+		if (check_nt(&s[i]) == 2)
 		{
 			i++;
 			count++;
 		}
-		else if (check_new_token(&s[i]) == 1)
+		else if (check_nt(&s[i]) == 1)
 		{
 			i += 2;
 			count++;
 		}
-		else if (check_new_token(&s[i]) == 3)
+		else if (check_nt(&s[i]) == 3)
 		{
 			count++;
 			i = while_not_symbol(s, i);

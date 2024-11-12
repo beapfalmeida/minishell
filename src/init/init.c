@@ -33,12 +33,14 @@ void	init_tokens(t_tokens *tokens)
 	tokens->next = NULL;
 }
 
-int	*init_fds(void)
+int	*init_fds(int *stop, t_tokens **infile)
 {
 	int	*fd;
 
 	fd = malloc(sizeof(int) * 2);
 	fd[0] = STDIN_FILENO;
 	fd[1] = STDOUT_FILENO;
+	*infile = NULL;
+	*stop = 0;
 	return (fd);
 }

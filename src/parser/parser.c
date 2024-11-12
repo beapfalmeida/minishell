@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-static int check_dir_cmd(t_tokens **tokens)
+static int	check_dir_cmd(t_tokens **tokens)
 {
-	char *token;
+	char	*token;
 
 	token = (*tokens)->token;
 	if ((*token == '.' || *token == '~' || has_char(token, '/')))
@@ -30,6 +30,12 @@ int	is_symbol(char *token, int len)
 	return (0);
 }
 
+static void	assign_pipe(t_tokens **temp)
+{
+	(*temp)->type = PIPE;
+	(*temp) = (*temp)->next;
+}
+
 void	assign_types(t_tokens **tokens)
 {
 	t_tokens	*temp;
@@ -40,21 +46,15 @@ void	assign_types(t_tokens **tokens)
 		if (temp->type == SKIP || temp->type == NOT_SKIP)
 			temp = temp->next;
 		else if (!ft_strncmp(temp->token, "|", ft_strlen(temp->token)))
-		{
-			temp->type = PIPE;
-			temp = temp->next;
-		}
+			assign_pipe(&temp);
 		else if (temp->type == INPUT && !temp->next)
 			break ;
-		else if (!ft_strncmp(temp->token, ">", ft_strlen(temp->token)))
-			redirect_out(&temp);
-		else if (!ft_strncmp(temp->token, "<", ft_strlen(temp->token)))
-			redirect_in(&temp);
-		else if (!ft_strncmp(temp->token, ">>", ft_strlen(temp->token)))
+		else if (!ft_strncmp(temp->token, ">", 1))
 			append_out(&temp);
-		else if (!ft_strncmp(temp->token, "<<", ft_strlen(temp->token)))
+		else if (!ft_strncmp(temp->token, "<", 1))
 			append_in(&temp);
-		else if ((temp->prev && (temp->prev->type == PIPE || temp->prev->type == OUTPUT)))
+		else if ((temp->prev
+				&& (temp->prev->type == PIPE || temp->prev->type == OUTPUT)))
 			command(&temp);
 		else if (!temp->prev)
 			check_dir_cmd(&temp);
@@ -72,11 +72,7 @@ void	create_tokens(t_tokens **tokens, char *input)
 	i = 0;
 	arr = ft_split_adapted(input);
 	if (!arr || !*arr)
-	{
-		// if (*arr)
-		// 	free(*arr);
 		return ;
-	}
 	while (arr[i])
 	{
 		item = new_node(arr[i], 0);

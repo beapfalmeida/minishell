@@ -2,7 +2,7 @@
 
 char	*found_quote(char *token, t_quotes *q, int type)
 {
-	char *trimed;
+	char	*trimed;
 
 	if (type == '\'')
 		q->sq = !q->sq;
@@ -33,20 +33,21 @@ char	*expand(char *token, t_shell *shell, t_quotes *q)
 	return (token);
 }
 
-char	*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q)
+char	*process_token(char *token, t_tokens *tokens,
+	t_shell *shell, t_quotes *q)
 {
 	while (token[q->i])
 	{
-		q->first_encounter = true;
+		q->fe = true;
 		if (token[q->i] == '\'' && q->dq == false)
 			token = found_quote(token, q, '\'');
 		else if (token[q->i] == '\"' && q->sq == false)
 			token = found_quote(token, q, '\"');
 		if (token[q->i] == '$' && q->sq == false)
 		{
-			if (token[q->i + 1] && token[q->i + 1] != ' ' && token[q->i + 1] != '$'
-				&& token[q->i + 1] != '\"' && token[q->i + 1] != '\''
-				&& check_new_token(&token[q->i + 1]) == 3)
+			if (token[q->i + 1] && token[q->i + 1] != ' '
+				&& token[q->i + 1] != '$' && token[q->i + 1] != '\"'
+				&& token[q->i + 1] != '\'' && check_nt(&token[q->i + 1]) == 3)
 				token = expand(token, shell, q);
 			else
 				q->i++;
@@ -65,7 +66,7 @@ char	*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q)
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*ret;
-	char	*token;
+	char		*token;
 	t_quotes	q;
 
 	ret = tokens;

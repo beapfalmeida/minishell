@@ -16,16 +16,14 @@ int	open_file(t_tokens *tokens, t_shell *shell)
 }
 
 int	*get_fds(t_tokens **tokens, t_shell *shell)
-{	
+{
 	int			*fd;
 	t_tokens	*temp;
 	t_tokens	*infile;
 	int			stop;
 
 	temp = *tokens;
-	fd = init_fds();
-	infile = NULL;
-	stop = 0;
+	fd = init_fds(&stop, &infile);
 	while (temp)
 	{
 		find_limiter(temp, shell, fd);
@@ -46,18 +44,15 @@ int	*get_fds(t_tokens **tokens, t_shell *shell)
 	return (fd);
 }
 
-void	create_fds(t_shell *args, t_tokens *tokens)
+static void	create_fds(t_shell *args, t_tokens *tokens, int fd_in, int fd_out)
 {
-	int	i;
-	int	fd_in;
-	int	fd_out;
-	int	*fd;
-	t_fds		*node;
-	t_fds		*fds = NULL;
+	int		*fd;
+	int		i;
+	t_fds	*node;
+	t_fds	*fds;
 
+	fds = NULL;
 	i = 0;
-	fd_in = 0;
-	fd_out = 0;
 	while (i <= args->n_pipes)
 	{
 		fd = get_fds(&tokens, args);
@@ -78,6 +73,6 @@ int	process_tokens(t_tokens **tokens, t_shell *args)
 
 	temp = *tokens;
 	args->n_pipes = count_pipes(tokens);
-	create_fds(args, temp);
+	create_fds(args, temp, 0, 0);
 	return (0);
 }

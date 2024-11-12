@@ -2,7 +2,7 @@
 
 static int	check_conditions(t_split *sp)
 {
-	if (check_new_token(&sp->s[sp->i]) == 3 && sp->s[sp->i] != '\"'
+	if (check_nt(&sp->s[sp->i]) == 3 && sp->s[sp->i] != '\"'
 		&& sp->s[sp->i] != '\'')
 		return (1);
 	return (0);
@@ -31,7 +31,7 @@ static void	put_word(t_split *sp, int c)
 			while (check_conditions(sp))
 				sp->arr[sp->j][sp->k++] = sp->s[sp->i++];
 			if (sp->s[sp->i]
-				&& (check_new_token(&sp->s[sp->i]) == 2 || sp->s[sp->i] == ' '))
+				&& (check_nt(&sp->s[sp->i]) == 2 || sp->s[sp->i] == ' '))
 				break ;
 		}
 	}

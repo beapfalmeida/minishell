@@ -33,12 +33,13 @@ char	*get_var(char *token)
 	i = 0;
 	while (token[i])
 	{
-		if (token[i] == '$' || token[i] == '\"' || token[i] == '\'' || token[i] == ' ')
+		if (token[i] == '$' || token[i] == '\"'
+			|| token[i] == '\'' || token[i] == ' ')
 			break ;
 		if (token[i] == '?')
 		{
 			i++;
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -52,11 +53,13 @@ char	*skip_quote(char *token, const char *quote_type, t_quotes *q)
 	char	*temp;
 
 	ret = ft_strdup(token);
-	if (quote_type[0] == '\'' && q->sq == true && q->first_encounter == false)
+	if (quote_type[0] == '\'' && q->sq == true
+		&& q->fe == false)
 		q->sq = false;
-	else if (quote_type[0] == '\"' && q->dq == true && q->first_encounter == false)
+	else if (quote_type[0] == '\"' && q->dq == true
+		&& q->fe == false)
 		q->dq = false;
-	q->first_encounter = false;
+	q->fe = false;
 	temp = ft_strdup(&ret[1]);
 	free(ret);
 	return (temp);
@@ -66,6 +69,6 @@ void	init_quotes(t_quotes *q)
 {
 	q->sq = false;
 	q->dq = false;
-	q->first_encounter = true;
+	q->fe = true;
 	q->i = 0;
 }
