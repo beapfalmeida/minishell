@@ -166,6 +166,11 @@ int			ft_isbuiltin(t_tokens *token);
 int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin);
 void		execute(t_tokens *token, t_shell *shell);
 void		handle_executable(t_tokens *tokens, t_shell *shell);
+int			check_export(t_tokens *tokens, t_shell *shell);
+char		**order_alphabetically(char **envp);
+void		print_export(char **envp);
+void		update_env(t_tokens *tokens, t_shell *shell);
+void		add_var(char **env, t_tokens *tokens);
 
 // Builtins
 int			ft_pwd(t_tokens *token, t_shell *shell);
@@ -182,6 +187,8 @@ void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
 void		free_all(t_tokens *tokens, t_shell *shell, char *input_buffer);
+void		handle_null_input(t_fds *fds);
+void		exec_fail(t_tokens *tokens, t_shell *shell, char **cmds, char *path);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);
@@ -196,7 +203,7 @@ int			arr_len(char **arr);
 int			count_args(t_tokens *token);
 int			ft_strclen(char *str, char c);
 char		*ft_strfjoin(char *s1, char *s2, int _to_free);
-long		calculate_exit_code(t_tokens *tokens, char *number);
+long		getexitcode(t_tokens *tokens, char *number);
 int			is_file(char *file_name);
 int			has_char(char *token, char c);
 int			has_sintax_error(t_tokens *tokens, t_shell *shell);
@@ -204,6 +211,8 @@ int			has_sintax_error(t_tokens *tokens, t_shell *shell);
 void		add_back_fds(t_fds **lst, t_fds *new);
 t_fds		*new_fds(int in, int out, int i);
 t_fds		*find_last_fds(t_fds *lst);
+t_fds		*find_redirects(t_fds *fds, int i);
+int			check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff);
 
 // Split
 char		**ft_split_adapted(char *s);

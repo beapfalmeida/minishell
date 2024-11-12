@@ -14,7 +14,7 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 
 # Directories containing source files
 SRC_DIR = main
-EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export handle_unset pipex
+EXECUTOR = executor handle_pwd handle_cd handle_echo handle_env handle_export exp_utils handle_unset pipex exec_cmd builtins
 INIT = init
 PARSER = assign_types assign_types2 parser process_args skip_redirects expander expander2 heredoc redirects
 PRINTS = print

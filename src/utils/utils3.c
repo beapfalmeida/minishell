@@ -63,7 +63,7 @@ char	*ft_strfjoin(char *s1, char *s2, int _to_free)
 	return (new_str);
 }
 
-long	calculate_exit_code(t_tokens *tokens, char *number)
+long	getexitcode(t_tokens *tokens, char *number)
 {
 	long long	ret;
 	int			i;

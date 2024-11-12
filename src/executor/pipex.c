@@ -2,9 +2,9 @@
 
 void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 {
-	int	i;
-	int	status;
-	t_tokens *temp;
+	int			i;
+	int			status;
+	t_tokens	*temp;
 
 	i = -1;
 	temp = tokens;
@@ -70,37 +70,15 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	}
 }
 
-static t_fds	*find_redirects(t_fds *fds, int i)
-{
-	t_fds *temp;
-
-	temp = fds;
-	while (temp)
-	{
-		if (i == temp->pn)
-			return (temp);
-		temp = temp->next;
-	}
-	return (fds);
-}
-
 void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 {
 	t_fds	*fds;
-	int		fd_null;
 
-	fd_null = 0;
 	if (p->pid[p->i] == 0)
 	{
-		signal(SIGINT, SIG_DFL); //TODO: dar mute aos outros sinais tambem
+		signal(SIGINT, SIG_DFL);
 		fds = find_redirects(shell->fds, p->i);
-		if (fds->in < 0)
-		{
-			fd_null = open("/dev/null", O_RDONLY);
-			dup2(fd_null, STDIN_FILENO);
-			close(fd_null);
-			exit(EXIT_FAILURE);
-		}
+		handle_null_input(fds);
 		if (fds->out == -1)
 			exit(1);
 		else if (p->i == fds->pn && fds->in != STDIN_FILENO)

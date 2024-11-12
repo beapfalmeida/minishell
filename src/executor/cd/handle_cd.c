@@ -7,8 +7,8 @@ static int	check_cd(t_tokens *token, t_shell *shell)
 		do_error(token, shell, ERROR_CMD);
 		return (1);
 	}
-	if (token->next && token->next->type == ARG &&
-		token->next->next && token->next->next->type == ARG)
+	if (token->next && token->next->type == ARG
+		&& token->next->next && token->next->next->type == ARG)
 	{
 		do_error(token, shell, ERROR_2ARGS);
 		return (1);
@@ -25,16 +25,9 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 {
 	char	*path;
 
-
 	if (check_cd(tokens, shell) == 1)
 		return (1);
-	if (!tokens->next)
-	{
-		path = getenv("HOME");
-		free(shell->last_path);
-		shell->last_path = ft_strdup(path);
-	}
-	else if (*tokens->next->token == '~')
+	if (!tokens->next || *tokens->next->token == '~')
 	{
 		path = getenv("HOME");
 		free(shell->last_path);
@@ -42,7 +35,6 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 	}
 	else if (*tokens->next->token == '-')
 		path = shell->last_path;
-
 	else
 	{
 		path = tokens->next->token;

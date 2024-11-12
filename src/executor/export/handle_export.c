@@ -1,23 +1,21 @@
 #include "minishell.h"
 
-static int	check_export(t_tokens *tokens, t_shell *shell)
+int	check_export(t_tokens *tokens, t_shell *shell)
 {
 	int	i;
 
 	if (ft_strncmp(tokens->token, "export", 7) != 0)
 		return (do_error(tokens, shell, ERROR_CMD), 1);
-	if (tokens->next
-		&& (!ft_strncmp(tokens->next->token, "=", 1) || !ft_strncmp(tokens->next->token, "+=", 2)))
+	if (tokens->next && (!ft_strncmp(tokens->next->token, "=", 1)
+			|| !ft_strncmp(tokens->next->token, "+=", 2)))
 		return (do_error(tokens, shell, ERROR_N_VAL), 1);
 	else if (tokens->next && tokens->next->type == ARG)
 	{
 		i = 1;
-		if (!ft_isalpha(tokens->next->token[0]) && tokens->next->token[0] != '_')
-		{
-			do_error(tokens, shell, ERROR_N_VAL);
-			return (1);
-		}
-		while (tokens->next->token[i] 
+		if (!ft_isalpha(tokens->next->token[0])
+			&& tokens->next->token[0] != '_')
+			return (do_error(tokens, shell, ERROR_N_VAL), 1);
+		while (tokens->next->token[i]
 			&& tokens->next->token[i] != '=' && tokens->next->token[i] != '+')
 		{
 			if (!ft_isalnum(tokens->next->token[i]))
@@ -31,123 +29,42 @@ static int	check_export(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
+static void	swap(int low, int i, char **envp)
+{
+	char	*temp;
+
+	temp = envp[i];
+	envp[i] = envp[low];
+	envp[low] = temp;
+}
+
 char	**order_alphabetically(char **envp)
 {
 	int		i;
 	int		j;
-	int		lowest_index;
-	char	*temp;
+	int		low;
 
 	i = 0;
 	while (envp[i])
 	{
-		lowest_index = i;
+		low = i;
 		j = i + 1;
 		while (envp[j])
 		{
-			if (ft_strncmp(envp[lowest_index], envp[j], ft_strlen(envp[j])) > 0)
-				lowest_index = j;
-			else if (ft_strncmp(envp[lowest_index], envp[j], ft_strlen(envp[lowest_index])) > 0)
-				lowest_index = j;
+			if (ft_strncmp(envp[low], envp[j], ft_strlen(envp[j])) > 0)
+				low = j;
+			else if (ft_strncmp(envp[low], envp[j], ft_strlen(envp[low])) > 0)
+				low = j;
 			j++;
 		}
-		if (lowest_index != i)
-		{
-			temp = envp[i];
-			envp[i] = envp[lowest_index];
-			envp[lowest_index] = temp;
-		}
+		if (low != i)
+			swap(low, i, envp);
 		i++;
 	}
 	return (envp);
 }
 
-static void	add_var(char **env, t_tokens *tokens)
-{
-	int 	i;
-	int 	j;
-	char	*temp;
-	char	*appended;
-
-	j = 0;
-	i = arr_len(env);
-	while (env[j])
-	{
-		if (has_char(tokens->token, '=') &&
-			!strncmp(env[j], tokens->token, ft_strclen(env[j], '=')) &&
-			!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
-		{
-			if (has_char(tokens->token, '='))
-				env[j] = ft_strdup(tokens->token);
-			env[i] = NULL;
-			return ;
-		}
-		else if (!has_char(tokens->token, '=') &&
-			!strncmp(env[j], tokens->token, ft_strlen(env[j])) &&
-			!strncmp(env[j], tokens->token, ft_strlen(tokens->token)))
-		{
-			env[j] = ft_strdup(tokens->token);
-			env[i] = NULL;
-			return ;
-		}
-		else if (has_char(tokens->token, '+') && !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+')))
-		{
-			if (ft_strclen(tokens->token, '\"') > ft_strclen(tokens->token, '+'))
-			{
-				temp = tokens->token;
-				while (*temp != '=')
-					temp++;
-				temp++;
-				ft_strtrim(temp, "\"");
-				if (has_char(env[j], '='))
-				{
-					ft_strtrim(env[j], "\"");
-					appended = ft_strjoin(env[j], temp);
-				}
-				else
-				{
-					appended = ft_strjoin(env[j], "=");
-					appended = ft_strfjoin(appended, temp, 1);
-				}
-				env[j] = appended;
-				return ;
-			}
-		}
-		j++;
-	}
-	env[i] = ft_strdup(tokens->token);
-	env[i + 1] = NULL;
-}
-
-static void	print_export(char **envp)
-{
-	int i;
-	int	equal_sign;
-	char	*env;
-
-	while (envp && *envp)
-	{
-		i = 0;
-		equal_sign = 0;
-		env = *envp;
-		ft_printf_fd(STDOUT_FILENO, "declare -x ");
-		while (env[i])
-		{
-			write(STDOUT_FILENO, &env[i], 1);
-			if (env[i] == '=')
-			{
-				write(STDOUT_FILENO, "\"", 1);
-				equal_sign = 1;
-			}
-			i++;
-		}
-		if (equal_sign == 1)
-			ft_printf_fd(STDOUT_FILENO, "\"");
-		ft_printf_fd(STDOUT_FILENO, "\n", 1);
-		envp++;
-	}
-}
-static void	update_env(t_tokens *tokens, t_shell *shell)
+void	update_env(t_tokens *tokens, t_shell *shell)
 {
 	char	**envp;
 	char	**new_envp;

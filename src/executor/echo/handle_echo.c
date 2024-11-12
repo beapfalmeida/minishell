@@ -2,8 +2,8 @@
 
 static int	check_flag(t_tokens *tokens)
 {
-	char *token;
-	int	i;
+	char	*token;
+	int		i;
 
 	i = 0;
 	token = NULL;
@@ -24,7 +24,6 @@ static int	check_flag(t_tokens *tokens)
 	return (0);
 }
 
-
 static int	check_echo(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "echo", 4) != 0)
@@ -38,7 +37,7 @@ static int	check_echo(t_tokens *tokens, t_shell *shell)
 int	ft_echo(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*temp;
-	int	flag;
+	int			flag;
 
 	temp = tokens;
 	temp = temp->next;
@@ -49,7 +48,6 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 		temp = temp->next;
 	if (flag && !(temp && temp->type == ARG))
 		return (shell->exit_code = 0, 1);
-	if (temp)
 	while (temp->token && temp->type == ARG)
 	{
 		ft_printf_fd(STDOUT_FILENO, temp->token);
@@ -63,4 +61,3 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 		ft_printf_fd(STDOUT_FILENO, "\n");
 	return (shell->exit_code = 0, 1);
 }
- 

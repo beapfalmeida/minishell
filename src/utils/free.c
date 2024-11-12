@@ -37,3 +37,26 @@ void	free_all(t_tokens *tokens, t_shell *shell, char *input_buffer)
 	if (input_buffer)
 		free(input_buffer);
 }
+
+void	handle_null_input(t_fds *fds)
+{
+	int		fd_null;
+
+	fd_null = 0;
+	if (fds->in < 0)
+	{
+		fd_null = open("/dev/null", O_RDONLY);
+		dup2(fd_null, STDIN_FILENO);
+		close(fd_null);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	exec_fail(t_tokens *tokens, t_shell *shell, char **cmds, char *path)
+{
+	free_all(tokens, shell, 0);
+	free_paths(cmds);
+	if (path)
+		free(path);
+	exit(SIG_EXEC_FAILURE);
+}

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	check_unset(t_tokens *tokens, t_shell *shell)
+static int	check_unset(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "unset", 6) != 0)
 	{
@@ -9,20 +9,14 @@ int	check_unset(t_tokens *tokens, t_shell *shell)
 	}
 	return (0);
 }
-int	ft_unset(t_tokens *tokens, t_shell *shell)
-{
-	char	**envp;
-	char	**new_envp;
-	char	**tmp;
-	int		found;
-	t_tokens	*temp;
 
-	if (check_unset(tokens, shell) != 0)
-		return (1);
-	if (!tokens->next)
-		return (1);
-	found = 0;
-	temp = tokens->next;
+static void	do_unset(t_tokens *temp, t_shell *shell)
+{
+	char		**envp;
+	char		**new_envp;
+	char		**tmp;
+	int			found;
+
 	while (temp)
 	{
 		envp = shell->envp;
@@ -43,5 +37,17 @@ int	ft_unset(t_tokens *tokens, t_shell *shell)
 		free(*new_envp);
 		temp = temp->next;
 	}
+}
+
+int	ft_unset(t_tokens *tokens, t_shell *shell)
+{
+	t_tokens	*temp;
+
+	if (check_unset(tokens, shell) != 0)
+		return (1);
+	if (!tokens->next)
+		return (1);
+	temp = tokens->next;
+	do_unset(temp, shell);
 	return (1);
 }

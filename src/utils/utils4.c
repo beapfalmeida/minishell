@@ -39,3 +39,43 @@ t_fds	*new_fds(int in, int out, int i)
 	node->pn = i;
 	return (node);
 }
+
+t_fds	*find_redirects(t_fds *fds, int i)
+{
+	t_fds	*temp;
+
+	temp = fds;
+	while (temp)
+	{
+		if (i == temp->pn)
+			return (temp);
+		temp = temp->next;
+	}
+	return (fds);
+}
+
+int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
+{
+	if (shell->interrupt_exec == true)
+	{
+		shell->interrupt_exec = false;
+		free_all(*tokens, shell, inbuff);
+		return (2);
+	}
+	if (ft_strlen((*tokens)->token) && !ft_strncmp((*tokens)->token, "exit", 5))
+	{
+		if (*tokens && (*tokens)->next)
+			shell->exit_code = getexitcode(*tokens, (*tokens)->next->token);
+		if ((*tokens)->next->next && shell->exit_code != 2)
+		{
+			ft_printf_fd(2, "bash: exit: too many arguments\n");
+			shell->exit_code = 1;
+			lstclear(tokens);
+			free(inbuff);
+			return (2);
+		}
+		else
+			return (1);
+	}
+	return (0);
+}

@@ -1,16 +1,15 @@
 #include "minishell.h"
 
-int g_signal;
+int	g_signal;
 
 static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 {
-	t_tokens *temp;
-	t_tokens *t;
+	t_tokens	*temp;
+	t_tokens	*t;
 
 	if (!handle_quotes(tokens, shell))
 		return (NULL);
 	assign_types(&tokens);
-	//print_tokens(&tokens);
 	if (has_sintax_error(tokens, shell))
 		return (NULL);
 	if (process_tokens(&tokens, shell))
@@ -26,44 +25,31 @@ static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
 	return (tokens);
 }
 
-static int check_exit_exec(t_tokens **tokens, t_shell *shell, char *input_buffer)
+static void	routine1(t_shell *shell, char **buff)
 {
-	if (shell->interrupt_exec == true)
-		{
-			shell->interrupt_exec = false;
-			free_all(*tokens, shell, input_buffer);
-			return (2);
-		}
-	if (ft_strlen((*tokens)->token) && !ft_strncmp((*tokens)->token, "exit", 5))
+	signals();
+	*buff = readline("minishell: ");
+	if (g_signal == SIGINT)
 	{
-		if (*tokens && (*tokens)->next)
-			shell->exit_code = calculate_exit_code(*tokens, (*tokens)->next->token);
-		if ((*tokens)->next->next && shell->exit_code != 2)
-		{
-			ft_printf_fd(2, "bash: exit: too many arguments\n");
-			shell->exit_code = 1;
-			lstclear(tokens);
-			free(input_buffer);
-			return (2);
-		}
-		else
-			return (1);
+		shell->exit_code = 130;
+		g_signal = 0;
 	}
-	return (0);
+}
+
+static void	routine2(t_tokens **tokens, t_shell *shell, char **buff)
+{
+	execute(*tokens, shell);
+	lstclear(tokens);
+	free(*buff);
 }
 
 void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
 {
 	int	check_exit;
+
 	while (1)
 	{
-		signals();
-		input_buffer = readline("minishell: ");
-		if (g_signal == SIGINT)
-		{
-			shell->exit_code = 130;
-			g_signal = 0;
-		}
+		routine1(shell, &input_buffer);
 		if (!input_buffer)
 			break ;
 		if (input_buffer && !*input_buffer)
@@ -81,11 +67,7 @@ void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
 			continue ;
 		else if (check_exit == 1)
 			break ;
-		execute(tokens, shell);
-		lstclear(&tokens);
-		free(input_buffer);
-		// dup2(STDIN_FILENO, shell->original_stdin);
-		// dup2(STDOUT_FILENO, shell->original_stdout);
+		routine2(&tokens, shell, &input_buffer);
 	}
 }
 

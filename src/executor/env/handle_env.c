@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-static int has_value(char *env)
+static int	has_value(char *env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (env[i])
