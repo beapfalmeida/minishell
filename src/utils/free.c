@@ -32,7 +32,8 @@ void	free_all(t_tokens **tokens, t_shell *shell, char *input_buffer)
 		close(shell->original_stdin);
 	if (shell->original_stdout != -1)
 		close(shell->original_stdout);
-	free_fds(shell);
+	if (shell && shell->fds)
+		free_fds(shell);
 	if (input_buffer)
 		free(input_buffer);
 }

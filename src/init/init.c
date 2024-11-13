@@ -20,6 +20,7 @@ void	init_shell(t_shell *shell, char **envp)
 	shell->last_path = ft_strdup(getenv("PWD"));
 	shell->original_stdin = 0;
 	shell->original_stdout = 1;
+	shell->fds = NULL;
 	if (shell->original_stdin == -1 || shell->original_stdout == -1)
 		exit(EXIT_FAILURE);
 	shell->interrupt_exec = false;
