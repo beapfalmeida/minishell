@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:06:18 by bpaiva-f          #+#    #+#             */
-/*   Updated: 2024/10/03 16:46:13 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:31:54 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ char	*ft_strtrim(char const *s, char const *set)
 		st++;
 	while (e >= 0 && check(set, s[e]))
 		e--;
-	// if (st == ft_strlen(s) - 1)
-	// 	return (ft_strdup(""));
 	trim = ft_substr(s, st, e - st + 1);
 	return (trim);
 }

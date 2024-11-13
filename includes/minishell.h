@@ -17,7 +17,8 @@
 # include <errno.h>
 # include <limits.h>
 
-# define MAX_PATH_SIZE 4096 // From Google search about path size limits in Unix
+// From Google search about path size limits in Unix
+# define MAX_PATH_SIZE 4096
 
 // Signals
 # define SIG_EXEC_BUILTIN 16
@@ -45,7 +46,7 @@
 # define EXPORT 5
 # define UNSET 6
 
-extern int g_signal;
+extern int	g_signal;
 
 typedef enum e_code
 {
@@ -66,12 +67,12 @@ typedef enum e_code
 	OPEN_DF,
 }	t_error;
 
-typedef	struct	s_fds
+typedef struct s_fds
 {
-	int	in;
-	int	out;
-	int	pn;
-	struct s_fds *next;
+	int				in;
+	int				out;
+	int				pn;
+	struct s_fds	*next;
 }	t_fds;
 
 typedef struct s_tokens
@@ -104,14 +105,12 @@ typedef struct s_shell
 
 typedef struct s_split
 {
-	int	i;
-	int	j;
-	int	k;
+	int		i;
+	int		j;
+	int		k;
 	char	*s;
 	char	**arr;
 }	t_split;
-
-
 
 typedef struct s_quotes
 {
@@ -142,7 +141,8 @@ t_tokens	*skip_redirects(t_tokens *tokens);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
 char		*found_quote(char *token, t_quotes *q, int type);
 char		*expand(char *token, t_shell *shell, t_quotes *q);
-char		*process_token(char *token, t_tokens *tokens, t_shell *shell, t_quotes *q);
+char		*process_token(char *token, t_tokens *tokens,
+				t_shell *shell, t_quotes *q);
 char		*get_var(char *token);
 char		*skip_quote(char *token, const char *quote_type, t_quotes *q);
 void		init_quotes(t_quotes *q);
@@ -152,7 +152,7 @@ int			find_limiter(t_tokens *tokens, t_shell *shell, int *fd);
 
 // Create shell struct
 int			process_tokens(t_tokens **tokens, t_shell *args);
-int			get_input(t_tokens *temp, t_shell *shell, t_tokens *infile, int *fd);
+int			get_input(t_tokens *temp, t_shell *shell, t_tokens *in, int *fd);
 int			get_output(t_tokens *temp, t_shell *shell, int *fd);
 int			*get_fds(t_tokens **tokens, t_shell *shell);
 int			*init_fds(int *stop, t_tokens **infile);
@@ -163,7 +163,7 @@ int			exec_cmd(t_tokens *tokens, t_tokens **free, t_shell *shell, int ex);
 char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
 int			ft_isbuiltin(t_tokens *token);
-int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin);
+int			ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin);
 void		execute(t_tokens **token, t_shell *shell);
 void		handle_executable(t_tokens *tokens, t_shell *shell);
 int			check_export(t_tokens *tokens, t_shell *shell);
@@ -181,14 +181,16 @@ int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 
 // Pipex
-void		do_pipe(t_tokens *tokens, t_tokens **free, t_shell *shell, t_pipe *p);
+void		do_pipe(t_tokens *tokens, t_tokens **free,
+				t_shell *shell, t_pipe *p);
 void		set_next_pipe(t_tokens **temp);
 void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
 void		free_all(t_tokens **tokens, t_shell *shell, char *input_buffer);
 void		handle_null_input(t_fds *fds);
-void		exec_fail(t_tokens **tokens, t_shell *shell, char **cmds, char *path);
+void		exec_fail(t_tokens **tokens, t_shell *shell,
+				char **cmds, char *path);
 void		free_fds(t_shell *shell);
 
 // Utils
@@ -198,7 +200,7 @@ void		add_back_list(t_tokens **lst, t_tokens *new);
 void		lstclear(t_tokens **lst);
 int			count_pipes(t_tokens **tokens);
 char		**ft_arrdup(char **arr);
-int			free_array(char	**arr, int	len);
+int			free_array(char	**arr, int len);
 void		free_paths(char **paths);
 int			arr_len(char **arr);
 int			count_args(t_tokens *token);
@@ -223,7 +225,7 @@ int			ft_word_len(char *s, int i);
 int			countwords(char *s, int i, int count);
 int			count_inquote(char *s, int i);
 int			find_quote(char *str);
-int 		malloc_gone_wrong(char **arr, int j);
+int			malloc_gone_wrong(char **arr, int j);
 int			check_nt(char *s);
 void		write_char(t_split *sp);
 void		split_quotes(t_split *sp, char c);
@@ -236,7 +238,7 @@ int			error_exit1(char *number, int i);
 int			error_exit2(int overflow, long long ret, char *number);
 
 //signals
-void		signals();
+void		signals(void);
 void		handle_sigint(int sig);
 void		signore(int sig);
 
