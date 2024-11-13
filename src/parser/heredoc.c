@@ -38,11 +38,12 @@ int	find_limiter(t_tokens *tokens, t_shell *shell, int *fd)
 		i++;
 		limiter[i] = '\0';
 		if (pipe(pipe_fd) <= -1)
-			;
+			return (perror(strerror(errno)), -1);
 		while (1)
 			if (do_heredoc(pipe_fd, limiter) == 1)
 				break ;
-		fd[0] = pipe_fd[0];
+		if (fd[0] != -1)
+			fd[0] = pipe_fd[0];
 		set_them_free(pipe_fd, limiter);
 	}
 	return (0);
