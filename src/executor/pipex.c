@@ -52,6 +52,7 @@ static void	prepare_exec(t_tokens *tokens, t_tokens **tofree,
 	res = ft_isbuiltin(tokens);
 	close(p->fd[1]);
 	close(p->fd[0]);
+	free(p->pid);
 	if (res)
 	{
 		ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));

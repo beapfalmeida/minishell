@@ -44,12 +44,14 @@ static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 		do_error(temp, shell, OPEN_DF);
 }
 
-static void	reestablish_fds(t_shell *shell)
+static void	reestablish_fds(t_shell *shell, int *pid)
 {
 	dup2(shell->original_stdin, STDIN_FILENO);
 	dup2(shell->original_stdout, STDOUT_FILENO);
 	close(shell->original_stdin);
 	close(shell->original_stdout);
+	if (pid)
+		free(pid);
 }
 
 static int	pipex(t_tokens **t, t_tokens *temp, t_shell *shell, t_pipe *p)
@@ -71,21 +73,21 @@ void	execute(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 	t_pipe		p;
-	int			pid[shell->n_pipes];//TODO: nao se pode fazer assim pela norminette
 
 	shell->p = &p;
+	p.pid = 0;
 	temp = *tokens;
-	p.pid = pid;
 	shell->original_stdin = dup(STDIN_FILENO);
 	shell->original_stdout = dup(STDOUT_FILENO);
 	if (temp->type == DIR_FILE)
 		return (handle_dir_file(tokens, temp, shell));
 	if (shell->n_pipes)
 	{
+		p.pid = malloc((shell->n_pipes + 1) * sizeof(int));
 		if (pipex(tokens, temp, shell, &p) == -1)
 			return ;
 	}
 	else
 		exec_cmd(temp, tokens, shell, 0);
-	reestablish_fds(shell);
+	reestablish_fds(shell, p.pid);
 }
