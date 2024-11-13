@@ -38,7 +38,7 @@ static void	routine1(t_shell *shell, char **buff)
 
 static void	routine2(t_tokens **tokens, t_shell *shell, char **buff)
 {
-	execute(*tokens, shell);
+	execute(tokens, shell);
 	lstclear(tokens);
 	free(*buff);
 }
@@ -83,6 +83,6 @@ int	main(int argc, char **argv, char **envp)
 	input_buffer = NULL;
 	init_shell(&shell, envp);
 	minishell(tokens, &shell, input_buffer);
-	free_all(tokens, &shell, input_buffer);
+	free_all(&tokens, &shell, input_buffer);
 	exit(shell.exit_code);
 }

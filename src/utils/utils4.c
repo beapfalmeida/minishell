@@ -59,7 +59,7 @@ int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
 	if (shell->interrupt_exec == true)
 	{
 		shell->interrupt_exec = false;
-		free_all(*tokens, shell, inbuff);
+		free_all(tokens, shell, inbuff);
 		return (2);
 	}
 	if (ft_strlen((*tokens)->token) && !ft_strncmp((*tokens)->token, "exit", 5))

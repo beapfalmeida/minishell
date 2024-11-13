@@ -32,7 +32,7 @@ static int	prepare_fds(t_shell *shell)
 	return (0);
 }
 
-static int	execute_child(t_tokens *tokens, t_shell *shell, int exec)
+static int	execute_child(t_tokens *tokens, t_tokens **free, t_shell *shell, int exec)
 {
 	int		pid;
 	char	*path;
@@ -53,7 +53,7 @@ static int	execute_child(t_tokens *tokens, t_shell *shell, int exec)
 		{
 			path = get_path(tokens->token, shell->envp);
 			if (!path || execve(path, cmds, shell->envp) == -1)
-				exec_fail(tokens, shell, cmds, path);
+				exec_fail(free, shell, cmds, path);
 		}
 	}
 	else
@@ -61,7 +61,7 @@ static int	execute_child(t_tokens *tokens, t_shell *shell, int exec)
 	return (0);
 }
 
-int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
+int	exec_cmd(t_tokens *tokens, t_tokens **free, t_shell *shell, int executable)
 {
 	if (prepare_fds(shell))
 		return (1);
@@ -69,7 +69,7 @@ int	exec_cmd(t_tokens *tokens, t_shell *shell, int executable)
 		return (1);
 	else
 	{
-		if (execute_child(tokens, shell, executable))
+		if (execute_child(tokens, free, shell, executable))
 			return (1);
 	}
 	if (shell->fds->in)

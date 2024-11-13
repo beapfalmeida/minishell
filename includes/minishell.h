@@ -159,12 +159,12 @@ int			*init_fds(int *stop, t_tokens **infile);
 int			open_file(t_tokens *tokens, t_shell *shell);
 
 // Executor
-int			exec_cmd(t_tokens *tokens, t_shell *shell, int ex);
+int			exec_cmd(t_tokens *tokens, t_tokens **free, t_shell *shell, int ex);
 char		**put_cmds(t_tokens	*token);
 char		*get_path(char	*cmd, char **envp);
 int			ft_isbuiltin(t_tokens *token);
 int	ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin);
-void		execute(t_tokens *token, t_shell *shell);
+void		execute(t_tokens **token, t_shell *shell);
 void		handle_executable(t_tokens *tokens, t_shell *shell);
 int			check_export(t_tokens *tokens, t_shell *shell);
 char		**order_alphabetically(char **envp);
@@ -181,14 +181,14 @@ int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 
 // Pipex
-void		do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p);
+void		do_pipe(t_tokens *tokens, t_tokens **free, t_shell *shell, t_pipe *p);
 void		set_next_pipe(t_tokens **temp);
 void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
-void		free_all(t_tokens *tokens, t_shell *shell, char *input_buffer);
+void		free_all(t_tokens **tokens, t_shell *shell, char *input_buffer);
 void		handle_null_input(t_fds *fds);
-void		exec_fail(t_tokens *tokens, t_shell *shell, char **cmds, char *path);
+void		exec_fail(t_tokens **tokens, t_shell *shell, char **cmds, char *path);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);

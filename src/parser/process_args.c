@@ -49,9 +49,8 @@ static void	create_fds(t_shell *args, t_tokens *tokens, int fd_in, int fd_out)
 	int		*fd;
 	int		i;
 	t_fds	*node;
-	t_fds	*fds;
 
-	fds = NULL;
+	args->fds = NULL;
 	i = 0;
 	while (i <= args->n_pipes)
 	{
@@ -60,11 +59,10 @@ static void	create_fds(t_shell *args, t_tokens *tokens, int fd_in, int fd_out)
 		fd_in = fd[0];
 		free(fd);
 		node = new_fds(fd_in, fd_out, i);
-		add_back_fds(&fds, node);
+		add_back_fds(&args->fds, node);
 		set_next_pipe(&tokens);
 		i++;
 	}
-	args->fds = fds;
 }
 
 int	process_tokens(t_tokens **tokens, t_shell *args)

@@ -23,25 +23,25 @@ void	handle_executable(t_tokens *tokens, t_shell *shell)
 	}
 }
 
-static void	handle_dir_file(t_tokens *tokens, t_shell *shell)
+static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 {
 	char	*token;
 	int		file;
 
-	token = tokens->token;
-	file = is_file(tokens->token);
+	token = temp->token;
+	file = is_file(temp->token);
 	if (!strncmp(token, ".", ft_strlen(token)))
-		do_error(tokens, shell, ERROR_FAR);
+		do_error(temp, shell, ERROR_FAR);
 	else if (!strncmp(token, "~", ft_strlen(token)))
-		do_error(tokens, shell, ERROR_TILD);
+		do_error(temp, shell, ERROR_TILD);
 	else if (file == 1)
-		exec_cmd(tokens, shell, 1);
+		exec_cmd(temp, tokens, shell, 1);
 	else if (file == 2)
-		do_error(tokens, shell, IS_DIR);
+		do_error(temp, shell, IS_DIR);
 	else if (file == 4)
-		do_error(tokens, shell, P_DENY);
-	else if (!is_file(tokens->token))
-		do_error(tokens, shell, OPEN_DF);
+		do_error(temp, shell, P_DENY);
+	else if (!is_file((*tokens)->token))
+		do_error(temp, shell, OPEN_DF);
 }
 
 static void	reestablish_fds(t_shell *shell)
@@ -52,40 +52,40 @@ static void	reestablish_fds(t_shell *shell)
 	close(shell->original_stdout);
 }
 
-static int	pipex(t_tokens *t, t_tokens *temp, t_shell *shell, t_pipe *p)
+static int	pipex(t_tokens **t, t_tokens *temp, t_shell *shell, t_pipe *p)
 {
 	p->i = -1;
 	while (++p->i <= shell->n_pipes)
 	{
 		if (pipe(p->fd) == -1)
-			return (perror(strerror(errno)), -1);
+			return (perror(strerror(errno)), free_all(t, shell, 0), -1);
 		p->pid[p->i] = fork();
-		do_pipe(temp, shell, p);
+		do_pipe(temp, t, shell, p);
 		set_next_pipe(&temp);
 	}
-	wait_allchildren(t, shell, p->pid);
+	wait_allchildren(*t, shell, p->pid);
 	return (0);
 }
 
-void	execute(t_tokens *tokens, t_shell *shell)
+void	execute(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 	t_pipe		p;
 	int			pid[shell->n_pipes];//TODO: nao se pode fazer assim pela norminette
 
 	shell->p = &p;
-	temp = tokens;
+	temp = *tokens;
 	p.pid = pid;
 	shell->original_stdin = dup(STDIN_FILENO);
 	shell->original_stdout = dup(STDOUT_FILENO);
 	if (temp->type == DIR_FILE)
-		return (handle_dir_file(temp, shell));
+		return (handle_dir_file(tokens, temp, shell));
 	if (shell->n_pipes)
 	{
 		if (pipex(tokens, temp, shell, &p) == -1)
 			return ;
 	}
 	else
-		exec_cmd(tokens, shell, 0);
+		exec_cmd(temp, tokens, shell, 0);
 	reestablish_fds(shell);
 }

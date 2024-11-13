@@ -41,7 +41,7 @@ static void	parent_process(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	close(p->fd[1]);
 }
 
-static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
+static void	prepare_exec(t_tokens *tokens,  t_tokens **tofree, t_shell *shell, t_pipe *p)
 {
 	int		res;
 	char	**cmds;
@@ -53,8 +53,10 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	if (res)
 	{
 		ft_exec_builtin(tokens, shell, ft_isbuiltin(tokens));
-		free_all(tokens, shell, 0);
+		free_all(tofree, shell, 0);
 		free_paths(cmds);
+		close(p->fd[1]);
+		close(p->fd[0]);
 		exit(0);
 	}
 	close(p->fd[1]);
@@ -62,7 +64,7 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	path = get_path(tokens->token, shell->envp);
 	if (!path || execve(path, cmds, shell->envp) == -1)
 	{
-		free_all(tokens, shell, 0);
+		free_all(tofree, shell, 0);
 		free_paths(cmds);
 		if (path)
 			free(path);
@@ -70,7 +72,7 @@ static void	prepare_exec(t_tokens *tokens, t_shell *shell, t_pipe *p)
 	}
 }
 
-void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
+void	do_pipe(t_tokens *tokens, t_tokens **free, t_shell *shell, t_pipe *p)
 {
 	t_fds	*fds;
 
@@ -87,7 +89,7 @@ void	do_pipe(t_tokens *tokens, t_shell *shell, t_pipe *p)
 			dup2(fds->out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		prepare_exec(tokens, shell, p);
+		prepare_exec(tokens, free, shell, p);
 	}
 	else
 		signal(SIGINT, signore);

@@ -31,10 +31,7 @@ int	get_input(t_tokens *temp, t_shell *shell, t_tokens *infile, int *fd)
 		infile = temp;
 		fd[0] = open_file(infile, shell);
 		if (fd[0] == -1)
-		{
-			close(shell->original_stdin);
 			return (1);
-		}
 	}
 	return (0);
 }
