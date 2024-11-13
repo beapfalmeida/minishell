@@ -28,20 +28,23 @@ static int	append_var(t_tokens *tokens, char **env, int j)
 	return (0);
 }
 
-static int	found_equal(t_tokens *tokens, char **env, int j)
+static int	to_replace(t_tokens *tokens, char **env, int j)
 {
-	if (has_char(tokens->token, '=')
-		&& !strncmp(env[j], tokens->token, ft_strclen(env[j], '='))
-		&& strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
+	if ((has_char(tokens->token, '=')
+			&& !strncmp(env[j], tokens->token, ft_strclen(env[j], '='))
+			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
+		|| (!has_char(tokens->token, '=')
+			&& !strncmp(env[j], tokens->token, ft_strlen(env[j]))
+			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '='))))
 		return (1);
 	return (0);
 }
 
-static int	didnt_exist(t_tokens *tokens, char **env, int j)
+static int	do_nothing(t_tokens *tokens, char **env, int j)
 {
-	if (!has_char(tokens->token, '=')
-		&& !strncmp(env[j], tokens->token, ft_strlen(env[j]))
-		&& !strncmp(env[j], tokens->token, ft_strlen(tokens->token)))
+	if (has_char(env[j], '=') && !has_char(tokens->token, '=')
+		&& !strncmp(env[j], tokens->token, ft_strclen(env[j], '='))
+		&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
 		return (1);
 	return (0);
 }
@@ -55,12 +58,14 @@ void	add_var(char **env, t_tokens *tokens)
 	i = arr_len(env);
 	while (env[j])
 	{
-		if (found_equal(tokens, env, j) || didnt_exist(tokens, env, j))
+		if (to_replace(tokens, env, j))
 		{
 			env[j] = ft_strdup(tokens->token);
 			env[i] = NULL;
 			return ;
 		}
+		else if (do_nothing(tokens, env, j))
+			return ;
 		else if (has_char(tokens->token, '+')
 			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+')))
 		{
