@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	free_fds(t_shell *shell)
+void	free_fds(t_shell *shell)
 {
 	t_fds	*temp;
 

@@ -189,6 +189,7 @@ void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 void		free_all(t_tokens **tokens, t_shell *shell, char *input_buffer);
 void		handle_null_input(t_fds *fds);
 void		exec_fail(t_tokens **tokens, t_shell *shell, char **cmds, char *path);
+void		free_fds(t_shell *shell);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);

@@ -32,7 +32,8 @@ static int	prepare_fds(t_shell *shell)
 	return (0);
 }
 
-static int	execute_child(t_tokens *tokens, t_tokens **free, t_shell *shell, int exec)
+static int	execute_child(t_tokens *tokens, t_tokens **free,
+	t_shell *shell, int exec)
 {
 	int		pid;
 	char	*path;
