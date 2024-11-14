@@ -166,10 +166,10 @@ int			ft_isbuiltin(t_tokens *token);
 int			ft_exec_builtin(t_tokens *token, t_shell *shell, int type_builtin);
 void		execute(t_tokens **token, t_shell *shell);
 void		handle_executable(t_tokens *tokens, t_shell *shell);
-int			check_export(t_tokens *tokens, t_shell *shell);
+int			check_export(char *begin, t_tokens *tokens, t_shell *shell);
 char		**order_alphabetically(char **envp);
 void		print_export(char **envp);
-void		update_env(t_tokens *tokens, t_shell *shell);
+void		update_env(char *begin, t_tokens *tokens, t_shell *shell);
 void		add_var(char **env, t_tokens *tokens);
 
 // Builtins
@@ -231,7 +231,7 @@ void		split_quotes(t_split *sp, char c);
 
 // Error handling
 char		*get_error(t_error i);
-void		do_error(t_tokens *tokens, t_shell *shell, t_error error);
+void		do_error(char *begin, t_tokens *tokens, t_shell *shell, t_error error);
 int			error_quote(char *s, int i);
 int			error_exit1(char *number, int i);
 int			error_exit2(int overflow, long long ret, char *number);

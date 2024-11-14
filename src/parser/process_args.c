@@ -8,9 +8,9 @@ int	open_file(t_tokens *tokens, t_shell *shell)
 	if (fd == -1)
 	{
 		if (errno == EACCES)
-			do_error(tokens, shell, ERROR_PDN);
+			do_error(0, tokens, shell, ERROR_PDN);
 		else if (errno == ENOENT)
-			do_error(tokens, shell, ERROR_OPEN);
+			do_error(0, tokens, shell, ERROR_OPEN);
 	}
 	return (fd);
 }

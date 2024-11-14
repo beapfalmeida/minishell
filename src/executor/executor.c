@@ -31,17 +31,17 @@ static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 	token = temp->token;
 	file = is_file(temp->token);
 	if (!strncmp(token, ".", ft_strlen(token)))
-		do_error(temp, shell, ERROR_FAR);
+		do_error(0, temp, shell, ERROR_FAR);
 	else if (!strncmp(token, "~", ft_strlen(token)))
-		do_error(temp, shell, ERROR_TILD);
+		do_error(0, temp, shell, ERROR_TILD);
 	else if (file == 1)
 		exec_cmd(temp, tokens, shell, 1);
 	else if (file == 2)
-		do_error(temp, shell, IS_DIR);
+		do_error(0, temp, shell, IS_DIR);
 	else if (file == 4)
-		do_error(temp, shell, P_DENY);
+		do_error(0, temp, shell, P_DENY);
 	else if (!is_file((*tokens)->token))
-		do_error(temp, shell, OPEN_DF);
+		do_error(0, temp, shell, OPEN_DF);
 }
 
 static void	reestablish_fds(t_shell *shell, int *pid)

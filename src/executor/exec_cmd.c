@@ -9,7 +9,7 @@ static void	parent(t_tokens *tokens, t_shell *shell)
 	if (WIFEXITED(status))
 	{
 		if (WEXITSTATUS(status) == 10)
-			do_error(tokens, shell, ERROR_CMD);
+			do_error(0, tokens, shell, ERROR_CMD);
 		else
 			shell->exit_code = WEXITSTATUS(status);
 	}

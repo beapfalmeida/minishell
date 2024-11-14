@@ -22,7 +22,7 @@ char	*get_error(t_error i)
 	return (str[i]);
 }
 
-void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
+void	do_error(char *begin, t_tokens *tokens, t_shell *shell, t_error error)
 {
 	if (error == ERROR_NDIR || error == ERROR_OPENCMD)
 		ft_printf_fd(STDERR_FILENO,
@@ -31,7 +31,7 @@ void	do_error(t_tokens *tokens, t_shell *shell, t_error error)
 		ft_printf_fd(STDERR_FILENO, get_error(IS_DIR), getenv("HOME"));
 	else if (error == ERROR_N_VAL)
 		ft_printf_fd(STDERR_FILENO,
-			get_error(error), tokens->token, tokens->next->token);
+			get_error(error), begin, tokens->token);
 	else if (error == ERROR_SYNTAX || error == ERROR_PIPE)
 		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));
 	else

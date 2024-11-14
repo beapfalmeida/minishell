@@ -14,9 +14,9 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 		if (WIFEXITED(status))
 		{
 			if (WEXITSTATUS(status) == SIG_EXEC_FAILURE)
-				do_error(temp, shell, ERROR_CMD);
+				do_error(0, temp, shell, ERROR_CMD);
 			else if (WEXITSTATUS(status) == 15)
-				do_error(tokens, shell, ERROR_OPEN);
+				do_error(0, tokens, shell, ERROR_OPEN);
 			else
 				shell->exit_code = WEXITSTATUS(status);
 		}

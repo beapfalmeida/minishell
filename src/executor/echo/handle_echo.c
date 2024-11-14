@@ -28,7 +28,7 @@ static int	check_echo(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "echo", 4) != 0)
 	{
-		do_error(tokens, shell, ERROR_CMD);
+		do_error(0, tokens, shell, ERROR_CMD);
 		return (1);
 	}
 	return (0);

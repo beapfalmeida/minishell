@@ -15,9 +15,9 @@ int	get_output(t_tokens *temp, t_shell *shell, int *fd)
 		if (fd[1] == -1 && fd[0] != -1)
 		{
 			if (errno == EACCES)
-				do_error(temp, shell, ERROR_PDN);
+				do_error(0, temp, shell, ERROR_PDN);
 			else if (errno == ENOENT)
-				do_error(temp, shell, ERROR_OPEN);
+				do_error(0, temp, shell, ERROR_OPEN);
 			return (1);
 		}
 	}

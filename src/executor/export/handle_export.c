@@ -1,26 +1,24 @@
 #include "minishell.h"
 
-int	check_export(t_tokens *tokens, t_shell *shell)
+int	check_export(char *begin, t_tokens *tokens, t_shell *shell)
 {
 	int	i;
 
-	if (ft_strncmp(tokens->token, "export", 7) != 0)
-		return (do_error(tokens, shell, ERROR_CMD), 1);
-	if (tokens->next && (!ft_strncmp(tokens->next->token, "=", 1)
-			|| !ft_strncmp(tokens->next->token, "+=", 2)))
-		return (do_error(tokens, shell, ERROR_N_VAL), 1);
-	else if (tokens->next && tokens->next->type == ARG)
+	if (tokens && (!ft_strncmp(tokens->token, "=", 1)
+			|| !ft_strncmp(tokens->token, "+=", 2)))
+		return (do_error(0, tokens, shell, ERROR_N_VAL), 1);
+	else if (tokens && tokens->type == ARG)
 	{
 		i = 1;
-		if (!ft_isalpha(tokens->next->token[0])
-			&& tokens->next->token[0] != '_')
-			return (do_error(tokens, shell, ERROR_N_VAL), 1);
-		while (tokens->next->token[i]
-			&& tokens->next->token[i] != '=' && tokens->next->token[i] != '+')
+		if (!ft_isalpha(tokens->token[0])
+			&& tokens->token[0] != '_')
+			return (do_error(begin, tokens, shell, ERROR_N_VAL), 1);
+		while (tokens->token[i]
+			&& tokens->token[i] != '=' && tokens->token[i] != '+')
 		{
-			if (!ft_isalnum(tokens->next->token[i]))
+			if (!ft_isalnum(tokens->token[i]))
 			{
-				do_error(tokens, shell, ERROR_N_VAL);
+				do_error(begin, tokens, shell, ERROR_N_VAL);
 				return (1);
 			}
 			i++;
@@ -64,14 +62,16 @@ char	**order_alphabetically(char **envp)
 	return (envp);
 }
 
-void	update_env(t_tokens *tokens, t_shell *shell)
+void	update_env(char *begin, t_tokens *tokens, t_shell *shell)
 {
 	char	**envp;
 	char	**new_envp;
 	int		i;
 
-	while (tokens->next && tokens->next->type == ARG)
+	while (tokens && tokens->type == ARG)
 	{
+		if (check_export(begin, tokens, shell))
+			tokens = tokens->next;
 		envp = shell->envp;
 		new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
 		i = 0;
@@ -81,7 +81,7 @@ void	update_env(t_tokens *tokens, t_shell *shell)
 			i++;
 		}
 		new_envp[i] = NULL;
-		add_var(new_envp, tokens->next);
+		add_var(new_envp, tokens);
 		free_array(shell->envp, arr_len(shell->envp));
 		shell->envp = new_envp;
 		tokens = tokens->next;
@@ -92,10 +92,10 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 {
 	char	**envp_print;
 
-	if (check_export(tokens, shell) != 0)
-		return (1);
+	if (ft_strncmp(tokens->token, "export", 7) != 0)
+			return (do_error(0, tokens, shell, ERROR_CMD), 1);
 	if (tokens->next && tokens->next->type == ARG)
-		update_env(tokens, shell);
+		update_env(tokens->token, tokens->next, shell);
 	else
 	{
 		envp_print = ft_arrdup(shell->envp);

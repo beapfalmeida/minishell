@@ -18,12 +18,12 @@ static int	check_env(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "env", 4) != 0)
 	{
-		do_error(tokens, shell, ERROR_CMD);
+		do_error(0, tokens, shell, ERROR_CMD);
 		return (1);
 	}
 	else if (tokens->next && tokens->next->type == ARG)
 	{
-		do_error(tokens, shell, ERROR_2ARGS);
+		do_error(0, tokens, shell, ERROR_2ARGS);
 		return (1);
 	}
 	return (0);
