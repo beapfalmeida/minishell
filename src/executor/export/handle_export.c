@@ -93,7 +93,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 	char	**envp_print;
 
 	if (ft_strncmp(tokens->token, "export", 7) != 0)
-			return (do_error(0, tokens, shell, ERROR_CMD), 1);
+		return (do_error(0, tokens, shell, ERROR_CMD), 1);
 	if (tokens->next && tokens->next->type == ARG)
 		update_env(tokens->token, tokens->next, shell);
 	else

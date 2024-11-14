@@ -82,10 +82,7 @@ void	do_pipe(t_tokens *tokens, t_tokens **tofree, t_shell *shell, t_pipe *p)
 		handle_null_input(fds, tofree, shell, p);
 		if (fds->out == -1)
 		{
-			free_all(tofree, shell, 0);
-			close(p->fd[0]);
-			close(p->fd[1]);
-			free(p->pid);
+			clean_exit(tofree, shell, p);
 			exit(1);
 		}
 		else if (p->i == fds->pn && fds->in != STDIN_FILENO)

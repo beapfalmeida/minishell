@@ -181,16 +181,19 @@ int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 
 // Pipex
-void		do_pipe(t_tokens *tokens, t_tokens **tofree, t_shell *shell, t_pipe *p);
+void		do_pipe(t_tokens *tokens, t_tokens **tofree,
+				t_shell *shell, t_pipe *p);
 void		set_next_pipe(t_tokens **temp);
 void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
 void		free_all(t_tokens **tokens, t_shell *shell, char *input_buffer);
-void		handle_null_input(t_fds *fds, t_tokens **tokens, t_shell *shell, t_pipe *p);
+void		handle_null_input(t_fds *fds, t_tokens **tokens,
+				t_shell *shell, t_pipe *p);
 void		exec_fail(t_tokens **tokens, t_shell *shell,
 				char **cmds, char *path);
 void		free_fds(t_shell *shell);
+void		clean_exit(t_tokens **tokens, t_shell *shell, t_pipe *p);
 
 // Utils
 t_tokens	*find_last(t_tokens *lst);
@@ -231,7 +234,8 @@ void		split_quotes(t_split *sp, char c);
 
 // Error handling
 char		*get_error(t_error i);
-void		do_error(char *begin, t_tokens *tokens, t_shell *shell, t_error error);
+void		do_error(char *begin, t_tokens *tokens, t_shell *shell,
+				t_error error);
 int			error_quote(char *s, int i);
 int			error_exit1(char *number, int i);
 int			error_exit2(int overflow, long long ret, char *number);
