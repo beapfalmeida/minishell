@@ -181,14 +181,13 @@ int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
 
 // Pipex
-void		do_pipe(t_tokens *tokens, t_tokens **free,
-				t_shell *shell, t_pipe *p);
+void		do_pipe(t_tokens *tokens, t_tokens **tofree, t_shell *shell, t_pipe *p);
 void		set_next_pipe(t_tokens **temp);
 void		wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid);
 
 // Free
 void		free_all(t_tokens **tokens, t_shell *shell, char *input_buffer);
-void		handle_null_input(t_fds *fds);
+void		handle_null_input(t_fds *fds, t_tokens **tokens, t_shell *shell, t_pipe *p);
 void		exec_fail(t_tokens **tokens, t_shell *shell,
 				char **cmds, char *path);
 void		free_fds(t_shell *shell);

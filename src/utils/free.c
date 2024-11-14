@@ -38,7 +38,7 @@ void	free_all(t_tokens **tokens, t_shell *shell, char *input_buffer)
 		free(input_buffer);
 }
 
-void	handle_null_input(t_fds *fds)
+void	handle_null_input(t_fds *fds, t_tokens **tokens, t_shell *shell, t_pipe *p)
 {
 	int		fd_null;
 
@@ -48,11 +48,16 @@ void	handle_null_input(t_fds *fds)
 		fd_null = open("/dev/null", O_RDONLY);
 		dup2(fd_null, STDIN_FILENO);
 		close(fd_null);
+		close(p->fd[0]);
+		close(p->fd[1]);
+		free_all(tokens, shell, 0);
+		free(p->pid);
 		exit(EXIT_FAILURE);
 	}
 }
 
-void	exec_fail(t_tokens **tokens, t_shell *shell, char **cmds, char *path)
+void	exec_fail(t_tokens **tokens,
+	t_shell *shell, char **cmds, char *path)
 {
 	free_all(tokens, shell, 0);
 	free_paths(cmds);

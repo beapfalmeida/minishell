@@ -70,13 +70,5 @@ int	process_tokens(t_tokens **tokens, t_shell *args)
 	temp = *tokens;
 	args->n_pipes = count_pipes(tokens);
 	create_fds(args, temp);
-	if (args->fds->in == -1 || args->fds->out == -1)
-	{
-		if (tokens)
-			lstclear(tokens, 1);
-		if (args && args->fds)
-			free_fds(args);
-		return (1);
-	}
 	return (0);
 }

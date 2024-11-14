@@ -71,7 +71,7 @@ static void	prepare_exec(t_tokens *tokens, t_tokens **tofree,
 	}
 }
 
-void	do_pipe(t_tokens *tokens, t_tokens **free, t_shell *shell, t_pipe *p)
+void	do_pipe(t_tokens *tokens, t_tokens **tofree, t_shell *shell, t_pipe *p)
 {
 	t_fds	*fds;
 
@@ -79,16 +79,22 @@ void	do_pipe(t_tokens *tokens, t_tokens **free, t_shell *shell, t_pipe *p)
 	{
 		signal(SIGINT, SIG_DFL);
 		fds = find_redirects(shell->fds, p->i);
-		handle_null_input(fds);
+		handle_null_input(fds, tofree, shell, p);
 		if (fds->out == -1)
+		{
+			free_all(tofree, shell, 0);
+			close(p->fd[0]);
+			close(p->fd[1]);
+			free(p->pid);
 			exit(1);
+		}
 		else if (p->i == fds->pn && fds->in != STDIN_FILENO)
 			dup2(fds->in, STDIN_FILENO);
 		if (fds->pn == p->i && fds->out != STDOUT_FILENO)
 			dup2(fds->out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		prepare_exec(tokens, free, shell, p);
+		prepare_exec(tokens, tofree, shell, p);
 	}
 	else
 		signal(SIGINT, signore);
