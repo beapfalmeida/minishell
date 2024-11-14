@@ -72,19 +72,22 @@ void	update_env(char *begin, t_tokens *tokens, t_shell *shell)
 	{
 		if (check_export(begin, tokens, shell))
 			tokens = tokens->next;
-		envp = shell->envp;
-		new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
-		i = 0;
-		while (envp[i])
+		if (tokens)
 		{
-			new_envp[i] = ft_strdup(envp[i]);
-			i++;
+			envp = shell->envp;
+			new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
+			i = 0;
+			while (envp[i])
+			{
+				new_envp[i] = ft_strdup(envp[i]);
+				i++;
+			}
+			new_envp[i] = NULL;
+			add_var(new_envp, tokens);
+			free_array(shell->envp, arr_len(shell->envp));
+			shell->envp = new_envp;
+			tokens = tokens->next;
 		}
-		new_envp[i] = NULL;
-		add_var(new_envp, tokens);
-		free_array(shell->envp, arr_len(shell->envp));
-		shell->envp = new_envp;
-		tokens = tokens->next;
 	}
 }
 

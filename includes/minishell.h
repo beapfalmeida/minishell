@@ -65,6 +65,7 @@ typedef enum e_code
 	ERROR_PIPE,
 	ERROR_PDN,
 	OPEN_DF,
+	ERROR_UNCLP,
 }	t_error;
 
 typedef struct s_fds
@@ -133,7 +134,7 @@ void		append_in(t_tokens **temp);
 void		command(t_tokens **temp);
 int			is_symbol(char *token, int len);
 void		loop_assigning(t_tokens **temp, int type);
-void		assign_types(t_tokens **tokens);
+int			assign_types(t_tokens **tokens);
 
 // Expander
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);

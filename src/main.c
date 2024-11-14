@@ -2,27 +2,34 @@
 
 int	g_signal;
 
-static t_tokens	*keep_parsing(t_tokens *tokens, t_shell *shell)
+static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 	t_tokens	*t;
+	int			ret;
 
-	if (!handle_quotes(tokens, shell))
+	if (!handle_quotes(*tokens, shell))
+		return (NULL); //e dar free?!
+	ret = assign_types(tokens);
+	if (ret)
+	{
+		do_error(0, *tokens, shell, ret);
+		lstclear(tokens, 1);
 		return (NULL);
-	assign_types(&tokens);
-	if (has_sintax_error(tokens, shell))
+	}
+	if (has_sintax_error(*tokens, shell))
 		return (NULL);
-	if (process_tokens(&tokens, shell))
+	if (process_tokens(tokens, shell))
 		return (NULL);
-	temp = tokens;
-	tokens = skip_redirects(tokens);
+	temp = *tokens;
+	*tokens = skip_redirects(*tokens);
 	while (temp)
 	{
 		t = temp->next;
 		free(temp);
 		temp = t;
 	}
-	return (tokens);
+	return (*tokens);
 }
 
 static void	routine1(t_shell *shell, char **buff)
@@ -61,7 +68,7 @@ void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
 		create_tokens(&tokens, input_buffer);
 		if (!tokens)
 			continue ;
-		tokens = keep_parsing(tokens, shell);
+		tokens = keep_parsing(&tokens, shell);
 		if (!tokens)
 			continue ;
 		check_exit = check_exit_exec(&tokens, shell, input_buffer);

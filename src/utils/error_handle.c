@@ -2,7 +2,7 @@
 
 char	*get_error(t_error i)
 {
-	char	*str[15];
+	char	*str[16];
 
 	str[0] = "%s: command not found\n";
 	str[1] = "bash: cd: No such file or directory\n";
@@ -19,6 +19,7 @@ char	*get_error(t_error i)
 	str[12] = "bash: syntax error near unexpected token `|'\n";
 	str[13] = "bash: %s: Permission denied\n";
 	str[14] = "bash: %s: No such file or directory\n";
+	str[15] = "we dont handle unclosed pipes, sorry\n";
 	return (str[i]);
 }
 
@@ -33,6 +34,8 @@ void	do_error(char *begin, t_tokens *tokens, t_shell *shell, t_error error)
 		ft_printf_fd(STDERR_FILENO,
 			get_error(error), begin, tokens->token);
 	else if (error == ERROR_SYNTAX || error == ERROR_PIPE)
+		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));
+	else if (error == ERROR_UNCLP)
 		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));
 	else
 		ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token);
