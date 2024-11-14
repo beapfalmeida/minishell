@@ -145,7 +145,7 @@ char		*expand(char *token, t_shell *shell, t_quotes *q);
 char		*process_token(char *token, t_tokens *tokens,
 				t_shell *shell, t_quotes *q);
 char		*get_var(char *token);
-char		*skip_quote(char *token, const char *quote_type, t_quotes *q);
+char		*skip_quote(char *token, char *quote_type, t_quotes *q);
 void		init_quotes(t_quotes *q);
 
 // Heredoc

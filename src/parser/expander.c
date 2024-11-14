@@ -3,15 +3,26 @@
 char	*found_quote(char *token, t_quotes *q, int type)
 {
 	char	*trimed;
+	char	qtype[1];
 
 	if (type == '\'')
 		q->sq = !q->sq;
 	else if (type == '\"')
 		q->dq = !q->dq;
-	trimed = skip_quote(&token[q->i], "\"", q);
+	*qtype =  (char)type;
+	trimed = skip_quote(&token[q->i], qtype, q);
 	token[q->i] = '\0';
 	token = ft_strfjoin(token, trimed, 3);
-	q->i--;
+	if (*token == type)
+	{
+		trimed = skip_quote(&token[q->i], qtype, q);
+		token[q->i] = '\0';
+		token = ft_strfjoin(token, trimed, 3);
+	}
+	if (q->i)
+		q->i--;
+	// if (!*token)
+	// 	q->i = 0;
 	return (token);
 }
 
@@ -36,7 +47,7 @@ char	*expand(char *token, t_shell *shell, t_quotes *q)
 char	*process_token(char *token, t_tokens *tokens,
 	t_shell *shell, t_quotes *q)
 {
-	while (token[q->i])
+	while (token && token[q->i])
 	{
 		q->fe = true;
 		if (token[q->i] == '\'' && q->dq == false)
@@ -57,7 +68,7 @@ char	*process_token(char *token, t_tokens *tokens,
 				break ;
 			}
 		}
-		else
+		else if (token[q->i])
 			q->i++;
 	}
 	return (token);

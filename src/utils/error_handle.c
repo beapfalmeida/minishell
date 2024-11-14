@@ -5,21 +5,21 @@ char	*get_error(t_error i)
 	char	*str[16];
 
 	str[0] = "%s: command not found\n";
-	str[1] = "bash: cd: No such file or directory\n";
-	str[2] = "bash: %s: too many arguments\n";
-	str[3] = "bash: %s: %s: Not a directory\n";
-	str[4] = "bash: %s: Is a directory\n";
-	str[5] = "bash: %s: Permission denied\n";
-	str[6] = "bash: .: filename argument required\n";
+	str[1] = "minishell: cd: No such file or directory\n";
+	str[2] = "minishell: %s: too many arguments\n";
+	str[3] = "minishell: %s: %s: Not a directory\n";
+	str[4] = "minishell: %s: Is a directory\n";
+	str[5] = "minishell: %s: Permission denied\n";
+	str[6] = "minishell: .: filename argument required\n";
 	str[7] = str[4];
-	str[8] = "bash: %s: No such file or directory\n";
+	str[8] = "minishell: %s: No such file or directory\n";
 	str[9] = "%s: %s: No such file or directory\n";
-	str[10] = "bash: syntax error near unexpected token `%s'\n";
-	str[11] = "bash: %s: `%s': not a valid identifier\n";
-	str[12] = "bash: syntax error near unexpected token `|'\n";
-	str[13] = "bash: %s: Permission denied\n";
-	str[14] = "bash: %s: No such file or directory\n";
-	str[15] = "we dont handle unclosed pipes, sorry\n";
+	str[10] = "minishell: syntax error near unexpected token `%s'\n";
+	str[11] = "minishell: %s: `%s': not a valid identifier\n";
+	str[12] = "minishell: syntax error near unexpected token `|'\n";
+	str[13] = "minishell: %s: Permission denied\n";
+	str[14] = "minishell: %s: No such file or directory\n";
+	str[15] = "minishell: no support for pipe prompt\n";
 	return (str[i]);
 }
 
@@ -54,7 +54,7 @@ void	do_error(char *begin, t_tokens *tokens, t_shell *shell, t_error error)
 		if (!tokens->next)
 			ft_printf_fd(STDERR_FILENO, get_error(error), "newline");
 		else
-			ft_printf_fd(STDERR_FILENO, get_error(error), tokens->token);
+			ft_printf_fd(STDERR_FILENO, get_error(error), tokens->next->token);
 	}
 	else if (error == ERROR_UNCLP)
 		ft_printf_fd(STDERR_FILENO, "%s", get_error(error));

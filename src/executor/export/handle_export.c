@@ -6,7 +6,7 @@ int	check_export(char *begin, t_tokens *tokens, t_shell *shell)
 
 	if (tokens && (!ft_strncmp(tokens->token, "=", 1)
 			|| !ft_strncmp(tokens->token, "+=", 2)))
-		return (do_error(0, tokens, shell, ERROR_N_VAL), 1);
+		return (do_error(begin, tokens, shell, ERROR_N_VAL), 1);
 	else if (tokens && tokens->type == ARG)
 	{
 		i = 1;

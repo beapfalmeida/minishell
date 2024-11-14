@@ -47,7 +47,7 @@ char	*get_var(char *token)
 	return (token);
 }
 
-char	*skip_quote(char *token, const char *quote_type, t_quotes *q)
+char	*skip_quote(char *token, char *quote_type, t_quotes *q)
 {
 	char	*ret;
 	char	*temp;
