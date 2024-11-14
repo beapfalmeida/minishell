@@ -3,7 +3,7 @@
 void	redirect_in(t_tokens **temp)
 {
 	(*temp)->type = REDIRECT_IN;
-	if ((*temp)->next)
+	if ((*temp)->next && !is_symbol((*temp)->next->token, 1))
 		(*temp)->next->type = INPUT;
 	else
 	{
@@ -30,7 +30,7 @@ void	redirect_in(t_tokens **temp)
 void	redirect_out(t_tokens **temp)
 {
 	(*temp)->type = REDIRECT_OUT;
-	if ((*temp)->next)
+	if ((*temp)->next && !is_symbol((*temp)->next->token, 1))
 		(*temp)->next->type = OUTPUT;
 	else
 	{
@@ -50,7 +50,7 @@ void	append_out(t_tokens **temp)
 		return ;
 	}
 	(*temp)->type = APPEND_OUT;
-	if ((*temp)->next)
+	if ((*temp)->next && !is_symbol((*temp)->next->token, 1))
 		(*temp)->next->type = OUTPUT;
 	else
 	{
@@ -69,7 +69,7 @@ void	append_in(t_tokens **temp)
 		return ;
 	}
 	(*temp)->type = APPEND_IN;
-	if ((*temp)->next)
+	if ((*temp)->next && !is_symbol((*temp)->next->token, 1))
 		(*temp)->next->type = LIMITER;
 	else
 	{
