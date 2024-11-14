@@ -70,7 +70,7 @@ int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
 		{
 			ft_printf_fd(2, "bash: exit: too many arguments\n");
 			shell->exit_code = 1;
-			lstclear(tokens);
+			lstclear(tokens, 1);
 			free(inbuff);
 			return (2);
 		}

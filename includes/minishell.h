@@ -197,7 +197,7 @@ void		free_fds(t_shell *shell);
 t_tokens	*find_last(t_tokens *lst);
 t_tokens	*new_node(char *content, int type);
 void		add_back_list(t_tokens **lst, t_tokens *new);
-void		lstclear(t_tokens **lst);
+void		lstclear(t_tokens **lst, int clean);
 int			count_pipes(t_tokens **tokens);
 char		**ft_arrdup(char **arr);
 int			free_array(char	**arr, int len);

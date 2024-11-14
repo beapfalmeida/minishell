@@ -57,7 +57,7 @@ t_tokens	*new_node(char *content, int type)
 	return (node);
 }
 
-void	lstclear(t_tokens **lst)
+void	lstclear(t_tokens **lst, int clean)
 {
 	t_tokens	*temp;
 
@@ -67,7 +67,7 @@ void	lstclear(t_tokens **lst)
 	{
 		temp = *lst;
 		*lst = (*lst)->next;
-		if (temp->token)
+		if (temp->token && clean)
 			free(temp->token);
 		temp->type = 0;
 		free(temp);

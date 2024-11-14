@@ -41,7 +41,7 @@ static void	routine2(t_tokens **tokens, t_shell *shell, char **buff)
 	execute(tokens, shell);
 	if (shell && shell->fds)
 		free_fds(shell);
-	lstclear(tokens);
+	lstclear(tokens, 1);
 	free(*buff);
 }
 

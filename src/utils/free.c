@@ -23,7 +23,7 @@ void	free_all(t_tokens **tokens, t_shell *shell, char *input_buffer)
 	if (shell->envp)
 		free_paths(shell->envp);
 	if (tokens)
-		lstclear(tokens);
+		lstclear(tokens, 1);
 	if (STDIN_FILENO != shell->original_stdin)
 		dup2(shell->original_stdin, STDIN_FILENO);
 	if (STDOUT_FILENO != shell->original_stdout)

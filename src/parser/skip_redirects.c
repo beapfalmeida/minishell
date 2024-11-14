@@ -18,6 +18,18 @@ static int	is_redirect(t_tokens *tokens)
 	return (0);
 }
 
+static void	skipping(t_tokens **tokens)
+{
+	free((*tokens)->token);
+	*tokens = (*tokens)->next;
+	while ((*tokens) && ((*tokens)->type == INPUT
+			|| (*tokens)->type == OUTPUT || (*tokens)->type == LIMITER))
+	{
+		free((*tokens)->token);
+		*tokens = (*tokens)->next;
+	}
+}
+
 t_tokens	*skip_redirects(t_tokens *tokens)
 {
 	t_tokens	*new_tokens;
@@ -26,12 +38,7 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 	while (tokens && tokens->token)
 	{
 		if (is_redirect(tokens))
-		{
-			tokens = tokens->next;
-			while (tokens && (tokens->type == INPUT
-					|| tokens->type == OUTPUT || tokens->type == LIMITER))
-				tokens = tokens->next;
-		}
+			skipping(&tokens);
 		if (dont_skip(tokens))
 		{
 			add_back_list(&new_tokens, new_node(tokens->token, 0));

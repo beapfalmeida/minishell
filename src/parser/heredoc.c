@@ -1,8 +1,10 @@
 #include "minishell.h"
 
-static void	set_them_free(int *pipe_fd, char *limiter)
+static void	set_them_free(int *pipe_fd, char *limiter, int *fd)
 {
 	close(pipe_fd[1]);
+	if (fd[0] == -1 || fd[1] == -1)
+		close (pipe_fd[0]);
 	free(limiter);
 }
 
@@ -44,7 +46,7 @@ int	find_limiter(t_tokens *tokens, t_shell *shell, int *fd)
 				break ;
 		if (fd[0] != -1)
 			fd[0] = pipe_fd[0];
-		set_them_free(pipe_fd, limiter);
+		set_them_free(pipe_fd, limiter, fd);
 	}
 	return (0);
 }
