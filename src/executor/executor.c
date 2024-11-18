@@ -34,8 +34,10 @@ static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 		do_error(0, temp, shell, ERROR_FAR);
 	else if (!strncmp(token, "~", ft_strlen(token)))
 		do_error(0, temp, shell, ERROR_TILD);
-	else if (file == 1)
+	else if (file == 1 && *token != '/')
 		exec_cmd(temp, tokens, shell, 1);
+	else if (file == 1)
+		exec_cmd(temp, tokens, shell, 0);
 	else if (file == 2)
 		do_error(0, temp, shell, IS_DIR);
 	else if (file == 4)

@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/// @brief Handles tokens that require expansion by getting the corresponding environment variable.
+/// @param envp Pointer to the Environment Variables array.
+/// @param var Variable to be expanded (searched for in envp).
+/// @param shell Pointer to the shell struct.
+/// @return 
 char	*handle_expander(char **envp, char *var, t_shell *shell)
 {
 	char	*trim;

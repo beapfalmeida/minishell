@@ -53,6 +53,8 @@ char	*get_path(char	*cmd, char **env)
 		free(joined);
 	}
 	free_paths(paths);
+	if (*cmd == '/')
+		return (cmd);
 	return (NULL);
 }
 
@@ -70,7 +72,8 @@ char	**put_cmds(t_tokens	*token)
 	ret = malloc(sizeof(char *) * (count_args(token) + 1));
 	if (!ret)
 		return (NULL);
-	while (temp && (temp->type == CMD || temp->type == ARG))
+	while (temp && (temp->type == CMD || temp->type == ARG 
+		|| temp->type == DIR_FILE))
 	{
 		ret[i] = ft_strdup(temp->token);
 		if (!ret[i])
