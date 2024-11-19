@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/// @brief If quote is found, this function skips that quote, if not inside unclosed brackets.
+/// @param token Pointer to the tokens struct.
+/// @param q Pointer to the quotes struct.
+/// @param type Type of quote in ASCII.
+/// @return 
 char	*found_quote(char *token, t_quotes *q, int type)
 {
 	char	*trimed;
@@ -9,7 +14,7 @@ char	*found_quote(char *token, t_quotes *q, int type)
 		q->sq = !q->sq;
 	else if (type == '\"')
 		q->dq = !q->dq;
-	*qtype =  (char)type;
+	*qtype = (char)type;
 	trimed = skip_quote(&token[q->i], qtype, q);
 	token[q->i] = '\0';
 	token = ft_strfjoin(token, trimed, 3);
@@ -21,11 +26,14 @@ char	*found_quote(char *token, t_quotes *q, int type)
 	}
 	if (q->i)
 		q->i--;
-	// if (!*token)
-	// 	q->i = 0;
 	return (token);
 }
 
+/// @brief Expand an env variable.
+/// @param token Pointer to the tokens struct.
+/// @param shell Pointer to the shell variables struct.
+/// @param q Pointer to the quotes struct.
+/// @return String containing expanded token.
 char	*expand(char *token, t_shell *shell, t_quotes *q)
 {
 	char	*temp;
@@ -44,6 +52,14 @@ char	*expand(char *token, t_shell *shell, t_quotes *q)
 	return (token);
 }
 
+/// @brief Looks for quotes and expanders inside a token and 
+/// treats them accordingly.
+/// @param token String containing the current token being 
+/// treated.
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell variables struct.
+/// @param q Pointer to the quotes struct.
+/// @return String containing treated token.
 char	*process_token(char *token, t_tokens *tokens,
 	t_shell *shell, t_quotes *q)
 {
@@ -74,6 +90,11 @@ char	*process_token(char *token, t_tokens *tokens,
 	return (token);
 }
 
+/// @brief Looks for quotes and expanders in every token. 
+/// Expands if not inside single-quotes.
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell variables struct.
+/// @return Pointer to the new, treated, tokens list.
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*ret;

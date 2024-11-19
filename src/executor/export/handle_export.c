@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/// @brief Checks if export cmd is well-written, and if it 
+/// meets the required criteria to be executed.
+/// @param begin 
+/// @param tokens 
+/// @param shell 
+/// @return 
 int	check_export(char *begin, t_tokens *tokens, t_shell *shell)
 {
 	int	i;
@@ -36,6 +42,9 @@ static void	swap(int low, int i, char **envp)
 	envp[low] = temp;
 }
 
+/// @brief Orders alphabetically an array of strings.
+/// @param envp 
+/// @return 
 char	**order_alphabetically(char **envp)
 {
 	int		i;
@@ -62,6 +71,11 @@ char	**order_alphabetically(char **envp)
 	return (envp);
 }
 
+/// @brief Updates the envp vars with the variable to be 
+/// exported.
+/// @param begin 
+/// @param tokens 
+/// @param shell 
 void	update_env(char *begin, t_tokens *tokens, t_shell *shell)
 {
 	char	**envp;
@@ -91,6 +105,11 @@ void	update_env(char *begin, t_tokens *tokens, t_shell *shell)
 	}
 }
 
+/// @brief Handles the export cmd, followed by the argument 
+/// containing the var to be exported.
+/// @param tokens 
+/// @param shell 
+/// @return 
 int	ft_export(t_tokens *tokens, t_shell *shell)
 {
 	char	**envp_print;

@@ -135,6 +135,7 @@ void		command(t_tokens **temp);
 int			is_symbol(char *token, int len);
 void		loop_assigning(t_tokens **temp, int type);
 int			assign_types(t_tokens **tokens);
+int			check_dir_cmd(t_tokens **tokens);
 
 // Expander
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
@@ -237,7 +238,7 @@ void		split_quotes(t_split *sp, char c);
 char		*get_error(t_error i);
 void		do_error(char *begin, t_tokens *tokens, t_shell *shell,
 				t_error error);
-int			error_quote(char *s, int i);
+// int			error_quote(char *s, int i);
 int			error_exit1(char *number, int i);
 int			error_exit2(int overflow, long long ret, char *number);
 

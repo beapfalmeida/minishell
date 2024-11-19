@@ -1,5 +1,8 @@
 #include "minishell.h"
 
+/// @brief Cheks if the -n flag is used.
+/// @param tokens 
+/// @return 1 if -n is present, 0 if not.
 static int	check_flag(t_tokens *tokens)
 {
 	char	*token;
@@ -24,6 +27,10 @@ static int	check_flag(t_tokens *tokens)
 	return (0);
 }
 
+/// @brief Checks if the echo cmd is well-written.
+/// @param tokens 
+/// @param shell 
+/// @return 
 static int	check_echo(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "echo", 4) != 0)
@@ -34,6 +41,10 @@ static int	check_echo(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
+/// @brief Prints the output of the echo command followed by arguments.
+/// @param tokens 
+/// @param shell 
+/// @return 
 int	ft_echo(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*temp;

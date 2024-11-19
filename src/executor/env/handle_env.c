@@ -14,6 +14,10 @@ static int	has_value(char *env)
 	return (0);
 }
 
+/// @brief Checks if env is well-written and if it has args that aren't required.
+/// @param tokens 
+/// @param shell 
+/// @return 0 if ok, 1 if fail.
 static int	check_env(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "env", 4) != 0)
@@ -29,6 +33,10 @@ static int	check_env(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
+/// @brief Prints the output of the env cmd.
+/// @param shell 
+/// @param tokens 
+/// @return 
 int	ft_env(t_shell *shell, t_tokens *tokens)
 {
 	char	**envp;

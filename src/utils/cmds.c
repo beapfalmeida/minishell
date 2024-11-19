@@ -1,7 +1,7 @@
 #include "minishell.h"
 
-/// @brief 
-/// @param paths 
+/// @brief Free an array.
+/// @param paths Array to free.
 void	free_paths(char **paths)
 {
 	int	i;
@@ -14,9 +14,9 @@ void	free_paths(char **paths)
 	free(paths);
 }
 
-/// @brief 
-/// @param cmd 
-/// @param envp 
+/// @brief Finds the string in $PATH and splits it by the :, 
+/// so that each path can then be searched for cmds.
+/// @param envp Pointer to an array of environment variables.
 /// @return 
 static char	**get_patharr(char **envp)
 {
@@ -58,8 +58,8 @@ char	*get_path(char	*cmd, char **env)
 	return (NULL);
 }
 
-/// @brief 
-/// @param token 
+/// @brief Creates an array of commands.
+/// @param token Pointer to list of tokens.
 /// @return 
 char	**put_cmds(t_tokens	*token)
 {
@@ -72,8 +72,8 @@ char	**put_cmds(t_tokens	*token)
 	ret = malloc(sizeof(char *) * (count_args(token) + 1));
 	if (!ret)
 		return (NULL);
-	while (temp && (temp->type == CMD || temp->type == ARG 
-		|| temp->type == DIR_FILE))
+	while (temp && (temp->type == CMD || temp->type == ARG
+			|| temp->type == DIR_FILE))
 	{
 		ret[i] = ft_strdup(temp->token);
 		if (!ret[i])

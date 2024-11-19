@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/// @brief Checks if unset is well-written.
+/// @param tokens 
+/// @param shell 
+/// @return 0 if ok, 1 if mistake.
 static int	check_unset(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "unset", 6) != 0)
@@ -39,6 +43,10 @@ static void	do_unset(t_tokens *temp, t_shell *shell)
 	}
 }
 
+/// @brief Undos exported variable.
+/// @param tokens 
+/// @param shell 
+/// @return 
 int	ft_unset(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*temp;

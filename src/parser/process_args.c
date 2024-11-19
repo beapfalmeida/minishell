@@ -72,3 +72,21 @@ int	process_tokens(t_tokens **tokens, t_shell *args)
 	create_fds(args, temp);
 	return (0);
 }
+
+/// @brief Checks if a topen is of DIR_FILE type.
+/// @param tokens Pointer to a struct containing tokens list.
+/// @return 
+int	check_dir_cmd(t_tokens **tokens)
+{
+	char	*token;
+
+	token = (*tokens)->token;
+	if ((*token == '.' || *token == '~' || has_char(token, '/')))
+	{
+		(*tokens)->type = DIR_FILE;
+		(*tokens) = (*tokens)->next;
+	}
+	else
+		command(tokens);
+	return (0);
+}

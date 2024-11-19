@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/// @brief Check if pwd is well-written.
+/// @param tokens 
+/// @param shell 
+/// @return 0 if ok, 1 if there's a mistake.
 static int	check_pwd(t_tokens *tokens, t_shell *shell)
 {
 	if (ft_strncmp(tokens->token, "pwd", 4))
@@ -10,8 +14,7 @@ static int	check_pwd(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
-/// @brief 
-/// @param cwd 
+/// @brief Prints the result of the pwd cmd.
 /// @return 
 int	ft_pwd(t_tokens *token, t_shell *shell)
 {

@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/// @brief Handles tokens of executable type. Appends the name 
+/// of the executable to the current dir pwd, got with getcwd.
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct.
 void	handle_executable(t_tokens *tokens, t_shell *shell)
 {
 	char	*path;
@@ -23,6 +27,10 @@ void	handle_executable(t_tokens *tokens, t_shell *shell)
 	}
 }
 
+/// @brief Handles inputs corresponding to files or directoties.
+/// @param tokens Pointer to the tokens struct.
+/// @param temp Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct.
 static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 {
 	char	*token;
@@ -46,6 +54,9 @@ static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 		do_error(0, temp, shell, OPEN_DF);
 }
 
+/// @brief Closes opened fds and reestablishes STDIN and STDOUT.
+/// @param shell Pointer to the shell vars struct.
+/// @param pid Array of pids for processes forked.
 static void	reestablish_fds(t_shell *shell, int *pid)
 {
 	dup2(shell->original_stdin, STDIN_FILENO);
@@ -56,6 +67,13 @@ static void	reestablish_fds(t_shell *shell, int *pid)
 		free(pid);
 }
 
+/// @brief Handles pipes.
+/// @param t Pointer to the tokens struct.
+/// @param temp Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct.
+/// @param p Pointer to struct containing information about 
+/// pipe processing in given token.
+/// @return 
 static int	pipex(t_tokens **t, t_tokens *temp, t_shell *shell, t_pipe *p)
 {
 	p->i = -1;
@@ -71,6 +89,9 @@ static int	pipex(t_tokens **t, t_tokens *temp, t_shell *shell, t_pipe *p)
 	return (0);
 }
 
+/// @brief Execute a sequence of tokens.
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct.
 void	execute(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;

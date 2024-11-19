@@ -1,5 +1,8 @@
 #include "minishell.h"
 
+/// @brief Error message selector.
+/// @param i Number of the error message listed in t_error.
+/// @return String containing the error message.
 char	*get_error(t_error i)
 {
 	char	*str[16];
@@ -37,6 +40,11 @@ static void	update_errorcode(t_shell *shell, t_error error)
 		shell->exit_code = 126;
 }
 
+/// @brief Prints error messages and changes current exit code.
+/// @param begin Beggining of certain error messages.
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct.
+/// @param error Error type.
 void	do_error(char *begin, t_tokens *tokens, t_shell *shell, t_error error)
 {
 	if (error == ERROR_NDIR || error == ERROR_OPENCMD)
@@ -63,15 +71,19 @@ void	do_error(char *begin, t_tokens *tokens, t_shell *shell, t_error error)
 	update_errorcode(shell, error);
 }
 
-int	error_quote(char *s, int i)
-{
-	if (!s[i])
-	{
-		printf("Sorry! Minishell doesn't handle unclosed quotes!\n");
-		return (1);
-	}
-	return (0);
-}
+// /// @brief Error message specific for unclosed brackets (minishell)
+// /// @param s 
+// /// @param i 
+// /// @return 
+// int	error_quote(char *s, int i)
+// {
+// 	if (!s[i])
+// 	{
+// 		printf("Sorry! Minishell doesn't handle unclosed quotes!\n");
+// 		return (1);
+// 	}
+// 	return (0);
+// }
 
 int	error_exit1(char *number, int i)
 {

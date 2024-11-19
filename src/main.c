@@ -2,6 +2,11 @@
 
 int	g_signal;
 
+/// @brief After tokens list created, treat all the tokens: 
+// quotes, types, syntax errors, redirects, ...
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct.
+/// @return New tokens list.
 static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
@@ -9,13 +14,12 @@ static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 	int			ret;
 
 	if (!handle_quotes(*tokens, shell))
-		return (NULL); //e dar free?!
+		return (NULL);
 	ret = assign_types(tokens);
 	if (ret)
 	{
 		do_error(0, *tokens, shell, ret);
-		lstclear(tokens, 1);
-		return (NULL);
+		return (lstclear(tokens, 1), NULL);
 	}
 	if (has_sintax_error(*tokens, shell))
 		return (NULL);
@@ -32,6 +36,10 @@ static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 	return (*tokens);
 }
 
+/// @brief Reads the line input, checks for SIGINT (Ctrl-C)
+/// @param shell Pointer to the shell vars struct
+/// @param buff Pointer to the location where the line 
+// read by readline() will be stored.
 static void	routine1(t_shell *shell, char **buff)
 {
 	signals();
@@ -43,6 +51,11 @@ static void	routine1(t_shell *shell, char **buff)
 	}
 }
 
+/// @brief Execute and clear everything.
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct
+/// @param buff Pointer to the location where the line 
+// read by readline() will be stored.
 static void	routine2(t_tokens **tokens, t_shell *shell, char **buff)
 {
 	execute(tokens, shell);
@@ -52,6 +65,11 @@ static void	routine2(t_tokens **tokens, t_shell *shell, char **buff)
 	free(*buff);
 }
 
+/// @brief Main loop function.
+/// @param tokens Pointer to the tokens struct.
+/// @param shell Pointer to the shell vars struct.
+/// @param input_buffer Pointer to the location where the line 
+// read by readline() will be stored.
 void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
 {
 	int	check_exit;
@@ -80,6 +98,11 @@ void	minishell(t_tokens *tokens, t_shell *shell, char *input_buffer)
 	}
 }
 
+/// @brief Main function.
+/// @param argc Not used.
+/// @param argv  Not used.
+/// @param envp Pointer to the environment variables array.
+/// @return 0
 int	main(int argc, char **argv, char **envp)
 {
 	t_tokens	*tokens;

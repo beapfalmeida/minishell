@@ -1,10 +1,11 @@
 #include "minishell.h"
 
-/// @brief Handles tokens that require expansion by getting the corresponding environment variable.
+/// @brief Handles tokens that require expansion by getting the 
+/// corresponding environment variable.
 /// @param envp Pointer to the Environment Variables array.
 /// @param var Variable to be expanded (searched for in envp).
 /// @param shell Pointer to the shell struct.
-/// @return 
+/// @return String containing expanded token.
 char	*handle_expander(char **envp, char *var, t_shell *shell)
 {
 	char	*trim;
@@ -15,8 +16,6 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 	trim = NULL;
 	if (!strncmp(var, "?", 1))
 		return (ft_itoa(shell->exit_code));
-	if (!var || !*var)
-		return (NULL);
 	trim = ft_strjoin(var, "=");
 	while (*envp)
 	{
@@ -33,10 +32,13 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 		}
 		envp++;
 	}
-	free(trim);
-	return (new_token);
+	return (free(trim), new_token);
 }
 
+/// @brief Null terminates the variable name to look for in 
+/// the environment variables.
+/// @param token Variable name to null-terminate.
+/// @return Null-terminated variable name.
 char	*get_var(char *token)
 {
 	int		i;
@@ -58,6 +60,12 @@ char	*get_var(char *token)
 	return (token);
 }
 
+/// @brief Function to skip a given quote, if no unclosed 
+/// brackets detected.
+/// @param token String containing the token to remove quotes from.
+/// @param quote_type String containing quotes of a given type.
+/// @param q Pointer to struct.
+/// @return 
 char	*skip_quote(char *token, char *quote_type, t_quotes *q)
 {
 	char	*ret;
@@ -76,6 +84,8 @@ char	*skip_quote(char *token, char *quote_type, t_quotes *q)
 	return (temp);
 }
 
+/// @brief Innitializes the quotes struct variables.
+/// @param q Pointer to the quotes struct.
 void	init_quotes(t_quotes *q)
 {
 	q->sq = false;
