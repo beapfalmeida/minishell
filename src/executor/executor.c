@@ -87,7 +87,7 @@ void	execute(t_tokens **tokens, t_shell *shell)
 	{
 		p.pid = malloc((shell->n_pipes + 1) * sizeof(int));
 		if (pipex(tokens, temp, shell, &p) == -1)
-			return ;
+			return (reestablish_fds(shell, p.pid));
 	}
 	else
 		exec_cmd(temp, tokens, shell, 0);

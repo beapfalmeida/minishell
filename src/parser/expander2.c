@@ -9,25 +9,31 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 {
 	char	*trim;
 	char	*new_token;
+	char	*result;
 
 	new_token = NULL;
+	trim = NULL;
 	if (!strncmp(var, "?", 1))
 		return (ft_itoa(shell->exit_code));
 	if (!var || !*var)
 		return (NULL);
+	trim = ft_strjoin(var, "=");
 	while (*envp)
 	{
-		if (ft_strncmp(*envp, var, ft_strclen(var, ' ')) == 0)
+		if (ft_strncmp(*envp, trim, ft_strlen(trim)) == 0)
 		{
-			trim = ft_strjoin(var, "=");
-			new_token = ft_strdup(*envp);
-			new_token += ft_strlen(trim);
-			new_token = ft_strtrim(new_token, "\"");
-			new_token = ft_strtrim(new_token, "\'");
+			new_token = ft_strdup(*envp + ft_strlen(trim));
+			result = ft_strtrim(new_token, "\"");
+			free(new_token);
+			new_token = result;
+			result = ft_strtrim(new_token, "\'");
+			free(new_token);
+			new_token = result;
 			break ;
 		}
 		envp++;
 	}
+	free(trim);
 	return (new_token);
 }
 
