@@ -22,7 +22,7 @@ static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 		return (lstclear(tokens, 1), NULL);
 	}
 	if (has_sintax_error(*tokens, shell))
-		return (NULL);
+		return (lstclear(tokens, 1), NULL);
 	if (process_tokens(tokens, shell))
 		return (NULL);
 	temp = *tokens;

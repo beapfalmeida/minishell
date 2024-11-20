@@ -27,7 +27,7 @@ static int	check_env(t_tokens *tokens, t_shell *shell)
 	}
 	else if (tokens->next && tokens->next->type == ARG)
 	{
-		do_error(0, tokens, shell, ERROR_2ARGS);
+		do_error(0, tokens->next, shell, OPEN_DF);
 		return (1);
 	}
 	return (0);

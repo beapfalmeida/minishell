@@ -19,7 +19,6 @@ static void	do_unset(t_tokens *temp, t_shell *shell)
 	char		**envp;
 	char		**new_envp;
 	char		**tmp;
-	int			found;
 
 	while (temp)
 	{
@@ -28,17 +27,18 @@ static void	do_unset(t_tokens *temp, t_shell *shell)
 		tmp = new_envp;
 		while (*envp)
 		{
-			if (ft_strncmp(*envp, temp->token, ft_strlen(temp->token)) != 0)
+			if (ft_strncmp(*envp, temp->token, ft_strclen(*envp, '=')) != 0)
 			{
 				*new_envp = *envp;
 				new_envp++;
-				found = 1;
 			}
+			else
+				free(*envp);
 			envp++;
 		}
 		*new_envp = NULL;
+		free(shell->envp);
 		shell->envp = tmp;
-		free(*new_envp);
 		temp = temp->next;
 	}
 }

@@ -32,6 +32,7 @@ void	init_tokens(t_tokens *tokens)
 	tokens->type = 0;
 	tokens->prev = NULL;
 	tokens->next = NULL;
+	tokens->expanded = false;
 }
 
 int	*init_fds(int *stop, t_tokens **infile)

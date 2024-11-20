@@ -21,13 +21,22 @@ void	free_paths(char **paths)
 static char	**get_patharr(char **envp)
 {
 	char	**paths;
+	int		flag;
 
+	flag = 0;
+	paths = NULL;
 	while (envp && *envp++)
+	{
 		if (envp && *envp && ft_strncmp(*envp, "PATH", 4) == 0)
+		{
+			flag = 1;
 			break ;
-	paths = ft_split(*envp + 5, ':');
+		}
+	}
+	if (flag == 1)
+		paths = ft_split(*envp + 5, ':');
 	if (!paths)
-		return (exit(EXIT_FAILURE), NULL);
+		return (NULL);
 	return (paths);
 }
 
@@ -40,6 +49,8 @@ char	*get_path(char	*cmd, char **env)
 
 	envp = env;
 	paths = get_patharr(envp);
+	if (!paths)
+		return (NULL);
 	i = 0;
 	while (paths[i])
 	{

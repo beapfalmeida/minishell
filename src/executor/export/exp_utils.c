@@ -60,6 +60,7 @@ void	add_var(char **env, t_tokens *tokens)
 	{
 		if (to_replace(tokens, env, j))
 		{
+			free(env[j]);
 			env[j] = ft_strdup(tokens->token);
 			env[i] = NULL;
 			return ;
@@ -74,6 +75,7 @@ void	add_var(char **env, t_tokens *tokens)
 		}
 		j++;
 	}
+	free(env[i]);
 	env[i] = ft_strdup(tokens->token);
 	env[i + 1] = NULL;
 }

@@ -18,6 +18,8 @@ static int	check_cd(t_tokens *token, t_shell *shell)
 		do_error(0, token, shell, ERROR_NDIR);
 		return (1);
 	}
+	// if (!token->next)
+	// 	return (1);
 	return (0);
 }
 
@@ -27,11 +29,13 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 
 	if (check_cd(tokens, shell) == 1)
 		return (1);
-	if (!tokens->next || *tokens->next->token == '~')
+	if (!tokens->next || !ft_strncmp(tokens->next->token, "~", 1))
 	{
-		path = getenv("HOME");
+		path = ft_strdup(getenv("HOME"));
+		if (tokens->next && !ft_strncmp(tokens->next->token, "~/", 2))
+			path = ft_strfjoin(path, &tokens->next->token[1], 1);
 		free(shell->last_path);
-		shell->last_path = ft_strdup(path);
+		shell->last_path = path;
 	}
 	else if (*tokens->next->token == '-')
 		path = shell->last_path;

@@ -82,6 +82,7 @@ typedef struct s_tokens
 	int				type;
 	struct s_tokens	*next;
 	struct s_tokens	*prev;
+	bool			expanded;
 }			t_tokens;
 
 typedef struct s_pipe
@@ -141,7 +142,7 @@ int			check_dir_cmd(t_tokens **tokens);
 t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell);
 t_tokens	*skip_redirects(t_tokens *tokens);
 char		*handle_expander(char **envp, char *var, t_shell *shell);
-char		*found_quote(char *token, t_quotes *q, int type);
+char		*found_quote(t_tokens *tokens, char *token, t_quotes *q, int type);
 char		*expand(char *token, t_shell *shell, t_quotes *q);
 char		*process_token(char *token, t_tokens *tokens,
 				t_shell *shell, t_quotes *q);

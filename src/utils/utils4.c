@@ -60,7 +60,7 @@ int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
 	{
 		if (*tokens && (*tokens)->next)
 			shell->exit_code = getexitcode(*tokens, (*tokens)->next->token);
-		if ((*tokens)->next->next && shell->exit_code != 2)
+		if ((*tokens)->next && (*tokens)->next->next && shell->exit_code != 2)
 		{
 			ft_printf_fd(2, "bash: exit: too many arguments\n");
 			shell->exit_code = 1;

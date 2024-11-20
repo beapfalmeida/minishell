@@ -38,6 +38,11 @@ static int	check_echo(t_tokens *tokens, t_shell *shell)
 		do_error(0, tokens, shell, ERROR_CMD);
 		return (1);
 	}
+	if (!tokens->next)
+	{
+		ft_printf_fd(STDOUT_FILENO, "\n");
+		return (1);
+	}
 	return (0);
 }
 

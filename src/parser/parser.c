@@ -28,7 +28,7 @@ static int	assign_pipe(t_tokens **temp)
 	(*temp)->type = PIPE;
 	if (!(*temp)->next && (*temp)->prev)
 		return (ERROR_UNCLP);
-	if (!(*temp)->next && !(*temp)->prev)
+	if (!(*temp)->prev)
 		return (ERROR_PIPE);
 	(*temp) = (*temp)->next;
 	return (0);
@@ -43,7 +43,7 @@ static int	assign_type(t_tokens **temp)
 
 	if ((*temp)->type == SKIP || (*temp)->type == NOT_SKIP)
 		(*temp) = (*temp)->next;
-	else if (!ft_strncmp((*temp)->token, "|", ft_strlen((*temp)->token)))
+	else if (!ft_strncmp((*temp)->token, "|", ft_strlen((*temp)->token)) && (*temp)->expanded == false)
 	{
 		res = assign_pipe(&(*temp));
 		if (res)
@@ -51,9 +51,9 @@ static int	assign_type(t_tokens **temp)
 	}
 	else if ((*temp)->type == INPUT && !(*temp)->next)
 		return (1);
-	else if (!ft_strncmp((*temp)->token, ">", 1))
+	else if (!ft_strncmp((*temp)->token, ">", 1) && (*temp)->expanded == false)
 		append_out(&(*temp));
-	else if (!ft_strncmp((*temp)->token, "<", 1))
+	else if (!ft_strncmp((*temp)->token, "<", 1) && (*temp)->expanded == false)
 		append_in(&(*temp));
 	else if (((*temp)->prev
 			&& ((*temp)->prev->type == PIPE || (*temp)->prev->type == OUTPUT)))
@@ -77,6 +77,12 @@ int	assign_types(t_tokens **tokens)
 	while (temp)
 	{
 		res = assign_type(&temp);
+		// else
+		// {
+		// 	temp->type = CMD;
+		// 	temp = temp->next;
+		// 	res = 0;
+		// }
 		if (res && res != 1)
 			return (res);
 		else if (res == 1)

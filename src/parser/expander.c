@@ -5,7 +5,7 @@
 /// @param q Pointer to the quotes struct.
 /// @param type Type of quote in ASCII.
 /// @return 
-char	*found_quote(char *token, t_quotes *q, int type)
+char	*found_quote(t_tokens *tokens, char *token, t_quotes *q, int type)
 {
 	char	*trimed;
 	char	qtype[1];
@@ -26,6 +26,7 @@ char	*found_quote(char *token, t_quotes *q, int type)
 	}
 	if (q->i)
 		q->i--;
+	tokens->expanded = true;
 	return (token);
 }
 
@@ -67,9 +68,9 @@ char	*process_token(char *token, t_tokens *tokens,
 	{
 		q->fe = true;
 		if (token[q->i] == '\'' && q->dq == false)
-			token = found_quote(token, q, '\'');
+			token = found_quote(tokens, token, q, '\'');
 		else if (token[q->i] == '\"' && q->sq == false)
-			token = found_quote(token, q, '\"');
+			token = found_quote(tokens, token, q, '\"');
 		if (token[q->i] == '$' && q->sq == false)
 		{
 			if (token[q->i + 1] && token[q->i + 1] != ' '

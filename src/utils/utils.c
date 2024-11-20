@@ -52,6 +52,7 @@ t_tokens	*new_node(char *content, int type)
 		return (NULL);
 	node->token = content;
 	node->type = type;
+	node->expanded = false;
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);

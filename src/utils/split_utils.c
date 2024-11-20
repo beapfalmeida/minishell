@@ -5,11 +5,11 @@ int	count_inquote(char *s, int i)
 	if (s[i] == '\'')
 	{
 		i++;
-		while (s[i] && s[i] != '\'')
+		while (s[i] != '\'')
 		{
-			i++;
 			if (!s[i])
-				return (ft_printf_fd(2, "Sorry! Minishell doesn't handle unclosed quotes!\n"), 0);
+				return (ft_printf_fd(2, "No unclosed quotes!\n"), 0);
+			i++;
 		}
 	}
 	else if (s[i] == '\"')
@@ -17,9 +17,9 @@ int	count_inquote(char *s, int i)
 		i++;
 		while (s[i] != '\"')
 		{
-			i++;
 			if (!s[i])
-				return (ft_printf_fd(2, "Sorry! Minishell doesn't handle unclosed quotes!\n"), 0);
+				return (ft_printf_fd(2, "No unclosed quotes!\n"), 0);
+			i++;
 		}
 	}
 	return (i + 1);
