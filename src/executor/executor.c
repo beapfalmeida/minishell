@@ -43,7 +43,7 @@ static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 	else if (!strncmp(token, "~", ft_strlen(token)))
 		do_error(0, temp, shell, ERROR_TILD);
 	else if (file == 1 && *token != '/')
-		exec_cmd(temp, tokens, shell, 1);
+		exec_cmd(temp, tokens, shell, 2);
 	else if (file == 1)
 		exec_cmd(temp, tokens, shell, 0);
 	else if (file == 2)
@@ -103,7 +103,11 @@ void	execute(t_tokens **tokens, t_shell *shell)
 	shell->original_stdin = dup(STDIN_FILENO);
 	shell->original_stdout = dup(STDOUT_FILENO);
 	if (temp->type == DIR_FILE)
-		return (handle_dir_file(tokens, temp, shell));
+	{
+		handle_dir_file(tokens, temp, shell);
+		reestablish_fds(shell, p.pid);
+		return ;
+	}
 	if (shell->n_pipes)
 	{
 		p.pid = malloc((shell->n_pipes + 1) * sizeof(int));

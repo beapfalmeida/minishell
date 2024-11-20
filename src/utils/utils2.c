@@ -19,7 +19,7 @@ int	count_args(t_tokens *token)
 
 	temp = token;
 	count = 1;
-	while (temp && (temp->type == ARG || temp->type == CMD))
+	while (temp && (temp->type == ARG || temp->type == CMD || temp->type == DIR_FILE))
 	{
 		count++;
 		temp = temp->next;

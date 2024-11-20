@@ -48,7 +48,7 @@ static int	execute_child(t_tokens *tokens, t_tokens **free,
 		cmds = put_cmds(tokens);
 		if (!cmds)
 			return (1);
-		if (exec)
+		if (exec == 1)
 			handle_executable(tokens, shell);
 		else
 		{

@@ -98,7 +98,7 @@ void	update_env(char *begin, t_tokens *tokens, t_shell *shell)
 			}
 			new_envp[i] = NULL;
 			add_var(new_envp, tokens);
-			free_array(shell->envp, arr_len(shell->envp));
+			free_paths(shell->envp);
 			shell->envp = new_envp;
 			tokens = tokens->next;
 		}
@@ -123,7 +123,7 @@ int	ft_export(t_tokens *tokens, t_shell *shell)
 		envp_print = ft_arrdup(shell->envp);
 		envp_print = order_alphabetically(envp_print);
 		print_export(envp_print);
-		free_array(envp_print, arr_len(envp_print));
+		free_paths(envp_print);
 	}
 	return (1);
 }

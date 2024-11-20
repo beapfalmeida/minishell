@@ -90,6 +90,7 @@ int	error_exit1(char *number, int i)
 	if (!ft_isdigit(number[i]))
 	{
 		ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
+		
 		return (1);
 	}
 	return (0);
