@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:32 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:44:33 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 15:30:00 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	has_value(char *env)
 	return (0);
 }
 
-/// @brief Checks if env is well-written and if it has args that aren't required.
+/// @brief
 /// @param tokens 
 /// @param shell 
 /// @return 0 if ok, 1 if fail.

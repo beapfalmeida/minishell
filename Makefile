@@ -5,7 +5,7 @@ READLINE_PATH = vendor/readline/
 RLFLAG = -L$(READLINE_PATH)/lib -lreadline
 
 # flags used to suppress readline warnings in valgrind
-VALFLAGS = -s --suppressions=readline.supp --tool=memcheck -q --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --show-below-main=no
+VALFLAGS = -s --suppressions=readline.supp --tool=memcheck -q --leak-check=full
 
 NAME = minishell
 

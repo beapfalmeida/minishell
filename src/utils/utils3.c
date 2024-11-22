@@ -6,12 +6,20 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:46:35 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:46:36 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 14:07:30 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/// @brief Tests if file_name is a file or a path to one.
+/// @param file_name Pointer to the string containing the file name.
+/// @return 0:File does not exist or cannot be accessed.
+/// 1: File exists, is a regular file, and is executable.
+/// 4: File exists, is a regular file, but is not executable.
+/// 2: File exists and is a directory.
+/// 3: File exists but is of some other type
+/// (neither regular file nor directory).
 int	is_file(char *file_name)
 {
 	struct stat	file_info;

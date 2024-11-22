@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:38 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 13:08:52 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 15:49:15 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,31 +60,30 @@ static int	do_nothing(t_tokens *tokens, char **env, int j)
 
 void	add_var(char **env, t_tokens *tokens)
 {
-	int		i;
 	int		j;
-	char	*little_string;
+	char	*little;
 
 	j = 0;
-	i = arr_len(env);
-	little_string = "+=";
+	little = "+=";
 	while (env[j])
 	{
 		if (to_replace(tokens, env, j))
 		{
 			free(env[j]);
 			env[j] = ft_strdup(tokens->token);
-			env[i] = NULL;
+			env[arr_len(env)] = NULL;
 			return ;
 		}
 		else if (do_nothing(tokens, env, j))
 			return ;
-		else if (ft_strnstr(tokens->token, little_string, ft_strlen(tokens->token)) != NULL
-			&& (!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+'))))
+		else if (ft_strnstr(tokens->token, little, ft_strlen(tokens->token))
+			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+'))
+			&& !strncmp(env[j], tokens->token, ft_strclen(env[j], '=')))
 			if (append_var(tokens, env, j))
 				return ;
 		j++;
 	}
-	add_envp_var(env, tokens, i);
+	add_envp_var(env, tokens, j);
 }
 
 void	print_export(char **envp)

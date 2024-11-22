@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:44 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 13:35:27 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 15:55:32 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	check_export(char *begin, t_tokens *tokens, t_shell *shell)
 			i++;
 		}
 		if ((tokens->token[i] && tokens->token[i + 1]
-			&& tokens->token[i] == '+' && tokens->token[i + 1] != '='))
+				&& tokens->token[i] == '+' && tokens->token[i + 1] != '='))
 			return (do_error(begin, tokens, shell, ERROR_N_VAL), 1);
 	}
 	return (0);

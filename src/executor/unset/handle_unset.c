@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:52 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 12:12:04 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 15:59:11 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,10 @@ static int	check_unset(t_tokens *tokens, t_shell *shell)
 	return (0);
 }
 
-static void	do_unset(t_tokens *temp, t_shell *shell)
+static void	do_unset(t_tokens *temp, t_shell *shell, char **tmp)
 {
 	char		**envp;
 	char		**new_envp;
-	char		**tmp;
 
 	while (temp)
 	{
@@ -40,7 +39,7 @@ static void	do_unset(t_tokens *temp, t_shell *shell)
 		while (*envp)
 		{
 			if (!ft_strncmp(*envp, temp->token, ft_strclen(*envp, '='))
-			&& !ft_strncmp(*envp, temp->token, ft_strlen(temp->token)))
+				&& !ft_strncmp(*envp, temp->token, ft_strlen(temp->token)))
 				free(*envp);
 			else
 			{
@@ -63,12 +62,14 @@ static void	do_unset(t_tokens *temp, t_shell *shell)
 int	ft_unset(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*temp;
+	char		**tmp;
 
+	tmp = NULL;
 	if (check_unset(tokens, shell) != 0)
 		return (1);
 	if (!tokens->next)
 		return (1);
 	temp = tokens->next;
-	do_unset(temp, shell);
+	do_unset(temp, shell, tmp);
 	return (1);
 }
