@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:26 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 19:28:57 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 22:15:54 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ static int	check_flag(t_tokens *tokens)
 	i = 0;
 	token = NULL;
 	flag = 0;
-	while (tokens && tokens->token)
+	while (tokens && tokens->token
+		&& !ft_strncmp(tokens->token, "-n", 2))
 	{
 		token = tokens->token;
 		if (token[i++] == '-')
@@ -69,15 +70,17 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 	int			flag;
+	int			skip;
 
 	temp = tokens;
 	temp = temp->next;
 	if (check_echo(tokens, shell))
 		return (1);
 	flag = check_flag(temp);
-	while (flag)
+	skip = flag;
+	while (flag--)
 		temp = temp->next;
-	if (flag && !(temp && temp->type == ARG))
+	if (skip && !(temp && temp->type == ARG))
 		return (shell->exit_code = 0, 1);
 	while (temp->token && temp->type == ARG)
 	{
@@ -88,7 +91,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 		if (temp == NULL)
 			break ;
 	}
-	if (!flag)
+	if (!skip)
 		ft_printf_fd(STDOUT_FILENO, "\n");
 	return (shell->exit_code = 0, 1);
 }

@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:02 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 19:39:07 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 21:26:11 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static int	pipex(t_tokens **t, t_tokens *temp, t_shell *shell, t_pipe *p)
 	{
 		if (pipe(p->fd) == -1)
 			return (perror(strerror(errno)), free_all(t, shell, 0), -1);
-		if (temp->type == CMD)
+		if (temp->type == CMD || temp->type == DIR_FILE)
 		{
 			p->pid[p->i] = fork();
 			do_pipe(temp, t, shell, p);
