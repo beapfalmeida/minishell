@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:05 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 18:52:55 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:27:14 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,18 @@ void	wait_allchildren(t_tokens *tokens, t_shell *shell, int *pid)
 	temp = tokens;
 	while (++i <= shell->n_pipes)
 	{
-		waitpid(pid[i], &status, 0);
-		if (WIFEXITED(status))
+		if (pid[i])
 		{
-			if (WEXITSTATUS(status) == SIG_EXEC_FAILURE)
-				do_error(0, temp, shell, ERROR_CMD);
-			else if (WEXITSTATUS(status) == 15)
-				do_error(0, tokens, shell, ERROR_OPEN);
-			else
-				shell->exit_code = WEXITSTATUS(status);
+			waitpid(pid[i], &status, 0);
+			if (WIFEXITED(status))
+			{
+				if (WEXITSTATUS(status) == SIG_EXEC_FAILURE)
+					do_error(0, temp, shell, ERROR_CMD);
+				else if (WEXITSTATUS(status) == 15)
+					do_error(0, tokens, shell, ERROR_OPEN);
+				else
+					shell->exit_code = WEXITSTATUS(status);
+			}
 		}
 		set_next_pipe(&temp);
 	}
