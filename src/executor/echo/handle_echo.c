@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:26 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 19:11:37 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:20:19 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 		if (temp == NULL)
 			break ;
 	}
-	if (flag == -1)
+	if (!flag)
 		ft_printf_fd(STDOUT_FILENO, "\n");
 	return (shell->exit_code = 0, 1);
 }
