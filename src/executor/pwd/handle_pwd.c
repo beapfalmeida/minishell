@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:48 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:44:49 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:26:13 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_pwd(t_tokens *token, t_shell *shell)
 	char	cwd[MAX_PATH_SIZE];
 
 	if (check_pwd(token, shell))
-		return (0);
+		return (1);
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
 		printf("%s\n", cwd);

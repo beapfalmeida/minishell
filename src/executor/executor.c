@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:02 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 18:51:11 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:22:29 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void	execute(t_tokens **tokens, t_shell *shell)
 {
 	t_tokens	*temp;
 	t_pipe		p;
+	int			flag;
 
 	shell->p = &p;
 	p.pid = 0;
@@ -119,9 +120,10 @@ void	execute(t_tokens **tokens, t_shell *shell)
 	shell->original_stdout = dup(STDOUT_FILENO);
 	if (temp->type == DIR_FILE && !shell->n_pipes)
 	{
-		if (handle_dir_file(tokens, temp, shell) == 2)
+		flag = handle_dir_file(tokens, temp, shell);
+		if (flag == 2)
 			exec_cmd(temp, tokens, shell, 1);
-		else
+		else if (flag == 3)
 			exec_cmd(temp, tokens, shell, 0);
 		reestablish_fds(shell, p.pid);
 	}
