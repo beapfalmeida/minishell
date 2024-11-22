@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_export.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:44:44 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/22 13:35:27 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /// @brief Checks if export cmd is well-written, and if it 
@@ -15,20 +27,20 @@ int	check_export(char *begin, t_tokens *tokens, t_shell *shell)
 		return (do_error(begin, tokens, shell, ERROR_N_VAL), 1);
 	else if (tokens && tokens->type == ARG)
 	{
-		i = 1;
 		if (!ft_isalpha(tokens->token[0])
 			&& tokens->token[0] != '_')
 			return (do_error(begin, tokens, shell, ERROR_N_VAL), 1);
+		i = 0;
 		while (tokens->token[i]
 			&& tokens->token[i] != '=' && tokens->token[i] != '+')
 		{
 			if (!ft_isalnum(tokens->token[i]))
-			{
-				do_error(begin, tokens, shell, ERROR_N_VAL);
-				return (1);
-			}
+				return (do_error(begin, tokens, shell, ERROR_N_VAL), 1);
 			i++;
 		}
+		if ((tokens->token[i] && tokens->token[i + 1]
+			&& tokens->token[i] == '+' && tokens->token[i + 1] != '='))
+			return (do_error(begin, tokens, shell, ERROR_N_VAL), 1);
 	}
 	return (0);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_cd.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:44:22 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/22 13:40:14 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	check_cd(t_tokens *token, t_shell *shell)
@@ -18,8 +30,6 @@ static int	check_cd(t_tokens *token, t_shell *shell)
 		do_error(0, token, shell, ERROR_NDIR);
 		return (1);
 	}
-	// if (!token->next)
-	// 	return (1);
 	return (0);
 }
 

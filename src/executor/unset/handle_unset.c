@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_unset.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:44:52 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/22 12:12:04 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /// @brief Checks if unset is well-written.
@@ -27,13 +39,14 @@ static void	do_unset(t_tokens *temp, t_shell *shell)
 		tmp = new_envp;
 		while (*envp)
 		{
-			if (ft_strncmp(*envp, temp->token, ft_strclen(*envp, '=')) != 0)
+			if (!ft_strncmp(*envp, temp->token, ft_strclen(*envp, '='))
+			&& !ft_strncmp(*envp, temp->token, ft_strlen(temp->token)))
+				free(*envp);
+			else
 			{
 				*new_envp = *envp;
 				new_envp++;
 			}
-			else
-				free(*envp);
 			envp++;
 		}
 		*new_envp = NULL;

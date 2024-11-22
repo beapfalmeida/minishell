@@ -1,26 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exp_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:44:38 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/22 13:08:52 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	append_var(t_tokens *tokens, char **env, int j)
 {
-	char	*temp;
+	char	*to_append;
 	char	*appended;
 
 	if (ft_strclen(tokens->token, '\"') > ft_strclen(tokens->token, '+'))
 	{
-		temp = tokens->token;
-		while (*temp != '=')
-			temp++;
-		temp++;
-		ft_strtrim(temp, "\"");
-		if (has_char(env[j], '='))
-		{
-			ft_strtrim(env[j], "\"");
-			appended = ft_strjoin(env[j], temp);
-		}
+		appended = env[j];
+		to_append = tokens->token;
+		while (*to_append != '=')
+			to_append++;
+		to_append++;
+		if (has_char(appended, '='))
+			appended = ft_strfjoin(appended, to_append, 1);
 		else
 		{
 			appended = ft_strjoin(env[j], "=");
-			appended = ft_strfjoin(appended, temp, 1);
+			appended = ft_strfjoin(appended, to_append, 1);
 		}
 		env[j] = appended;
 		return (1);
@@ -51,11 +60,13 @@ static int	do_nothing(t_tokens *tokens, char **env, int j)
 
 void	add_var(char **env, t_tokens *tokens)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	*little_string;
 
 	j = 0;
 	i = arr_len(env);
+	little_string = "+=";
 	while (env[j])
 	{
 		if (to_replace(tokens, env, j))
@@ -67,17 +78,13 @@ void	add_var(char **env, t_tokens *tokens)
 		}
 		else if (do_nothing(tokens, env, j))
 			return ;
-		else if (has_char(tokens->token, '+')
-			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+')))
-		{
+		else if (ft_strnstr(tokens->token, little_string, ft_strlen(tokens->token)) != NULL
+			&& (!strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+'))))
 			if (append_var(tokens, env, j))
 				return ;
-		}
 		j++;
 	}
-	free(env[i]);
-	env[i] = ft_strdup(tokens->token);
-	env[i + 1] = NULL;
+	add_envp_var(env, tokens, i);
 }
 
 void	print_export(char **envp)

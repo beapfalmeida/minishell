@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:44:10 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/22 11:51:17 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -182,6 +194,7 @@ int			ft_echo(t_tokens *token, t_shell *shell);
 int			ft_env(t_shell *shell, t_tokens *tokens);
 int			ft_export(t_tokens *token, t_shell *shell);
 int			ft_unset(t_tokens *tokens, t_shell *shell);
+void		add_envp_var(char **env, t_tokens *tokens, int	i);
 
 // Pipex
 void		do_pipe(t_tokens *tokens, t_tokens **tofree,

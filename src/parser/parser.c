@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:45:29 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/20 15:57:09 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /// @brief Return type of symbol.
@@ -43,7 +55,8 @@ static int	assign_type(t_tokens **temp)
 
 	if ((*temp)->type == SKIP || (*temp)->type == NOT_SKIP)
 		(*temp) = (*temp)->next;
-	else if (!ft_strncmp((*temp)->token, "|", ft_strlen((*temp)->token)) && (*temp)->expanded == false)
+	else if (!ft_strncmp((*temp)->token, "|", ft_strlen((*temp)->token))
+		&& (*temp)->expanded == false)
 	{
 		res = assign_pipe(&(*temp));
 		if (res)
@@ -77,12 +90,6 @@ int	assign_types(t_tokens **tokens)
 	while (temp)
 	{
 		res = assign_type(&temp);
-		// else
-		// {
-		// 	temp->type = CMD;
-		// 	temp = temp->next;
-		// 	res = 0;
-		// }
 		if (res && res != 1)
 			return (res);
 		else if (res == 1)

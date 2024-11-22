@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:45:17 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/20 15:57:29 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/// @brief If quote is found, this function skips that quote, if not inside unclosed brackets.
+/// @brief If quote is found, this function skips that quote,
+/// if not inside unclosed brackets.
 /// @param token Pointer to the tokens struct.
 /// @param q Pointer to the quotes struct.
 /// @param type Type of quote in ASCII.

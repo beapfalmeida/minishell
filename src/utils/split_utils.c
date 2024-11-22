@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:46:15 by jsobreir          #+#    #+#             */
+/*   Updated: 2024/11/20 15:54:32 by jsobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	count_inquote(char *s, int i)
@@ -53,11 +65,8 @@ int	while_not_symbol(char *s, int i)
 	return (i);
 }
 
-int	countwords(char *s, int j, int count)
+int	countwords(char *s, int i, int count)
 {
-	int	i;
-
-	i = j;
 	while (s[i])
 	{
 		while (s[i] && s[i] == ' ')
