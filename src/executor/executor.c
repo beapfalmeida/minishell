@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:02 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:45:03 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 18:40:25 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 	else if (!strncmp(token, "~", ft_strlen(token)))
 		do_error(0, temp, shell, ERROR_TILD);
 	else if (file == 1 && *token != '/')
-		exec_cmd(temp, tokens, shell, 2);
+		exec_cmd(temp, tokens, shell, 1);
 	else if (file == 1)
 		exec_cmd(temp, tokens, shell, 0);
 	else if (file == 2)
@@ -93,9 +93,17 @@ static int	pipex(t_tokens **t, t_tokens *temp, t_shell *shell, t_pipe *p)
 	{
 		if (pipe(p->fd) == -1)
 			return (perror(strerror(errno)), free_all(t, shell, 0), -1);
-		p->pid[p->i] = fork();
-		do_pipe(temp, t, shell, p);
-		set_next_pipe(&temp);
+		if (temp->type == CMD)
+		{
+			p->pid[p->i] = fork();
+			do_pipe(temp, t, shell, p);
+			set_next_pipe(&temp);
+		}
+		else
+		{
+			p->pid[p->i] = 0;
+			set_next_pipe(&temp);
+		}
 	}
 	wait_allchildren(*t, shell, p->pid);
 	return (0);

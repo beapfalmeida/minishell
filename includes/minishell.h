@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:10 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 15:59:36 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:32:00 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,6 +260,7 @@ int			error_exit2(int overflow, long long ret, char *number);
 void		signals(void);
 void		handle_sigint(int sig);
 void		signore(int sig);
+void		sig_heredoc(int sig);
 
 // testing
 void		print_tokens(t_tokens **begin_list);

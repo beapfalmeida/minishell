@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_echo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:26 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:44:27 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 18:39:11 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@ static int	check_flag(t_tokens *tokens)
 {
 	char	*token;
 	int		i;
+	int		flag;
 
 	i = 0;
 	token = NULL;
-	if (tokens && tokens->token)
+	flag = 0;
+	while (tokens && tokens->token)
 	{
 		token = tokens->token;
 		if (token[i++] == '-')
@@ -32,11 +34,14 @@ static int	check_flag(t_tokens *tokens)
 			if (!token[i])
 			{
 				tokens = tokens->next;
-				return (1);
+				flag++;
 			}
+			else
+				return (flag);
 		}
+		i = 0;
 	}
-	return (0);
+	return (flag);
 }
 
 /// @brief Checks if the echo cmd is well-written.
@@ -72,7 +77,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 	if (check_echo(tokens, shell))
 		return (1);
 	flag = check_flag(temp);
-	if (flag)
+	while (flag--)
 		temp = temp->next;
 	if (flag && !(temp && temp->type == ARG))
 		return (shell->exit_code = 0, 1);

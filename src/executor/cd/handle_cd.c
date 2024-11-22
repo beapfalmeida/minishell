@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_cd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:22 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 16:01:53 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 16:54:30 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,8 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 		flag = 1;
 		path = ft_strdup(shell->last_path);
 	}
-	else if (is_file(tokens->next->token) == 2)
-		path = ft_strdup(tokens->next->token);
 	else
-		path = tokens->next->token;
+		path = ft_strdup(tokens->next->token);
 	do_cd(path, tokens, shell);
 	return (1);
 }
