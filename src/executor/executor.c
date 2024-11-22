@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:02 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 18:40:25 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:26:27 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,30 @@ void	handle_executable(t_tokens *tokens, t_shell *shell)
 /// @param tokens Pointer to the tokens struct.
 /// @param temp Pointer to the tokens struct.
 /// @param shell Pointer to the shell vars struct.
-static void	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
+/// @return 1 in case of failure, 2 if executable, 3 is not executable
+int	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 {
 	char	*token;
 	int		file;
 
+	(void)tokens;
 	token = temp->token;
 	file = is_file(temp->token);
 	if (!strncmp(token, ".", ft_strlen(token)))
-		do_error(0, temp, shell, ERROR_FAR);
+		return(do_error(0, temp, shell, ERROR_FAR), 1);
 	else if (!strncmp(token, "~", ft_strlen(token)))
-		do_error(0, temp, shell, ERROR_TILD);
+		return(do_error(0, temp, shell, ERROR_TILD), 1);
 	else if (file == 1 && *token != '/')
-		exec_cmd(temp, tokens, shell, 1);
+		return (2);
 	else if (file == 1)
-		exec_cmd(temp, tokens, shell, 0);
+		return (3);
 	else if (file == 2)
-		do_error(0, temp, shell, IS_DIR);
+		return(do_error(0, temp, shell, IS_DIR), 1);
 	else if (file == 4)
-		do_error(0, temp, shell, P_DENY);
-	else if (!is_file((*tokens)->token))
-		do_error(0, temp, shell, OPEN_DF);
+		return(do_error(0, temp, shell, P_DENY), 1);
+	else if (!file)
+		return(do_error(0, temp, shell, OPEN_DF), 1);
+	return (1);
 }
 
 /// @brief Closes opened fds and reestablishes STDIN and STDOUT.
@@ -122,13 +125,15 @@ void	execute(t_tokens **tokens, t_shell *shell)
 	temp = *tokens;
 	shell->original_stdin = dup(STDIN_FILENO);
 	shell->original_stdout = dup(STDOUT_FILENO);
-	if (temp->type == DIR_FILE)
+	if (temp->type == DIR_FILE && !shell->n_pipes)
 	{
-		handle_dir_file(tokens, temp, shell);
+		if (handle_dir_file(tokens, temp, shell) == 2)
+			exec_cmd(temp, tokens, shell, 1);
+		else
+			exec_cmd(temp, tokens, shell, 0);
 		reestablish_fds(shell, p.pid);
-		return ;
 	}
-	if (shell->n_pipes)
+	else if (shell->n_pipes)
 	{
 		p.pid = malloc((shell->n_pipes + 1) * sizeof(int));
 		if (pipex(tokens, temp, shell, &p) == -1)
