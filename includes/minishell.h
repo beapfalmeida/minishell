@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:10 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 15:59:36 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:19:34 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ char		**order_alphabetically(char **envp);
 void		print_export(char **envp);
 void		update_env(char *begin, t_tokens *tokens, t_shell *shell);
 void		add_var(char **env, t_tokens *tokens);
+int			handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell);
 
 // Builtins
 int			ft_pwd(t_tokens *token, t_shell *shell);

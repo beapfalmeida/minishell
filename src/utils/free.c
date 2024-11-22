@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:46:08 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:46:09 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:45:03 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,5 @@ void	clean_exit(t_tokens **tokens, t_shell *shell, t_pipe *p)
 	close(p->fd[0]);
 	close(p->fd[1]);
 	free(p->pid);
+	exit (1);
 }

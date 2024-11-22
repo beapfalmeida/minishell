@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:05 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:45:06 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 18:52:55 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,17 +93,18 @@ void	do_pipe(t_tokens *tokens, t_tokens **tofree, t_shell *shell, t_pipe *p)
 		fds = find_redirects(shell->fds, p->i);
 		handle_null_input(fds, tofree, shell, p);
 		if (fds->out == -1)
-		{
 			clean_exit(tofree, shell, p);
-			exit(1);
-		}
 		else if (p->i == fds->pn && fds->in != STDIN_FILENO)
 			dup2(fds->in, STDIN_FILENO);
 		if (fds->pn == p->i && fds->out != STDOUT_FILENO)
 			dup2(fds->out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		prepare_exec(tokens, tofree, shell, p);
+		if (tokens->type == DIR_FILE 
+			&& handle_dir_file(&tokens, tokens, shell) == 2)
+			handle_executable(tokens, shell);
+		else
+			prepare_exec(tokens, tofree, shell, p);
 	}
 	else
 		signal(SIGINT, signore);
