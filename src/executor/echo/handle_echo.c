@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:26 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 18:39:11 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:11:37 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,12 @@ static int	check_flag(t_tokens *tokens)
 			while (token[i] == 'n')
 				i++;
 			if (!token[i])
-			{
-				tokens = tokens->next;
 				flag++;
-			}
 			else
 				return (flag);
 		}
 		i = 0;
+		tokens = tokens->next;
 	}
 	return (flag);
 }
@@ -77,7 +75,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 	if (check_echo(tokens, shell))
 		return (1);
 	flag = check_flag(temp);
-	while (flag--)
+	while (flag)
 		temp = temp->next;
 	if (flag && !(temp && temp->type == ARG))
 		return (shell->exit_code = 0, 1);
@@ -90,7 +88,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 		if (temp == NULL)
 			break ;
 	}
-	if (!flag)
+	if (flag == -1)
 		ft_printf_fd(STDOUT_FILENO, "\n");
 	return (shell->exit_code = 0, 1);
 }
