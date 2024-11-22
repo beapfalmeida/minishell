@@ -6,7 +6,7 @@
 /*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:02 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 19:28:47 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:39:07 by jsobreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,23 @@ int	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 /// @brief Closes opened fds and reestablishes STDIN and STDOUT.
 /// @param shell Pointer to the shell vars struct.
 /// @param pid Array of pids for processes forked.
-static void	reestablish_fds(t_shell *shell, int *pid)
+static void	establish_fds(t_shell *shell, int *pid, int decide)
 {
-	dup2(shell->original_stdin, STDIN_FILENO);
-	dup2(shell->original_stdout, STDOUT_FILENO);
-	close(shell->original_stdin);
-	close(shell->original_stdout);
-	if (pid)
-		free(pid);
+	if (decide == 1)
+	{
+		shell->p->pid = 0;
+		shell->original_stdin = dup(STDIN_FILENO);
+		shell->original_stdout = dup(STDOUT_FILENO);	
+	}
+	else
+	{
+		dup2(shell->original_stdin, STDIN_FILENO);
+		dup2(shell->original_stdout, STDOUT_FILENO);
+		close(shell->original_stdin);
+		close(shell->original_stdout);
+		if (pid)
+			free(pid);
+	}
 }
 
 /// @brief Handles pipes.
@@ -122,10 +131,8 @@ void	execute(t_tokens **tokens, t_shell *shell)
 	int			flag;
 
 	shell->p = &p;
-	p.pid = 0;
 	temp = *tokens;
-	shell->original_stdin = dup(STDIN_FILENO);
-	shell->original_stdout = dup(STDOUT_FILENO);
+	establish_fds(shell, p.pid, 1);
 	if (temp->type == DIR_FILE && !shell->n_pipes)
 	{
 		flag = handle_dir_file(tokens, temp, shell);
@@ -133,15 +140,15 @@ void	execute(t_tokens **tokens, t_shell *shell)
 			exec_cmd(temp, tokens, shell, 1);
 		else if (flag == 3)
 			exec_cmd(temp, tokens, shell, 0);
-		reestablish_fds(shell, p.pid);
+		establish_fds(shell, p.pid, 0);
 	}
 	else if (shell->n_pipes)
 	{
 		p.pid = malloc((shell->n_pipes + 1) * sizeof(int));
 		if (pipex(tokens, temp, shell, &p) == -1)
-			return (reestablish_fds(shell, p.pid));
+			return (establish_fds(shell, p.pid, 0));
 	}
 	else
 		exec_cmd(temp, tokens, shell, 0);
-	reestablish_fds(shell, p.pid);
+	establish_fds(shell, p.pid, 0);
 }
