@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:05 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 19:27:14 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/11/23 15:47:59 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	do_pipe(t_tokens *tokens, t_tokens **tofree, t_shell *shell, t_pipe *p)
 			dup2(fds->out, STDOUT_FILENO);
 		else if (p->i != shell->n_pipes)
 			dup2(p->fd[1], STDOUT_FILENO);
-		if (tokens->type == DIR_FILE 
+		if (tokens->type == DIR_FILE
 			&& handle_dir_file(&tokens, tokens, shell) == 2)
 			handle_executable(tokens, shell);
 		else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_echo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:26 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 22:15:54 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/23 15:51:08 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ int	ft_echo(t_tokens *tokens, t_shell *shell)
 	int			flag;
 	int			skip;
 
-	temp = tokens;
-	temp = temp->next;
+	temp = tokens->next;
 	if (check_echo(tokens, shell))
 		return (1);
 	flag = check_flag(temp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:02 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 21:26:11 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/23 15:48:54 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,19 @@ int	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 	token = temp->token;
 	file = is_file(temp->token);
 	if (!strncmp(token, ".", ft_strlen(token)))
-		return(do_error(0, temp, shell, ERROR_FAR), 1);
+		return (do_error(0, temp, shell, ERROR_FAR), 1);
 	else if (!strncmp(token, "~", ft_strlen(token)))
-		return(do_error(0, temp, shell, ERROR_TILD), 1);
+		return (do_error(0, temp, shell, ERROR_TILD), 1);
 	else if (file == 1 && *token != '/')
 		return (2);
 	else if (file == 1)
 		return (3);
 	else if (file == 2)
-		return(do_error(0, temp, shell, IS_DIR), 1);
+		return (do_error(0, temp, shell, IS_DIR), 1);
 	else if (file == 4)
-		return(do_error(0, temp, shell, P_DENY), 1);
+		return (do_error(0, temp, shell, P_DENY), 1);
 	else if (!file)
-		return(do_error(0, temp, shell, OPEN_DF), 1);
+		return (do_error(0, temp, shell, OPEN_DF), 1);
 	return (1);
 }
 
@@ -78,7 +78,7 @@ static void	establish_fds(t_shell *shell, int *pid, int decide)
 	{
 		shell->p->pid = 0;
 		shell->original_stdin = dup(STDIN_FILENO);
-		shell->original_stdout = dup(STDOUT_FILENO);	
+		shell->original_stdout = dup(STDOUT_FILENO);
 	}
 	else
 	{

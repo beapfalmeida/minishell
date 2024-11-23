@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:46:43 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:46:44 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/23 15:46:21 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 	t_tokens	*t;
 	int			ret;
 
-	if (!handle_quotes(*tokens, shell))
-		return (NULL);
+	if (!handle_quotes(*tokens, shell) || *(*tokens)->token == '\0')
+		return (lstclear(tokens, 1), NULL);
 	ret = assign_types(tokens);
 	if (ret)
 	{
@@ -36,7 +36,7 @@ static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 	if (has_sintax_error(*tokens, shell))
 		return (lstclear(tokens, 1), NULL);
 	if (process_tokens(tokens, shell))
-		return (NULL);
+		return (lstclear(tokens, 1), NULL);
 	temp = *tokens;
 	*tokens = skip_redirects(*tokens);
 	while (temp)
