@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:46:43 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/23 15:46:21 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/11/23 16:34:05 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,20 @@ static t_tokens	*keep_parsing(t_tokens **tokens, t_shell *shell)
 	t_tokens	*t;
 	int			ret;
 
-	if (!handle_quotes(*tokens, shell) || *(*tokens)->token == '\0')
+	if (!handle_quotes(*tokens, shell))
 		return (lstclear(tokens, 1), NULL);
 	ret = assign_types(tokens);
 	if (ret)
-	{
-		do_error(0, *tokens, shell, ret);
-		return (lstclear(tokens, 1), NULL);
-	}
+		return (do_error(0, *tokens, shell, ret),
+			lstclear(tokens, 1), NULL);
 	if (has_sintax_error(*tokens, shell))
 		return (lstclear(tokens, 1), NULL);
 	if (process_tokens(tokens, shell))
 		return (lstclear(tokens, 1), NULL);
 	temp = *tokens;
 	*tokens = skip_redirects(*tokens);
+	if (!*tokens)
+		free_fds(shell);
 	while (temp)
 	{
 		t = temp->next;
@@ -61,6 +61,8 @@ static void	routine1(t_shell *shell, char **buff)
 		shell->exit_code = 130;
 		g_signal = 0;
 	}
+	if (!*buff)
+		ft_printf_fd(STDOUT_FILENO, "exit\n");
 }
 
 /// @brief Execute and clear everything.

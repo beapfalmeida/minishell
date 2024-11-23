@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:17 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:57:29 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/11/23 15:56:33 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,12 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 		tokens->token = token;
 		tokens = tokens->next;
 	}
-	return (ret);
+	tokens = ret;
+	while (tokens)
+	{
+		if (*(tokens->token) != '\0')
+			return (ret);
+		tokens = tokens->next;
+	}
+	return (NULL);
 }
