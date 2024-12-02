@@ -31,7 +31,7 @@ char	*found_quote(t_tokens *tokens, char *token, t_quotes *q, int type)
 	trimed = skip_quote(&token[q->i], qtype, q);
 	token[q->i] = '\0';
 	token = ft_strfjoin(token, trimed, 3);
-	if (*token == type)
+	while (*token == type)
 	{
 		trimed = skip_quote(&token[q->i], qtype, q);
 		token[q->i] = '\0';

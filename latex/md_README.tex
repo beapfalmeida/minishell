@@ -1,0 +1,200 @@
+\chapter{minishell}
+\hypertarget{md_README}{}\label{md_README}\index{minishell@{minishell}}
+\label{md_README_autotoc_md0}%
+\Hypertarget{md_README_autotoc_md0}%
+
+
+
+
+As beautiful as a shell.
+
+The goal of this project is to create a simpler version of a shell, adhering to the Goals and Rules below.\hypertarget{md_README_autotoc_md1}{}\doxysection{\texorpdfstring{Documentation}{Documentation}}\label{md_README_autotoc_md1}
+\hypertarget{md_README_autotoc_md2}{}\doxysection{\texorpdfstring{Project Goals and Rules}{Project Goals and Rules}}\label{md_README_autotoc_md2}
+
+\begin{DoxyItemize}
+\item Display a prompt while waiting for a new command;
+\item Have a working history;
+\item Search and launch the right executable based on the PATH variable;
+\item Avoid using more than one global variable to indicate received signal (e.\+g. CTRL-\/C);
+\item Handle single quotes and double quotes;
+\item Implement redirections\+:
+\begin{DoxyItemize}
+\item \texorpdfstring{$<$}{<} redirects input
+\item \texorpdfstring{$>$}{>} redirects output
+\item \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} expects a delimiter, then reads input until line containing delimiter. Doesn\textquotesingle{}t update history.
+\item \texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>} redirects output in append mode;
+\end{DoxyItemize}
+\item Handle pipes {\ttfamily \texorpdfstring{$\vert$}{|}};
+\item Handle environment variables, which expand to their values;
+\item Handle {\ttfamily \$?} which expands to exit status of the most recently executed foreground pipeline;
+\item Handle {\ttfamily ctrl-\/C}, {\ttfamily ctrl-\/D}, {\ttfamily ctrl-\/\textbackslash{}};
+\item In interactive mode\+: {\ttfamily ctrl-\/C} displays a new prompt on a new line, {\ttfamily ctrl-\/D} exits the shell, {\ttfamily ctrl-\/\textbackslash{}} does nothing;
+\item Handle the following built-\/ins\+:
+\end{DoxyItemize}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Built-\/in   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Built-\/in   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+{\ttfamily echo \mbox{[}-\/n\mbox{]}}   &Displays a line of text\textbackslash{}n\+Optional flag {\ttfamily -\/n} does not output trailing line    \\\cline{1-2}
+{\ttfamily cd \mbox{[}path\mbox{]}}   &Changes working directory, updating {\ttfamily PWD} and {\ttfamily OLDPWD} ~\newline
+ Without arguments it changes to Home Directory    \\\cline{1-2}
+{\ttfamily pwd}   &Shows the current directory as an absolute path.    \\\cline{1-2}
+{\ttfamily export}   &Accepts arguments name\mbox{[}=value\mbox{]} ~\newline
+ Adds name to the environment. Set\textquotesingle{}s value of name to value. ~\newline
+ If no argument is given, displays list of exported variables.    \\\cline{1-2}
+{\ttfamily unset}   &Accepts argument {\ttfamily name} removing it from the environment    \\\cline{1-2}
+{\ttfamily env}   &Displays the env variables    \\\cline{1-2}
+{\ttfamily exit}   &Terminates the shell   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_README_autotoc_md3}{}\doxysection{\texorpdfstring{Installing and Using}{Installing and Using}}\label{md_README_autotoc_md3}
+To download, clone the repository into your device and navigate inside using {\ttfamily cd pipex}, then typing {\ttfamily make} to compile all the functions and generate the executable pipex, which you can run as follows\+:\hypertarget{md_README_autotoc_md4}{}\doxysection{\texorpdfstring{Theory}{Theory}}\label{md_README_autotoc_md4}
+\hypertarget{md_README_autotoc_md5}{}\doxysubsection{\texorpdfstring{Bash vs Terminal vs Command Line vs Prompt}{Bash vs Terminal vs Command Line vs Prompt}}\label{md_README_autotoc_md5}
+A terminal emulator is the the terminal window which is a program that runs Bash, zsh,... 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{jsobreir\$\ echo\ \$0}
+\DoxyCodeLine{/bin/zsh\ <-\/-\/-\/-\/-\/\ The\ terminal\ is\ running\ zsh}
+
+\end{DoxyCode}
+ The command line is part of the terminal and it refers to the actual interfacce that interprets the commands you write. Bash and zsh are similar but zsh is more costumizable, interactive,... generally has more features.\hypertarget{md_README_autotoc_md6}{}\doxysection{\texorpdfstring{Basic program}{Basic program}}\label{md_README_autotoc_md6}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{while}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ print\_prompt();}
+\DoxyCodeLine{\ \ read\_line();}
+\DoxyCodeLine{\ \ parse();}
+\DoxyCodeLine{\ \ exec();}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ \hypertarget{md_README_autotoc_md7}{}\doxysection{\texorpdfstring{Project Implementation}{Project Implementation}}\label{md_README_autotoc_md7}
+\hypertarget{md_README_autotoc_md8}{}\doxysubsection{\texorpdfstring{Parser}{Parser}}\label{md_README_autotoc_md8}
+The Parser is the software component that reads the command line such as “ls ­al” and puts it into a data structure called Command Table that will store the commands that will be executed. \hypertarget{md_README_autotoc_md9}{}\doxysubsubsection{\texorpdfstring{Tokens}{Tokens}}\label{md_README_autotoc_md9}
+The characters in the arguments are converted into words (tokens). \hypertarget{md_README_autotoc_md10}{}\doxysubsubsection{\texorpdfstring{Command Table}{Command Table}}\label{md_README_autotoc_md10}
+This is a table of commands containing all the tokens.\hypertarget{md_README_autotoc_md11}{}\doxysubsection{\texorpdfstring{Executor}{Executor}}\label{md_README_autotoc_md11}
+The executor will take the command table generated by the parser and for every Simple\+Command in the array it will create a new process. It will also if necessary create pipes to communicate the output of one process to the input of the next one. Additionally, it will redirect the standard input, standard output, and standard error if there are any redirections\hypertarget{md_README_autotoc_md12}{}\doxysubsection{\texorpdfstring{Shell subsystems}{Shell subsystems}}\label{md_README_autotoc_md12}
+These are the subsystems that make executing commands possible\+:
+\begin{DoxyItemize}
+\item Environment variables\+: expressions of the forms \$\{VAR\} are expandend with the corresponding environment variables.
+\item Wildcards\+: Arguments of the form {\ttfamily \texorpdfstring{$\ast$}{*}} are expanded to all the files that match them, in the local directory or multiple directories.
+\item Subshells\+: Arguments between \`{}\`{} are executed and it\textquotesingle{}s output is sent to the input of the shell.
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md13}{}\doxysection{\texorpdfstring{Task List}{Task List}}\label{md_README_autotoc_md13}
+
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Shell Features}}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Prompt}}\+: Display a shell prompt and await user input.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Command History}}\+: Implement a command history using {\ttfamily readline()}.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Signal Handling}}\+: Properly handle signals (e.\+g., {\ttfamily ctrl-\/C}, {\ttfamily ctrl-\/D}, {\ttfamily ctrl-\/\textbackslash{}}).
+\end{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{Parser}}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Implement a {\bfseries{Lexer}} (tokenizer) to separate the input into tokens (commands and arguments).
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Build the {\bfseries{Command Table}} to store commands and arguments.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Implement rules for handling builtins ({\ttfamily echo}, {\ttfamily cd}, {\ttfamily pwd}, etc.) and external commands.
+\item[\DoxyUnchecked] Implement error handling for invalid input. -\/ Bea
+\end{DoxyItemize}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Built-\/ins}}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{echo}}\+: Implement with {\ttfamily -\/n} option.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{cd}}\+: Implement with relative or absolute path.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{pwd}}\+: Print the current directory.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{export}}\+: Handle environment variable exportation.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{unset}}\+: Remove environment variables.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{env}}\+: Print all environment variables.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{exit}}\+: Exit the shell with a status.
+\end{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{Expanders}}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Environment Variables}}\+: Expand {\ttfamily \$VAR} expressions.
+\item[\DoxyUnchecked] {\bfseries{Handle brackets in expander}}\+: single and double and both. -\/ Bea
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{Exit Status}}\+: Implement {\ttfamily \$?} to hold the exit status of the last executed command. -\/ Bea
+\end{DoxyItemize}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Executor}}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Create child processes using {\ttfamily fork()} for each command.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Use {\ttfamily execve()} to execute external commands.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Implement builtins in the parent process where applicable ({\ttfamily cd}, {\ttfamily export}, etc.).
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Ensure the last child process waits to complete using {\ttfamily waitpid()}.
+\end{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{Redirections}}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Implement input redirection ({\ttfamily \texorpdfstring{$<$}{<} infile}).
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Implement output redirection ({\ttfamily \texorpdfstring{$>$}{>} outfile}).
+\item[\DoxyUnchecked] Skip redirectors and files -\/ Joao
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Implement append output redirection ({\ttfamily \texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>} outfile}).
+\item[\DoxyUnchecked] Implement heredoc ({\ttfamily \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} delimiter}). -\/ Joao
+\end{DoxyItemize}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] {\bfseries{Pipes}}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Implement pipes ({\ttfamily \texorpdfstring{$\vert$}{|}}) to connect commands in a pipeline.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Redirect stdout of one command to stdin of the next using {\ttfamily pipe()} and {\ttfamily dup2()}.
+\end{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{Testing}}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Create test cases for all possible scenarios, including edge cases.
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Validate memory management using {\ttfamily valgrind} or similar tools to ensure no memory leaks.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md14}{}\doxysection{\texorpdfstring{Links}{Links}}\label{md_README_autotoc_md14}
+
+\begin{DoxyItemize}
+\item \href{https://www.markdownguide.org/extended-syntax/}{\texttt{ https\+://www.\+markdownguide.\+org/extended-\/syntax/}}
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md15}{}\doxysection{\texorpdfstring{Disclaimer}{Disclaimer}}\label{md_README_autotoc_md15}
+At 42 School our projects have to adhere to the 42 Norm of coding standards and good practices. These include\+:
+\begin{DoxyItemize}
+\item Maximum 25 lines per function and 5 functions per file;
+\item No variable declarations and assignments in the same line;
+\item Forbiden structures\+: {\ttfamily for}, {\ttfamily switch}, {\ttfamily goto} and {\ttfamily case};
+\item No more than 5 variables per function.
+\end{DoxyItemize}
+
+All of my projects strictly adhere to this Norm, that promotes code simplicity and readability. 

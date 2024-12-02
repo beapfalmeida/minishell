@@ -1,0 +1,276 @@
+\doxysection{minishell.\+h}
+\hypertarget{minishell_8h_source}{}\label{minishell_8h_source}\index{includes/minishell.h@{includes/minishell.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ **************************************************************************\ */}}
+\DoxyCodeLine{00002\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :::\ \ \ \ \ \ ::::::::\ \ \ */}}
+\DoxyCodeLine{00004\ \textcolor{comment}{/*\ \ \ minishell.h\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :+:\ \ \ \ \ \ :+:\ \ \ \ :+:\ \ \ */}}
+\DoxyCodeLine{00005\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +:+\ +:+\ \ \ \ \ \ \ \ \ +:+\ \ \ \ \ */}}
+\DoxyCodeLine{00006\ \textcolor{comment}{/*\ \ \ By:\ bpaiva-\/f\ <bpaiva-\/f@student.42porto.com>\ \ \ \ +\#+\ \ +:+\ \ \ \ \ \ \ +\#+\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00007\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\#+\#+\#+\#+\#+\ \ \ +\#+\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00008\ \textcolor{comment}{/*\ \ \ Created:\ 2024/11/20\ 15:44:10\ by\ jsobreir\ \ \ \ \ \ \ \ \ \ \#+\#\ \ \ \ \#+\#\ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00009\ \textcolor{comment}{/*\ \ \ Updated:\ 2024/11/22\ 19:27:35\ by\ bpaiva-\/f\ \ \ \ \ \ \ \ \ \#\#\#\ \ \ \#\#\#\#\#\#\#\#.fr\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00011\ \textcolor{comment}{/*\ **************************************************************************\ */}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ MINISHELL\_H}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ define\ MINISHELL\_H}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ include\ <stdio.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ include\ <signal.h>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ include\ <unistd.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ include\ <stdlib.h>}\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ include\ "{}./libft/libft.h"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ include\ "{}./libft/printf\_fd/ft\_printf\_fd.h"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ include\ <readline/readline.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ include\ <readline/history.h>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ include\ <errno.h>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ include\ <sys/types.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ include\ <sys/wait.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#\ include\ <sys/stat.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#\ include\ <stdbool.h>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ include\ <errno.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ include\ <limits.h>}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ From\ Google\ search\ about\ path\ size\ limits\ in\ Unix}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#\ define\ MAX\_PATH\_SIZE\ 4096}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Signals}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#\ define\ SIG\_EXEC\_BUILTIN\ 16}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#\ define\ SIG\_EXEC\_FAILURE\ 10}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//token\ types}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#\ define\ OUTPUT\ 1}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#\ define\ CMD\ 2}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ define\ PIPE\ 3}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ define\ REDIRECT\_IN\ 4}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#\ define\ REDIRECT\_OUT\ 5}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#\ define\ INPUT\ 6}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#\ define\ APPEND\_IN\ 7}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ define\ APPEND\_OUT\ 8}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ define\ LIMITER\ 9}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ define\ ARG\ 14}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#\ define\ DIR\_FILE\ 13}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#\ define\ SKIP\ 50}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#\ define\ NOT\_SKIP\ 42}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ Built-\/ins}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ define\ PWD\ 1}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ define\ CD\ 2}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#\ define\ ECHO\ 3}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ define\ ENV\ 4}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ define\ EXPORT\ 5}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ define\ UNSET\ 6}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ g\_signal;}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ e\_code}
+\DoxyCodeLine{00064\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ ERROR\_CMD,}
+\DoxyCodeLine{00066\ \ \ \ \ ERROR\_CD,}
+\DoxyCodeLine{00067\ \ \ \ \ ERROR\_2ARGS,}
+\DoxyCodeLine{00068\ \ \ \ \ ERROR\_NDIR,}
+\DoxyCodeLine{00069\ \ \ \ \ IS\_DIR,}
+\DoxyCodeLine{00070\ \ \ \ \ P\_DENY,}
+\DoxyCodeLine{00071\ \ \ \ \ ERROR\_FAR,}
+\DoxyCodeLine{00072\ \ \ \ \ ERROR\_TILD,}
+\DoxyCodeLine{00073\ \ \ \ \ ERROR\_OPEN,}
+\DoxyCodeLine{00074\ \ \ \ \ ERROR\_OPENCMD,}
+\DoxyCodeLine{00075\ \ \ \ \ ERROR\_SYNTAX,}
+\DoxyCodeLine{00076\ \ \ \ \ ERROR\_N\_VAL,}
+\DoxyCodeLine{00077\ \ \ \ \ ERROR\_PIPE,}
+\DoxyCodeLine{00078\ \ \ \ \ ERROR\_PDN,}
+\DoxyCodeLine{00079\ \ \ \ \ OPEN\_DF,}
+\DoxyCodeLine{00080\ \ \ \ \ ERROR\_UNCLP,}
+\DoxyCodeLine{00081\ \}\ \ \ t\_error;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__fds}{s\_fds}}}
+\DoxyCodeLine{00084\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ in;}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ out;}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ pn;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__fds}{s\_fds}}\ \ \ *next;}
+\DoxyCodeLine{00089\ \}\ \ \ \mbox{\hyperlink{structs__fds}{t\_fds}};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__tokens}{s\_tokens}}}
+\DoxyCodeLine{00092\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ \ \ \ \ *token;}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ type;}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__tokens}{s\_tokens}}\ *next;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__tokens}{s\_tokens}}\ *prev;}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ expanded;}
+\DoxyCodeLine{00098\ \}\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structs__tokens}{t\_tokens}};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__pipe}{s\_pipe}}}
+\DoxyCodeLine{00101\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ i;}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ *pid;}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ fd[2];}
+\DoxyCodeLine{00105\ \}\ \ \ \mbox{\hyperlink{structs__pipe}{t\_pipe}};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__shell}{s\_shell}}}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ **envp;}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ n\_pipes;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ *last\_path;}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ original\_stdin;}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ original\_stdout;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ exit\_code;}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ interrupt\_exec;}
+\DoxyCodeLine{00116\ \ \ \ \ \mbox{\hyperlink{structs__fds}{t\_fds}}\ \ *fds;}
+\DoxyCodeLine{00117\ \ \ \ \ \mbox{\hyperlink{structs__pipe}{t\_pipe}}\ \ \ \ *p;}
+\DoxyCodeLine{00118\ \}\ \ \ \mbox{\hyperlink{structs__shell}{t\_shell}};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__split}{s\_split}}}
+\DoxyCodeLine{00121\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ i;}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ j;}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ k;}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ *s;}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ **arr;}
+\DoxyCodeLine{00127\ \}\ \ \ \mbox{\hyperlink{structs__split}{t\_split}};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structs__quotes}{s\_quotes}}}
+\DoxyCodeLine{00130\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ dq;}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ sq;}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ fe;}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ i;}
+\DoxyCodeLine{00135\ \}\ \ \ \mbox{\hyperlink{structs__quotes}{t\_quotes}};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{comment}{//\ Init}}
+\DoxyCodeLine{00138\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ init\_tokens(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token);}
+\DoxyCodeLine{00139\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ init\_shell(\mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{char}\ **envp);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{comment}{//\ Parser}}
+\DoxyCodeLine{00142\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ create\_tokens(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \textcolor{keywordtype}{char}\ *input);}
+\DoxyCodeLine{00143\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ redirect\_in(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **temp);}
+\DoxyCodeLine{00144\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ redirect\_out(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **temp);}
+\DoxyCodeLine{00145\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ append\_out(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **temp);}
+\DoxyCodeLine{00146\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ append\_in(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **temp);}
+\DoxyCodeLine{00147\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ command(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **temp);}
+\DoxyCodeLine{00148\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ is\_symbol(\textcolor{keywordtype}{char}\ *token,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00149\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ loop\_assigning(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **temp,\ \textcolor{keywordtype}{int}\ type);}
+\DoxyCodeLine{00150\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ assign\_types(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens);}
+\DoxyCodeLine{00151\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ check\_dir\_cmd(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{comment}{//\ Expander}}
+\DoxyCodeLine{00154\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ \ \ \ *handle\_quotes(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00155\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ \ \ \ *skip\_redirects(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens);}
+\DoxyCodeLine{00156\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *handle\_expander(\textcolor{keywordtype}{char}\ **envp,\ \textcolor{keywordtype}{char}\ *var,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00157\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *found\_quote(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \textcolor{keywordtype}{char}\ *token,\ \mbox{\hyperlink{structs__quotes}{t\_quotes}}\ *q,\ \textcolor{keywordtype}{int}\ type);}
+\DoxyCodeLine{00158\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *expand(\textcolor{keywordtype}{char}\ *token,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \mbox{\hyperlink{structs__quotes}{t\_quotes}}\ *q);}
+\DoxyCodeLine{00159\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *process\_token(\textcolor{keywordtype}{char}\ *token,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \mbox{\hyperlink{structs__quotes}{t\_quotes}}\ *q);}
+\DoxyCodeLine{00161\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *get\_var(\textcolor{keywordtype}{char}\ *token);}
+\DoxyCodeLine{00162\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *skip\_quote(\textcolor{keywordtype}{char}\ *token,\ \textcolor{keywordtype}{char}\ *quote\_type,\ \mbox{\hyperlink{structs__quotes}{t\_quotes}}\ *q);}
+\DoxyCodeLine{00163\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ init\_quotes(\mbox{\hyperlink{structs__quotes}{t\_quotes}}\ *q);}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{comment}{//\ Heredoc}}
+\DoxyCodeLine{00166\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ find\_limiter(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{int}\ *fd);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{comment}{//\ Create\ shell\ struct}}
+\DoxyCodeLine{00169\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ process\_tokens(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *args);}
+\DoxyCodeLine{00170\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ get\_input(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *temp,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *in,\ \textcolor{keywordtype}{int}\ *fd);}
+\DoxyCodeLine{00171\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ get\_output(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *temp,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{int}\ *fd);}
+\DoxyCodeLine{00172\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ *get\_fds(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00173\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ *init\_fds(\textcolor{keywordtype}{int}\ *stop,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **infile);}
+\DoxyCodeLine{00174\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ open\_file(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{comment}{//\ Executor}}
+\DoxyCodeLine{00177\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ exec\_cmd(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **free,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{int}\ ex);}
+\DoxyCodeLine{00178\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ **put\_cmds(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token);}
+\DoxyCodeLine{00179\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *get\_path(\textcolor{keywordtype}{char}\ \ *cmd,\ \textcolor{keywordtype}{char}\ **envp);}
+\DoxyCodeLine{00180\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_isbuiltin(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token);}
+\DoxyCodeLine{00181\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_exec\_builtin(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{int}\ type\_builtin);}
+\DoxyCodeLine{00182\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ execute(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **token,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00183\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ handle\_executable(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00184\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ check\_export(\textcolor{keywordtype}{char}\ *begin,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00185\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ **order\_alphabetically(\textcolor{keywordtype}{char}\ **envp);}
+\DoxyCodeLine{00186\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ print\_export(\textcolor{keywordtype}{char}\ **envp);}
+\DoxyCodeLine{00187\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ update\_env(\textcolor{keywordtype}{char}\ *begin,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00188\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ add\_var(\textcolor{keywordtype}{char}\ **env,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens);}
+\DoxyCodeLine{00189\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ handle\_dir\_file(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *temp,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{comment}{//\ Builtins}}
+\DoxyCodeLine{00192\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_pwd(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00193\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_cd(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00194\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_echo(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00195\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_env(\mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens);}
+\DoxyCodeLine{00196\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_export(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00197\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_unset(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00198\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ add\_envp\_var(\textcolor{keywordtype}{char}\ **env,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{comment}{//\ Pipex}}
+\DoxyCodeLine{00201\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ do\_pipe(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tofree,}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \mbox{\hyperlink{structs__pipe}{t\_pipe}}\ *p);}
+\DoxyCodeLine{00203\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ set\_next\_pipe(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **temp);}
+\DoxyCodeLine{00204\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ wait\_allchildren(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{int}\ *pid);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{comment}{//\ Free}}
+\DoxyCodeLine{00207\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ free\_all(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{char}\ *input\_buffer);}
+\DoxyCodeLine{00208\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ handle\_null\_input(\mbox{\hyperlink{structs__fds}{t\_fds}}\ *fds,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \mbox{\hyperlink{structs__pipe}{t\_pipe}}\ *p);}
+\DoxyCodeLine{00210\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ exec\_fail(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ **cmds,\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00212\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ free\_fds(\mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00213\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ clean\_exit(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \mbox{\hyperlink{structs__pipe}{t\_pipe}}\ *p);}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{comment}{//\ Utils}}
+\DoxyCodeLine{00216\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ \ \ \ *find\_last(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *lst);}
+\DoxyCodeLine{00217\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ \ \ \ *new\_node(\textcolor{keywordtype}{char}\ *content,\ \textcolor{keywordtype}{int}\ type);}
+\DoxyCodeLine{00218\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ add\_back\_list(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **lst,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *\textcolor{keyword}{new});}
+\DoxyCodeLine{00219\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ lstclear(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **lst,\ \textcolor{keywordtype}{int}\ clean);}
+\DoxyCodeLine{00220\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ count\_pipes(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens);}
+\DoxyCodeLine{00221\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ **ft\_arrdup(\textcolor{keywordtype}{char}\ **arr);}
+\DoxyCodeLine{00222\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ free\_array(\textcolor{keywordtype}{char}\ **arr,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00223\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ free\_paths(\textcolor{keywordtype}{char}\ **paths);}
+\DoxyCodeLine{00224\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ arr\_len(\textcolor{keywordtype}{char}\ **arr);}
+\DoxyCodeLine{00225\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ count\_args(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *token);}
+\DoxyCodeLine{00226\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_strclen(\textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ c);}
+\DoxyCodeLine{00227\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *ft\_strfjoin(\textcolor{keywordtype}{char}\ *s1,\ \textcolor{keywordtype}{char}\ *s2,\ \textcolor{keywordtype}{int}\ \_to\_free);}
+\DoxyCodeLine{00228\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ getexitcode(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \textcolor{keywordtype}{char}\ *number);}
+\DoxyCodeLine{00229\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ is\_file(\textcolor{keywordtype}{char}\ *file\_name);}
+\DoxyCodeLine{00230\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ has\_char(\textcolor{keywordtype}{char}\ *token,\ \textcolor{keywordtype}{char}\ c);}
+\DoxyCodeLine{00231\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ has\_sintax\_error(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ add\_back\_fds(\mbox{\hyperlink{structs__fds}{t\_fds}}\ **lst,\ \mbox{\hyperlink{structs__fds}{t\_fds}}\ *\textcolor{keyword}{new});}
+\DoxyCodeLine{00234\ \mbox{\hyperlink{structs__fds}{t\_fds}}\ \ \ \ \ \ *new\_fds(\textcolor{keywordtype}{int}\ in,\ \textcolor{keywordtype}{int}\ out,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00235\ \mbox{\hyperlink{structs__fds}{t\_fds}}\ \ \ \ \ \ *find\_last\_fds(\mbox{\hyperlink{structs__fds}{t\_fds}}\ *lst);}
+\DoxyCodeLine{00236\ \mbox{\hyperlink{structs__fds}{t\_fds}}\ \ \ \ \ \ *find\_redirects(\mbox{\hyperlink{structs__fds}{t\_fds}}\ *fds,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00237\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ check\_exit\_exec(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,\ \textcolor{keywordtype}{char}\ *inbuff);}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{comment}{//\ Split}}
+\DoxyCodeLine{00240\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ **ft\_split\_adapted(\textcolor{keywordtype}{char}\ *s);}
+\DoxyCodeLine{00241\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ split\_words(\mbox{\hyperlink{structs__split}{t\_split}}\ *sp);}
+\DoxyCodeLine{00242\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ split\_quotes(\mbox{\hyperlink{structs__split}{t\_split}}\ *sp,\ \textcolor{keywordtype}{char}\ c);}
+\DoxyCodeLine{00243\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ ft\_word\_len(\textcolor{keywordtype}{char}\ *s,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00244\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ countwords(\textcolor{keywordtype}{char}\ *s,\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00245\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ count\_inquote(\textcolor{keywordtype}{char}\ *s,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00246\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ find\_quote(\textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{00247\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ malloc\_gone\_wrong(\textcolor{keywordtype}{char}\ **arr,\ \textcolor{keywordtype}{int}\ j);}
+\DoxyCodeLine{00248\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ check\_nt(\textcolor{keywordtype}{char}\ *s);}
+\DoxyCodeLine{00249\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ write\_char(\mbox{\hyperlink{structs__split}{t\_split}}\ *sp);}
+\DoxyCodeLine{00250\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ split\_quotes(\mbox{\hyperlink{structs__split}{t\_split}}\ *sp,\ \textcolor{keywordtype}{char}\ c);}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \textcolor{comment}{//\ Error\ handling}}
+\DoxyCodeLine{00253\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *get\_error(t\_error\ i);}
+\DoxyCodeLine{00254\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ do\_error(\textcolor{keywordtype}{char}\ *begin,\ \mbox{\hyperlink{structs__tokens}{t\_tokens}}\ *tokens,\ \mbox{\hyperlink{structs__shell}{t\_shell}}\ *shell,}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t\_error\ error);}
+\DoxyCodeLine{00256\ \textcolor{comment}{//\ int\ \ \ \ \ \ \ \ \ \ error\_quote(char\ *s,\ int\ i);}}
+\DoxyCodeLine{00257\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ error\_exit1(\textcolor{keywordtype}{char}\ *number,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00258\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ error\_exit2(\textcolor{keywordtype}{int}\ overflow,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ ret,\ \textcolor{keywordtype}{char}\ *number);}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{comment}{//signals}}
+\DoxyCodeLine{00261\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ signals(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00262\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ handle\_sigint(\textcolor{keywordtype}{int}\ sig);}
+\DoxyCodeLine{00263\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ signore(\textcolor{keywordtype}{int}\ sig);}
+\DoxyCodeLine{00264\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ sig\_heredoc(\textcolor{keywordtype}{int}\ sig);}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{comment}{//\ testing}}
+\DoxyCodeLine{00267\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ print\_tokens(\mbox{\hyperlink{structs__tokens}{t\_tokens}}\ **begin\_list);}
+\DoxyCodeLine{00268\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ print\_arr(\textcolor{keywordtype}{char}\ **arr);}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
