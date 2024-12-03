@@ -35,6 +35,8 @@ int	is_file(char *file_name)
 		else
 			return (4);
 	}
+	if (S_ISCHR(file_info.st_mode))
+		return (5);
 	if (S_ISDIR(file_info.st_mode))
 		return (2);
 	else
@@ -83,7 +85,7 @@ char	*ft_strfjoin(char *s1, char *s2, int _to_free)
 	return (new_str);
 }
 
-long	getexitcode(t_tokens *tokens, char *number)
+long	getexitcode(t_tokens *tokens, char *number, int *flag)
 {
 	long long	ret;
 	int			i;
@@ -92,7 +94,6 @@ long	getexitcode(t_tokens *tokens, char *number)
 	overflow = 0;
 	(void)tokens;
 	i = 0;
-	ft_printf_fd(STDOUT_FILENO, "exit\n");
 	if (number[0] == '+')
 		i++;
 	while (number[0] == '-' && number[i] == '-')
@@ -100,12 +101,12 @@ long	getexitcode(t_tokens *tokens, char *number)
 	while (number[i])
 	{
 		if (error_exit1(number, i))
-			return (2);
+			return (*flag = 1, 2);
 		i++;
 	}
 	ret = ft_atoll(number, &overflow);
 	if (error_exit2(overflow, ret, number))
-		return (2);
+		return (*flag = 1, 2);
 	if (!(0 <= ret && ret <= 255))
 		ret %= 256;
 	return ((long)ret);

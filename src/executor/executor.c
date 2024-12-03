@@ -62,7 +62,7 @@ int	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 		return (3);
 	else if (file == 2)
 		return (do_error(0, temp, shell, IS_DIR), 1);
-	else if (file == 4)
+	else if (file == 4 || file == 5)
 		return (do_error(0, temp, shell, P_DENY), 1);
 	else if (!file)
 		return (do_error(0, temp, shell, OPEN_DF), 1);

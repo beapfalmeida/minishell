@@ -12,19 +12,21 @@
 
 #include "minishell.h"
 
-static int is_path(char *path)
+static int	is_path(char *path)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (path[i])
 	{
 		if ((path[i] >= '0' && path[i] <= '9')
-			|| ((path[i] > 64 && path[i] < 91) || (path[i] > 96 && path[i] < 123))
-			|| path[i] == '/' || path[i] == '_' || path[i] == '.' || path[i] == '~')
+			|| ((path[i] > 64 && path[i] < 91)
+				|| (path[i] > 96 && path[i] < 123))
+			|| path[i] == '/' || path[i] == '_'
+			|| path[i] == '.' || path[i] == '~')
 			i++;
 		else
-			return (0);	
+			return (0);
 	}
 	return (1);
 }
@@ -54,6 +56,8 @@ static int	do_cd(char *path, t_tokens *tokens, t_shell *shell)
 {
 	char	cwd[MAX_PATH_SIZE];
 
+	if (*path == '\0')
+		return (free(path), 1);
 	free(shell->last_path);
 	getcwd(cwd, sizeof(cwd));
 	shell->last_path = ft_strdup(cwd);

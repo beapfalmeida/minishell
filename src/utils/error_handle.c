@@ -45,7 +45,8 @@ static void	update_errorcode(t_shell *shell, t_error error)
 		|| error == ERROR_OPENCMD || error == ERROR_OPEN
 		|| error == ERROR_N_VAL)
 		shell->exit_code = 1;
-	else if (error == ERROR_FAR || error == ERROR_SYNTAX || error == ERROR_INVO)
+	else if (error == ERROR_FAR || error == ERROR_SYNTAX || error == ERROR_INVO
+		|| error == ERROR_SYNTAX || error == ERROR_PIPE)
 		shell->exit_code = 2;
 	else if (error == ERROR_CMD || error == OPEN_DF)
 		shell->exit_code = 127;

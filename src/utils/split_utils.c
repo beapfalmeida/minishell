@@ -20,7 +20,7 @@ int	count_inquote(char *s, int i)
 		while (s[i] != '\'')
 		{
 			if (!s[i])
-				return (ft_printf_fd(2, "No unclosed quotes!\n"), 0);
+				return (ft_printf_fd(2, "No support for unclosed quotes\n"), 0);
 			i++;
 		}
 	}
@@ -30,7 +30,7 @@ int	count_inquote(char *s, int i)
 		while (s[i] != '\"')
 		{
 			if (!s[i])
-				return (ft_printf_fd(2, "No unclosed quotes!\n"), 0);
+				return (ft_printf_fd(2, "No support for unclosed quotes\n"), 0);
 			i++;
 		}
 	}

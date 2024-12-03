@@ -122,7 +122,7 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 		init_quotes(&q);
 		token = tokens->token;
 		token = process_token(token, tokens, shell, &q);
-		if (!*token && tokens->type != NOT_SKIP)
+		if (!*token && tokens->expanded && tokens->type != NOT_SKIP)
 			tokens->type = SKIP;
 		tokens->token = token;
 		tokens = tokens->next;
@@ -134,5 +134,5 @@ t_tokens	*handle_quotes(t_tokens *tokens, t_shell *shell)
 			return (ret);
 		tokens = tokens->next;
 	}
-	return (NULL);
+	return (ret);
 }

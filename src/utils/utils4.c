@@ -68,13 +68,16 @@ t_fds	*find_redirects(t_fds *fds, int i)
 
 int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
 {
+	int	flag;
+
+	flag = 0;
 	if (ft_strlen((*tokens)->token) && !ft_strncmp((*tokens)->token, "exit", 5))
 	{
+		ft_printf_fd(STDOUT_FILENO, "exit\n");
 		if (*tokens && (*tokens)->next)
-			shell->exit_code = getexitcode(*tokens, (*tokens)->next->token);
-		else
-			ft_printf_fd(STDOUT_FILENO, "exit\n");
-		if ((*tokens)->next && (*tokens)->next->next && shell->exit_code != 2)
+			shell->exit_code
+				= getexitcode(*tokens, (*tokens)->next->token, &flag);
+		if ((*tokens)->next && (*tokens)->next->next && !flag)
 		{
 			ft_printf_fd(2, "bash: exit: too many arguments\n");
 			shell->exit_code = 1;
@@ -82,12 +85,9 @@ int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
 			free(inbuff);
 			return (2);
 		}
-		else
-		{
-			lstclear(tokens, 1);
-			free(inbuff);
-			return (1);
-		}
+		lstclear(tokens, 1);
+		free(inbuff);
+		return (1);
 	}
 	return (0);
 }

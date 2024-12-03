@@ -14,7 +14,8 @@
 
 void	loop_assigning(t_tokens **temp, int type)
 {
-	while ((*temp) && !is_symbol((*temp)->token, ft_strlen((*temp)->token)))
+	while ((*temp) && (!is_symbol((*temp)->token, ft_strlen((*temp)->token))
+			|| (*temp)->expanded == true))
 	{
 		(*temp)->type = type;
 		(*temp) = (*temp)->next;

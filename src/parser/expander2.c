@@ -58,14 +58,14 @@ char	*get_var(char *token)
 	i = 0;
 	while (token[i])
 	{
-		if (token[i] == '$' || token[i] == '\"'
-			|| token[i] == '\'' || token[i] == ' ')
-			break ;
 		if (token[i] == '?')
 		{
 			i++;
 			break ;
 		}
+		else if (token[i] == '$' || token[i] == '\"'
+			|| token[i] == '\'' || !ft_isalnum(token[i]))
+			break ;
 		i++;
 	}
 	token[i] = '\0';

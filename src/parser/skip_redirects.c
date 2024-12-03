@@ -45,6 +45,7 @@ static void	skipping(t_tokens **tokens)
 t_tokens	*skip_redirects(t_tokens *tokens)
 {
 	t_tokens	*new_tokens;
+	t_tokens	*node;
 
 	new_tokens = NULL;
 	while (tokens && tokens->token)
@@ -53,7 +54,9 @@ t_tokens	*skip_redirects(t_tokens *tokens)
 			skipping(&tokens);
 		if (dont_skip(tokens))
 		{
-			add_back_list(&new_tokens, new_node(tokens->token, 0));
+			node = new_node(tokens->token, 0);
+			node->expanded = tokens->expanded;
+			add_back_list(&new_tokens, node);
 			tokens = tokens->next;
 		}
 	}
