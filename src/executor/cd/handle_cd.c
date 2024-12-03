@@ -65,7 +65,7 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 		if (tokens->next && !ft_strncmp(tokens->next->token, "~/", 3))
 			path = ft_strfjoin(path, &tokens->next->token[1], 1);
 	}
-	else if (ft_strncmp(tokens->next->token, "-", 2))
+	else if (!ft_strncmp(tokens->next->token, "-", 2))
 	{
 		flag = 1;
 		path = ft_strdup(shell->last_path);
