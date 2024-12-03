@@ -6,11 +6,28 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:22 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/12/03 11:10:06 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:37:22 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int is_path(char *path)
+{
+	int i;
+
+	i = 0;
+	while (path[i])
+	{
+		if ((path[i] >= '0' && path[i] <= '9')
+			|| ((path[i] > 64 && path[i] < 91) || (path[i] > 96 && path[i] < 123))
+			|| path[i] == '/' || path[i] == '_' || path[i] == '.' || path[i] == '~')
+			i++;
+		else
+			return (0);	
+	}
+	return (1);
+}
 
 static int	check_cd(t_tokens *token, t_shell *shell)
 {
@@ -59,19 +76,22 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 	flag = 0;
 	if (check_cd(tokens, shell) == 1)
 		return (1);
-	if (!tokens->next || !ft_strncmp(tokens->next->token, "~", 2))
+	if (!tokens->next || !ft_strncmp(tokens->next->token, "~/", 2)
+		|| !ft_strncmp(tokens->next->token, "~", 2))
 	{
 		path = ft_strdup(getenv("HOME"));
-		if (tokens->next && !ft_strncmp(tokens->next->token, "~/", 3))
+		if (tokens->next && !ft_strncmp(tokens->next->token, "~/", 2))
 			path = ft_strfjoin(path, &tokens->next->token[1], 1);
 	}
-	else if (ft_strncmp(tokens->next->token, "-", 2))
+	else if (!ft_strncmp(tokens->next->token, "-", 2))
 	{
 		flag = 1;
 		path = ft_strdup(shell->last_path);
 	}
-	else
+	else if (is_path(tokens->next->token))
 		path = ft_strdup(tokens->next->token);
+	else
+		return (do_error(0, tokens->next, shell, ERROR_INVO), 1);
 	do_cd(path, tokens, shell);
 	return (1);
 }

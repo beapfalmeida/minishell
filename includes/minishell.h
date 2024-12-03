@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:10 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/12/03 11:01:53 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:23:47 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef enum e_code
 	ERROR_PDN,
 	OPEN_DF,
 	ERROR_UNCLP,
+	ERROR_INVO,
 }	t_error;
 
 typedef struct s_fds
