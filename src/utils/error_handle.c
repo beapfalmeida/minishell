@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:46:05 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:46:06 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:26:28 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /// @return String containing the error message.
 char	*get_error(t_error i)
 {
-	char	*str[16];
+	char	*str[17];
 
 	str[0] = "%s: command not found\n";
 	str[1] = "minishell: cd: No such file or directory\n";
@@ -35,6 +35,7 @@ char	*get_error(t_error i)
 	str[13] = "minishell: %s: Permission denied\n";
 	str[14] = "minishell: %s: No such file or directory\n";
 	str[15] = "minishell: no support for pipe prompt\n";
+	str[16] = "minishell: cd: %s: invalid option\n";
 	return (str[i]);
 }
 
@@ -44,7 +45,7 @@ static void	update_errorcode(t_shell *shell, t_error error)
 		|| error == ERROR_OPENCMD || error == ERROR_OPEN
 		|| error == ERROR_N_VAL)
 		shell->exit_code = 1;
-	else if (error == ERROR_FAR || error == ERROR_SYNTAX)
+	else if (error == ERROR_FAR || error == ERROR_SYNTAX || error == ERROR_INVO)
 		shell->exit_code = 2;
 	else if (error == ERROR_CMD || error == OPEN_DF)
 		shell->exit_code = 127;
