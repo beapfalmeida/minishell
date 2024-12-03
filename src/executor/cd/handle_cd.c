@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:22 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/12/03 11:37:22 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/03 17:24:19 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static int	is_path(char *path)
 			|| ((path[i] > 64 && path[i] < 91)
 				|| (path[i] > 96 && path[i] < 123))
 			|| path[i] == '/' || path[i] == '_'
-			|| path[i] == '.' || path[i] == '~')
+			|| path[i] == '.' || path[i] == '~'
+			|| path[i] == '-')
 			i++;
 		else
 			return (0);
