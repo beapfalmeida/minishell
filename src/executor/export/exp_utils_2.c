@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 11:42:13 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 15:56:27 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:01:47 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,14 @@ void	add_envp_var(char **env, t_tokens *tokens, int i)
 	else
 		env[i] = ft_strdup(token);
 	env[i + 1] = NULL;
+}
+
+void	copy_envp(char **envp, char **new_envp, int i)
+{
+	while (envp[i])
+	{
+		new_envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	new_envp[i] = NULL;
 }

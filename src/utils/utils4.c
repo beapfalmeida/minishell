@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:46:39 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/23 16:01:23 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:42:03 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
 	{
 		if (*tokens && (*tokens)->next)
 			shell->exit_code = getexitcode(*tokens, (*tokens)->next->token);
+		else
+			ft_printf_fd(STDOUT_FILENO, "exit\n");
 		if ((*tokens)->next && (*tokens)->next->next && shell->exit_code != 2)
 		{
 			ft_printf_fd(2, "bash: exit: too many arguments\n");
@@ -82,7 +84,6 @@ int	check_exit_exec(t_tokens **tokens, t_shell *shell, char *inbuff)
 		}
 		else
 		{
-			ft_printf_fd(STDOUT_FILENO, "exit\n");
 			lstclear(tokens, 1);
 			free(inbuff);
 			return (1);

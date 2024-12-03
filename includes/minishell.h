@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:10 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 19:27:35 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:01:53 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ char		**order_alphabetically(char **envp);
 void		print_export(char **envp);
 void		update_env(char *begin, t_tokens *tokens, t_shell *shell);
 void		add_var(char **env, t_tokens *tokens);
+void		copy_envp(char **envp, char **new_envp, int i);
 int			handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell);
 
 // Builtins

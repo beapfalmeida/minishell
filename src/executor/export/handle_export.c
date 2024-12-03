@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_export.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:44 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 15:55:32 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:01:40 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,21 +94,19 @@ void	update_env(char *begin, t_tokens *tokens, t_shell *shell)
 	char	**new_envp;
 	int		i;
 
+	i = 0;
 	while (tokens && tokens->type == ARG)
 	{
 		if (check_export(begin, tokens, shell))
+		{
 			tokens = tokens->next;
+			continue ;
+		}
 		if (tokens)
 		{
 			envp = shell->envp;
 			new_envp = malloc(sizeof(char *) * (arr_len(envp) + 2));
-			i = 0;
-			while (envp[i])
-			{
-				new_envp[i] = ft_strdup(envp[i]);
-				i++;
-			}
-			new_envp[i] = NULL;
+			copy_envp(envp, new_envp, i);
 			add_var(new_envp, tokens);
 			free_paths(shell->envp);
 			shell->envp = new_envp;

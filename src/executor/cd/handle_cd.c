@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:22 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 16:54:30 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:10:06 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ int	ft_cd(t_tokens *tokens, t_shell *shell)
 	flag = 0;
 	if (check_cd(tokens, shell) == 1)
 		return (1);
-	if (!tokens->next || !ft_strncmp(tokens->next->token, "~", 1))
+	if (!tokens->next || !ft_strncmp(tokens->next->token, "~", 2))
 	{
 		path = ft_strdup(getenv("HOME"));
-		if (tokens->next && !ft_strncmp(tokens->next->token, "~/", 2))
+		if (tokens->next && !ft_strncmp(tokens->next->token, "~/", 3))
 			path = ft_strfjoin(path, &tokens->next->token[1], 1);
 	}
-	else if (*tokens->next->token == '-')
+	else if (ft_strncmp(tokens->next->token, "-", 2))
 	{
 		flag = 1;
 		path = ft_strdup(shell->last_path);
