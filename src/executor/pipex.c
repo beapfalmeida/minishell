@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:05 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/23 15:47:59 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:17:31 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	do_pipe(t_tokens *tokens, t_tokens **tofree, t_shell *shell, t_pipe *p)
 
 	if (p->pid[p->i] == 0)
 	{
-		signal(SIGINT, SIG_DFL);
+		child_signals();
 		fds = find_redirects(shell->fds, p->i);
 		handle_null_input(fds, tofree, shell, p);
 		if (fds->out == -1)

@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:10 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/12/03 11:23:47 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:15:11 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,6 @@ void		split_quotes(t_split *sp, char c);
 char		*get_error(t_error i);
 void		do_error(char *begin, t_tokens *tokens, t_shell *shell,
 				t_error error);
-// int			error_quote(char *s, int i);
 int			error_exit1(char *number, int i);
 int			error_exit2(int overflow, long long ret, char *number);
 
@@ -263,10 +262,6 @@ int			error_exit2(int overflow, long long ret, char *number);
 void		signals(void);
 void		handle_sigint(int sig);
 void		signore(int sig);
-void		sig_heredoc(int sig);
-
-// testing
-void		print_tokens(t_tokens **begin_list);
-void		print_arr(char **arr);
+void		child_signals(void);
 
 #endif

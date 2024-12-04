@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:02 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/23 15:48:54 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:15:02 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ int	handle_dir_file(t_tokens **tokens, t_tokens *temp, t_shell *shell)
 	(void)tokens;
 	token = temp->token;
 	file = is_file(temp->token);
-	if (!strncmp(token, ".", ft_strlen(token)))
+	if (!ft_strncmp(token, ".", ft_strlen(token)))
 		return (do_error(0, temp, shell, ERROR_FAR), 1);
-	else if (!strncmp(token, "~", ft_strlen(token)))
+	else if (!ft_strncmp(token, "~", ft_strlen(token)))
 		return (do_error(0, temp, shell, ERROR_TILD), 1);
 	else if (file == 1 && *token != '/')
 		return (2);

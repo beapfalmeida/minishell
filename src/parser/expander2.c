@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:20 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/20 15:45:21 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:16:36 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*handle_expander(char **envp, char *var, t_shell *shell)
 
 	new_token = NULL;
 	trim = NULL;
-	if (!strncmp(var, "?", 1))
+	if (!ft_strncmp(var, "?", 1))
 		return (ft_itoa(shell->exit_code));
 	trim = ft_strjoin(var, "=");
 	while (*envp)

@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:25 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 18:24:17 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:15:56 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	do_heredoc(int *pipe_fd, char *limiter)
 	input_buff = readline("> ");
 	if (input_buff)
 		input_buff = ft_strfjoin(input_buff, "\n", 1);
-	if (!strncmp(input_buff, limiter, ft_strlen(input_buff)))
+	if (!ft_strncmp(input_buff, limiter, ft_strlen(input_buff)))
 		return (free(input_buff), 1);
 	ft_printf_fd(pipe_fd[1], input_buff);
 	free(input_buff);

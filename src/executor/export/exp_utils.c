@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:44:38 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 15:49:15 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:16:35 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,13 @@ static int	append_var(t_tokens *tokens, char **env, int j)
 static int	to_replace(t_tokens *tokens, char **env, int j)
 {
 	if ((has_char(tokens->token, '=')
-			&& !strncmp(env[j], tokens->token, ft_strclen(env[j], '='))
-			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
+			&& !ft_strncmp(env[j], tokens->token, ft_strclen(env[j], '='))
+			&& !ft_strncmp(env[j], tokens->token,
+				ft_strclen(tokens->token, '=')))
 		|| (!has_char(tokens->token, '=')
-			&& !strncmp(env[j], tokens->token, ft_strlen(env[j]))
-			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '='))))
+			&& !ft_strncmp(env[j], tokens->token, ft_strlen(env[j]))
+			&& !ft_strncmp(env[j], tokens->token,
+				ft_strclen(tokens->token, '='))))
 		return (1);
 	return (0);
 }
@@ -52,8 +54,8 @@ static int	to_replace(t_tokens *tokens, char **env, int j)
 static int	do_nothing(t_tokens *tokens, char **env, int j)
 {
 	if (has_char(env[j], '=') && !has_char(tokens->token, '=')
-		&& !strncmp(env[j], tokens->token, ft_strclen(env[j], '='))
-		&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
+		&& !ft_strncmp(env[j], tokens->token, ft_strclen(env[j], '='))
+		&& !ft_strncmp(env[j], tokens->token, ft_strclen(tokens->token, '=')))
 		return (1);
 	return (0);
 }
@@ -77,8 +79,9 @@ void	add_var(char **env, t_tokens *tokens)
 		else if (do_nothing(tokens, env, j))
 			return ;
 		else if (ft_strnstr(tokens->token, little, ft_strlen(tokens->token))
-			&& !strncmp(env[j], tokens->token, ft_strclen(tokens->token, '+'))
-			&& !strncmp(env[j], tokens->token, ft_strclen(env[j], '=')))
+			&& !ft_strncmp(env[j], tokens->token,
+				ft_strclen(tokens->token, '+'))
+			&& !ft_strncmp(env[j], tokens->token, ft_strclen(env[j], '=')))
 			if (append_var(tokens, env, j))
 				return ;
 		j++;

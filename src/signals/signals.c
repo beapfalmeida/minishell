@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:59 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 18:24:11 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:14:28 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,10 @@ void	signore(int sig)
 {
 	ft_printf_fd(STDOUT_FILENO, "\n");
 	g_signal = sig;
+}
+
+void	child_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

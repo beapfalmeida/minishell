@@ -6,7 +6,7 @@
 /*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:46:05 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/12/03 11:26:28 by bpaiva-f         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:18:01 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,8 @@ int	error_exit1(char *number, int i)
 
 int	error_exit2(int overflow, long long ret, char *number)
 {
-	if (overflow == 1 && ret != LONG_MIN)
+	(void)ret;
+	if (overflow == 1)
 	{
 		ft_printf_fd(2, "bash: exit: %s: numeric argument required\n", number);
 		return (1);

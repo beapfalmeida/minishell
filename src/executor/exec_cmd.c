@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsobreir <jsobreir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bpaiva-f <bpaiva-f@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:45:00 by jsobreir          #+#    #+#             */
-/*   Updated: 2024/11/22 19:10:59 by jsobreir         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:17:08 by bpaiva-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	execute_child(t_tokens *tokens, t_tokens **free,
 		return (perror(strerror(errno)), 1);
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
+		child_signals();
 		cmds = put_cmds(tokens);
 		if (!cmds)
 			return (1);
